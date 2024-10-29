@@ -1,22 +1,14 @@
 import {
-  NumberDecrementStepper,
-  NumberIncrementStepper,
-  NumberInput,
-  NumberInputField,
-  NumberInputStepper,
-} from '@chakra-ui/react';
-import { parseZonedDateTime } from '@internationalized/date';
-import {
   Button,
-  DateRangePicker,
-  Divider,
+  DateInput,
   Popover,
   PopoverContent,
   PopoverTrigger,
   Select,
   SelectItem,
-  Switch,
 } from '@nextui-org/react';
+
+import { getLocalTimeZone, now } from '@internationalized/date';
 import { RouterPath } from '@router/RouterPath';
 import { cn } from '@utils/Utils';
 import { useState } from 'react';
@@ -53,13 +45,14 @@ function Header({ showText, showSearch }) {
   }
 
   return (
-    <div className="relative rounded-ee-xl rounded-es-xl bg-blue-600">
-      <div className="m-auto w-full max-w-[80%] 2xl:max-w-[80%]">
-        <header className="pt-5 text-white">
+    <div className="relative rounded-es-xl bg-blue-600">
+      <div className="w-full justify-center items-center flex flex-col">
+        <header className="py-3 text-white w-full  justify-center items-center">
           <div className="container mx-auto flex items-center justify-between">
-            <div className="flex items-center space-x-4">
+            <div className="flex items-center space-x-2">
               <Link to="/" className="text-2xl font-bold">
-                VEXERE
+                <img src="https://storage.googleapis.com/fe-production/svgIcon/icon_vxr_full_2.svg" />
+                {/* VEXERE */}
               </Link>
             </div>
             <div className="flex items-center space-x-2">
@@ -71,6 +64,43 @@ function Header({ showText, showSearch }) {
               >
                 Trở thành đối tác
               </Button>
+
+              <Popover placement="bottom" offset={10}>
+                <PopoverTrigger>
+                  <Button
+                    variant="light"
+                    color="white"
+                    className="rounded-xl font-bold hover:bg-blue-600"
+                  >
+                    Hotline 24/7
+                  </Button>
+                </PopoverTrigger>
+                <PopoverContent>
+                  <div className="flex flex-col gap-2 p-4">
+                    <div classNam="flex flex-col w-full items-center justify-between gap-20">
+                      <div>
+                        <a href="tel:1900545541">
+                          <span>1900545541 - </span>
+                        </a>
+                        Để đặt dịch vụ thuê xe (Từ 07:00 - 21:00)
+                      </div>
+                      <div>
+                        <a href="tel:1900888684">
+                          <span>1900888684 - </span>
+                        </a>
+                        Để đặt vé qua điện thoại (24/7)
+                      </div>
+                      <div>
+                        <a href="tel:1900969681">
+                          <span>1900969681 - </span>
+                        </a>
+                        Để phản hồi về dịch vụ và xử lý sự cố
+                      </div>
+                    </div>
+                  </div>
+                </PopoverContent>
+              </Popover>
+
               <Button
                 variant="bordered"
                 color="primary"
@@ -91,130 +121,120 @@ function Header({ showText, showSearch }) {
           </div>
         </header>
 
-        <main className={cn('text-left text-white', !showText && 'py-7')}>
+        <main
+          className={cn('w-full text-left text-white', !showText && 'py-3')}
+          style={
+            showText
+              ? {
+                  backgroundImage:
+                    'url("https://static.vexere.com/production/banners/1209/leaderboard.png")',
+                  backgroundSize: 'cover',
+                  backgroundPosition: 'center',
+                  height: '456px',
+                  width: '100%',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  position: 'relative',
+                }
+              : {}
+          }
+        >
           {showText && (
-            <>
-              <h1 className="pb-2 pt-8 text-4xl font-bold">
-                Tìm chỗ nghỉ tiếp theo
+            <div className="items-center flex flex-col justify-center mt-20">
+              <h1 className="pb-2 pt-8 text-2xl font-bold">
+                Tìm chuyến xe phù hợp với bạn, cam kết hoàn tiền nếu nhà xe
+                không phục vụ
               </h1>
-              <p className="mt-2 pb-16 text-lg">
-                Tìm ưu đãi khách sạn, chỗ nghỉ dạng nhà và nhiều hơn nữa...
-              </p>
-            </>
+            </div>
           )}
 
           {showSearch && (
-            <div className="bottom-[-20px] w-full xl:absolute xl:w-[80%] 2xl:w-[80%]">
-              <div className="bg-ye flex w-full flex-col items-center justify-center gap-1 rounded-xl bg-accent p-1 shadow-lg xl:flex-row">
+            <div className="items-center flex flex-col justify-center my-10 ">
+              <div className=" w-full xl:w-[70%] flex h-full flex-col items-center justify-center gap-1 rounded-xl bg-white p-1 shadow-lg xl:flex-row">
                 <Select
-                  className="flex-4 xl:flex-3 border-none"
+                  className="flex-4 xl:flex-3 border-nonet"
+                  style={{
+                    backgroundColor: 'transparent',
+                  }}
                   variant="flat"
                   radius="sm"
+                  label="Nơi xuất phát"
                   defaultSelectedKeys={[1]}
                   placeholder="Bạn muốn đến đâu?"
-                  startContent={<i className="fas fa-bed text-gray-500"></i>}
+                  startContent={
+                    <i className="fas fa-dot-circle text-blue-500"></i>
+                  }
                 >
                   <SelectItem key={1}>{'Hội An'}</SelectItem>
                   <SelectItem key={2}>{'Đà Nẵng'}</SelectItem>
                   <SelectItem key={3}>{'Đà Lạt'}</SelectItem>
                 </Select>
 
-                <DateRangePicker
-                  radius="sm"
-                  hideTimeZone
-                  variant="flat"
-                  visibleMonths={2}
-                  className="flex-5 border-none"
-                  defaultValue={{
-                    start: parseZonedDateTime(
-                      '2024-04-01T00:45[America/Los_Angeles]',
-                    ),
-                    end: parseZonedDateTime(
-                      '2024-04-08T11:15[America/Los_Angeles]',
-                    ),
+                <div className="mx-4 flex flex-col h-full rounded-full p-2 bg-gray-200 border-blue-500 justify-center items-center ">
+                  <i className="fas fa-exchange-alt text-gray-400"></i>
+                </div>
+
+                <Select
+                  className="flex-4 xl:flex-3 border-none"
+                  style={{
+                    backgroundColor: 'transparent',
                   }}
+                  variant="flat"
+                  radius="sm"
+                  label="Nơi đến"
+                  defaultSelectedKeys={[1]}
+                  placeholder="Bạn muốn đến đâu?"
+                  startContent={
+                    <i className="fas fa-map-marker-alt text-error"></i>
+                  }
+                >
+                  <SelectItem key={1}>{'Hội An'}</SelectItem>
+                  <SelectItem key={2}>{'Đà Nẵng'}</SelectItem>
+                  <SelectItem key={3}>{'Đà Lạt'}</SelectItem>
+                </Select>
+                <DateInput
+                  label="Ngày đi"
+                  radius="sm"
+                  classNames={{
+                    base: 'bg-white',
+                    selectorButton: 'bg-white',
+                    inputWrapper: 'bg-white',
+                  }}
+                  hideTimeZone
+                  showMonthAndYearPickers
+                  className="bg-white"
+                  defaultValue={now(getLocalTimeZone())}
                 />
-
-                <Popover placement="bottom" offset={10}>
-                  <PopoverTrigger>
-                    <Button
-                      className={cn(
-                        'flex-3 w-full rounded-lg border-none bg-white xl:min-w-[250px]',
-                        havePet && 'min-w-[300px]',
-                      )}
-                    >
-                      Phòng {personCount} người · {roomCount} phòng{' '}
-                      {havePet && '· Vật nuôi'}
-                      <i
-                        className="fa fa-caret-down tet-xl text-[20px] text-grey-500"
-                        aria-hidden="true"
-                      ></i>
-                    </Button>
-                  </PopoverTrigger>
-                  <PopoverContent>
-                    <div className="flex w-[250px] flex-col gap-2 p-4">
-                      <div className="flex w-full">
-                        <div className="flex w-full items-center justify-between gap-20">
-                          <p className="text-small font-bold">Người lớn</p>
-                        </div>
-                        <NumberInput
-                          minWidth={'100px'}
-                          onChange={(e) => setPersonCount(e)}
-                          value={personCount}
-                          max={1000}
-                          min={1}
-                        >
-                          <NumberInputField />
-                          <NumberInputStepper>
-                            <NumberIncrementStepper />
-                            <NumberDecrementStepper />
-                          </NumberInputStepper>
-                        </NumberInput>
-                      </div>
-
-                      <div className="flex w-full">
-                        <div className="flex w-full items-center justify-between gap-20">
-                          <p className="text-small font-bold">Số phòng</p>
-                        </div>
-                        <NumberInput
-                          minWidth={'100px'}
-                          onChange={(e) => setRoomCount(e)}
-                          value={roomCount}
-                          max={1000}
-                          min={1}
-                        >
-                          <NumberInputField />
-                          <NumberInputStepper>
-                            <NumberIncrementStepper />
-                            <NumberDecrementStepper />
-                          </NumberInputStepper>
-                        </NumberInput>
-                      </div>
-
-                      <Divider />
-
-                      <div className="flex w-full">
-                        <div className="flex w-full items-center justify-between gap-20">
-                          <p className="text-small font-bold">Vật nuôi</p>
-                        </div>
-                        <Switch
-                          isSelected={havePet}
-                          onChange={() => setHavePet(!havePet)}
-                          color={'blue-base'}
-                        />
-                      </div>
-                    </div>
-                  </PopoverContent>
-                </Popover>
 
                 <Button
                   onClick={handleSearch}
                   variant="solid"
                   radius="sm"
-                  className="w-full min-w-[200px] bg-blue-600 px-4 py-2 text-white xl:w-fit"
+                  className="w-full min-w-[200px] bg-blue-600 px-4 py-2 text-white text-xl xl:w-fit h-12"
                 >
                   Tìm kiếm
                 </Button>
+              </div>
+            </div>
+          )}
+
+          {showSearch && (
+            <div className="h-14 w-full absolute bottom-0 bg-black bg-opacity-50 flex justify-center items-center space-x-12 text-white text-lg">
+              <div className="flex items-center space-x-2">
+                <i className="fas fa-star text-yellow-500"></i>
+                <span>Chắc chắn có chỗ</span>
+              </div>
+              <div className="flex items-center space-x-2">
+                <i className="fas fa-headset text-yellow-500"></i>
+                <span>Hỗ trợ 24/7</span>
+              </div>
+              <div className="flex items-center space-x-2">
+                <i className="fas fa-percent text-yellow-500"></i>
+                <span>Nhiều ưu đãi</span>
+              </div>
+              <div className="flex items-center space-x-2">
+                <i className="fas fa-dollar-sign text-yellow-500"></i>
+                <span>Thanh toán đa dạng</span>
               </div>
             </div>
           )}
