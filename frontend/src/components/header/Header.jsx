@@ -1,6 +1,6 @@
 import {
   Button,
-  DateInput,
+  DatePicker,
   Popover,
   PopoverContent,
   PopoverTrigger,
@@ -153,9 +153,9 @@ function Header({ showText, showSearch }) {
               <div className=" w-full xl:w-[70%] flex h-full flex-col items-center justify-center gap-1 rounded-xl bg-white p-1 shadow-lg xl:flex-row">
                 <Select
                   className="flex-4 xl:flex-3 border-nonet"
-                  style={{
-                    backgroundColor: 'transparent',
-                  }}
+                  //   style={{
+                  //     backgroundColor: 'transparent',
+                  //   }}
                   variant="flat"
                   radius="sm"
                   label="Nơi xuất phát"
@@ -170,15 +170,15 @@ function Header({ showText, showSearch }) {
                   <SelectItem key={3}>{'Đà Lạt'}</SelectItem>
                 </Select>
 
-                <div className="mx-4 flex flex-col h-full rounded-full p-2 bg-gray-200 border-blue-500 justify-center items-center ">
+                <div className=" flex flex-col h-full rounded-full p-2 bg-gray-200 border-blue-500 justify-center items-center ">
                   <i className="fas fa-exchange-alt text-gray-400"></i>
                 </div>
 
                 <Select
                   className="flex-4 xl:flex-3 border-none"
-                  style={{
-                    backgroundColor: 'transparent',
-                  }}
+                  //   style={{
+                  //     backgroundColor: 'transparent',
+                  //   }}
                   variant="flat"
                   radius="sm"
                   label="Nơi đến"
@@ -192,25 +192,31 @@ function Header({ showText, showSearch }) {
                   <SelectItem key={2}>{'Đà Nẵng'}</SelectItem>
                   <SelectItem key={3}>{'Đà Lạt'}</SelectItem>
                 </Select>
-                <DateInput
+
+                <div className="flex flex-col h-full rounded-full p-2 mx-0 justify-center items-center ">
+                  {/* <i className="fas fa-exchange-alt text-gray-400"></i> */}
+                </div>
+                <DatePicker
                   label="Ngày đi"
                   radius="sm"
                   classNames={{
                     base: 'bg-white',
                     selectorButton: 'bg-white',
-                    inputWrapper: 'bg-white',
+                    inputWrapper: 'bg-transparent',
+                    input: 'bg-white',
+                    // input,
                   }}
                   hideTimeZone
                   showMonthAndYearPickers
                   className="bg-white"
                   defaultValue={now(getLocalTimeZone())}
                 />
-
+                <div className="flex flex-col h-full rounded-full p-2 mx-0 justify-center items-center "></div>
                 <Button
                   onClick={handleSearch}
                   variant="solid"
                   radius="sm"
-                  className="w-full min-w-[200px] bg-blue-600 px-4 py-2 text-white text-xl xl:w-fit h-12"
+                  className="w-full min-w-[200px] bg-yellow-300 text-content-primaryC px-4 py-2 text-xl xl:w-fit h-14"
                 >
                   Tìm kiếm
                 </Button>
