@@ -87,19 +87,21 @@ function CardDestination({
         className="h-48 w-full object-cover"
         src={src ? src : 'https://placehold.co/400x300'}
       />
-      <div className="p-4">
+      <div className="p-4 ">
         <div className="flex justify-between items-center">
           <h3 className="text-lg font-bold">{name}</h3>
           <p>{convertStringToNumber(price)}</p>
         </div>
-        <p className="text-gray-600">
-          {from} - {to}
-        </p>
-        <div className="mt-2 flex items-center">
-          <span className="rounded-md bg-blue-600 px-2 py-1 text-sm text-white">
-            {rate}
-          </span>
-          <span className="ml-2 text-gray-600">{comments} đánh giá</span>
+        <div className="flex mt-2 justify-between items-center">
+          <p className="text-gray-600">
+            {from} - {to}
+          </p>
+          <div className="flex items-center">
+            <span className="rounded-md bg-blue-600 px-2 py-1 text-sm text-white">
+              {rate}
+            </span>
+            <span className="ml-2 text-gray-600">{comments} đánh giá</span>
+          </div>
         </div>
       </div>
     </Link>

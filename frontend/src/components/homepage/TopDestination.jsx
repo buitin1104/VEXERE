@@ -25,7 +25,11 @@ function TopDestination() {
 const Card = ({ image, title, price, bgColor }) => (
   <div className="rounded-lg overflow-hidden shadow-lg ml-3">
     <div className="relative">
-      <img src={image} alt={title} className="w-full h-48 object-cover" />
+      <img
+        src={image}
+        alt={title}
+        className="w-full object-cover aspect-[600/300]"
+      />
     </div>
     <div className={`p-4 ${bgColor}`}>
       <h2 className="text-white text-lg font-bold">{title}</h2>
