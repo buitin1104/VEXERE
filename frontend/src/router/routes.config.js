@@ -1,7 +1,8 @@
 import PrivateRoute from '@components/private-router/PrivateRoute';
 import Layout from '@layout/Layout';
+import AdminPage from '@pages/admin';
 import ConfirmPage from '@pages/confirm/ConfirmPage';
-import CreatedSuccessPage from '@pages/created-success/CreatedSuscessPage';
+import CreatedSuccessPage from '@pages/created-success/CreatedSuccessPage';
 import DetailPage from '@pages/detail/DetailPage';
 import HomePage from '@pages/homepage/HomePage';
 import NotFoundPage from '@pages/not-found/NotFoundPage';
@@ -44,6 +45,10 @@ const routesConfig = [
     element: CreatedSuccessPage,
     layout: Layout,
     layoutProps: { showText: false },
+  },
+  {
+    path: RouterPath.ADMIN,
+    element: AdminPage,
   },
   {
     path: '/about',

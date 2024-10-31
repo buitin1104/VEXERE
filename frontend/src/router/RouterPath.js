@@ -5,4 +5,5 @@ export const RouterPath = {
   CREATED_SUCCESS: '/created_success',
   DETAIL: '/detail',
   REGISTER_HOST: '/register-host',
+  ADMIN: '/admin',
 };
