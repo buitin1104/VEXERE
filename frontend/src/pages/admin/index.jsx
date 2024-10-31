@@ -6,7 +6,6 @@ import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import { useModalCommon } from '../../context/ModalContext';
 import AdminBusList from '../../section/admin/AdminBusList';
-import AdminRequestHost from '../../section/admin/AdminRequestHost';
 import AdminSideBar from '../../section/admin/AdminSideBar';
 import AdminTicketList from '../../section/admin/AdminTicketList';
 import AdminUser from '../../section/admin/AdminUser';
@@ -64,7 +63,7 @@ export default function AdminPage() {
     }
   };
 
-  if (!loading)
+  if (loading)
     return (
       <div className="flex flex-row">
         <div className="flex w-full">

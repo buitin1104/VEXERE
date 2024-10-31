@@ -1,6 +1,11 @@
 import {
+  Avatar,
   Button,
   DatePicker,
+  Dropdown,
+  DropdownItem,
+  DropdownMenu,
+  DropdownTrigger,
   Popover,
   PopoverContent,
   PopoverTrigger,
@@ -11,8 +16,8 @@ import {
 import { getLocalTimeZone, now } from '@internationalized/date';
 import { RouterPath } from '@router/RouterPath';
 import { cn } from '@utils/Utils';
-import { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, NavLink, useNavigate } from 'react-router-dom';
+import { useAuth } from '../../context/AuthContext';
 import { useModalCommon } from '../../context/ModalContext';
 import LoginModal from './Login';
 import RegisterModal from './Register';
@@ -20,9 +25,7 @@ import RegisterModal from './Register';
 function Header({ showText, showSearch }) {
   const navigate = useNavigate();
   const { onOpen } = useModalCommon();
-  const [roomCount, setRoomCount] = useState(1);
-  const [personCount, setPersonCount] = useState(2);
-  const [havePet, setHavePet] = useState(false);
+  const { auth } = useAuth();
 
   function handleSearch() {
     navigate('/search');
@@ -48,11 +51,10 @@ function Header({ showText, showSearch }) {
     <div className="relative bg-blue-600">
       <div className="w-full justify-center items-center flex flex-col">
         <header className="py-3 text-white w-full  justify-center items-center">
-          <div className="container mx-auto flex items-center justify-between">
+          <div className="px-8 mx-auto flex items-center justify-between">
             <div className="flex items-center space-x-2">
               <Link to="/" className="text-2xl font-bold">
                 <img src="https://storage.googleapis.com/fe-production/svgIcon/icon_vxr_full_2.svg" />
-                {/* VEXERE */}
               </Link>
             </div>
             <div className="flex items-center space-x-2">
@@ -100,23 +102,62 @@ function Header({ showText, showSearch }) {
                   </div>
                 </PopoverContent>
               </Popover>
-
-              <Button
-                variant="bordered"
-                color="primary"
-                className="rounded-xl bg-slate-50 font-bold"
-                onClick={openRegister}
-              >
-                Đăng ký
-              </Button>
-              <Button
-                variant="bordered"
-                color="primary"
-                className="rounded-xl bg-slate-50 font-bold"
-                onClick={openLogin}
-              >
-                Đăng nhập
-              </Button>
+              {auth ? (
+                <>
+                  <Dropdown>
+                    <DropdownTrigger>
+                      <Button
+                        variant="light"
+                        className="border-none hover:bg-transparent"
+                      >
+                        <Avatar
+                          src={auth.src}
+                          className="w-6 h-6 bg-gray-200"
+                        />
+                        <p className="text-white">{auth.name} </p>
+                        <i className="fa fa-caret-down text-white"></i>
+                      </Button>
+                    </DropdownTrigger>
+                    <DropdownMenu aria-label="Static Actions">
+                      <DropdownItem key="profile" as={NavLink} to="/profile">
+                        <i className="fas fa-user mr-2"></i>
+                        <span>Thông tin tài khoản</span>
+                      </DropdownItem>
+                      <DropdownItem key="ticket">
+                        <i className="fas fa-ticket-alt mr-2"></i>
+                        <span>Vé của tôi</span>
+                      </DropdownItem>
+                      <DropdownItem key="review">
+                        <i className="fas fa-comment-dots mr-2"></i>
+                        <span>Nhận xét chuyến đi</span>
+                      </DropdownItem>
+                      <DropdownItem color="danger">
+                        <i className="fas fa-power-off mr-2"></i>
+                        <span>Đăng xuất</span>
+                      </DropdownItem>
+                    </DropdownMenu>
+                  </Dropdown>
+                </>
+              ) : (
+                <>
+                  <Button
+                    variant="bordered"
+                    color="primary"
+                    className="rounded-xl bg-slate-50 font-bold"
+                    onClick={openRegister}
+                  >
+                    Đăng ký
+                  </Button>
+                  <Button
+                    variant="bordered"
+                    color="primary"
+                    className="rounded-xl bg-slate-50 font-bold"
+                    onClick={openLogin}
+                  >
+                    Đăng nhập
+                  </Button>
+                </>
+              )}
             </div>
           </div>
         </header>
