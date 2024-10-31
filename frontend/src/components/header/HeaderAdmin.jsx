@@ -3,7 +3,7 @@ import React from 'react';
 
 export default function HeaderAdmin({ title }) {
   return (
-    <header className="flex items-center justify-between rounded-2xl mb-1 shadow-2xl p-2 sticky top-2 mx-4 bg-white">
+    <header className="z-20 flex items-center justify-between rounded-2xl mb-1 shadow-2xl p-2 sticky top-2 mx-4 bg-white">
       <div className="flex items-center bg-white p-2 rounded  w-1/2">
         <p className="font-bold">{title}</p>
       </div>
