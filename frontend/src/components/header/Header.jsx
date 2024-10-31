@@ -45,7 +45,7 @@ function Header({ showText, showSearch }) {
   }
 
   return (
-    <div className="relative rounded-es-xl bg-blue-600">
+    <div className="relative bg-blue-600">
       <div className="w-full justify-center items-center flex flex-col">
         <header className="py-3 text-white w-full  justify-center items-center">
           <div className="container mx-auto flex items-center justify-between">
@@ -122,7 +122,7 @@ function Header({ showText, showSearch }) {
         </header>
 
         <main
-          className={cn('w-full text-left text-white', !showText && 'py-3')}
+          className={cn('w-full text-left text-white')}
           style={
             showText
               ? {
@@ -216,7 +216,7 @@ function Header({ showText, showSearch }) {
                   onClick={handleSearch}
                   variant="solid"
                   radius="sm"
-                  className="w-full min-w-[200px] bg-yellow-300 text-content-primaryC px-4 py-2 text-xl xl:w-fit h-14"
+                  className="w-full text-white min-w-[200px] bg-yellow-300   px-4 py-2 text-xl xl:w-fit h-14"
                 >
                   Tìm kiếm
                 </Button>

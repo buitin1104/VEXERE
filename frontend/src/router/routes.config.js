@@ -1,5 +1,7 @@
 import PrivateRoute from '@components/private-router/PrivateRoute';
 import Layout from '@layout/Layout';
+import ConfirmPage from '@pages/confirm/ConfirmPage';
+import CreatedSuccessPage from '@pages/created-success/CreatedSuscessPage';
 import DetailPage from '@pages/detail/DetailPage';
 import HomePage from '@pages/homepage/HomePage';
 import NotFoundPage from '@pages/not-found/NotFoundPage';
@@ -23,11 +25,23 @@ const routesConfig = [
     path: RouterPath.SEARCH,
     element: SearchPage,
     layout: Layout,
-    layoutProps: { showSearch: false, showSearch: true },
+    layoutProps: { showSearch: false, showSearch: false },
   },
   {
     path: RouterPath.REGISTER_HOST,
     element: RegisterHostPage,
+    layout: Layout,
+    layoutProps: { showText: false },
+  },
+  {
+    path: RouterPath.CONFIRM_INFORMATION,
+    element: ConfirmPage,
+    layout: Layout,
+    layoutProps: { showText: false },
+  },
+  {
+    path: RouterPath.CREATED_SUCCESS,
+    element: CreatedSuccessPage,
     layout: Layout,
     layoutProps: { showText: false },
   },

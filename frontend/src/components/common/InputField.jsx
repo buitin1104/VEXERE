@@ -16,12 +16,11 @@ const InputField = ({
         type={type}
         placeholder={placeholder}
         className={`min-w-72 w-full  bg-transparent ${className}`}
+        color={errors?.[name] ? 'danger' : 'default'}
+        errorMessage={errors?.[name] && 'Bắt buộc nhập thông tin'}
         {...register(name)}
         {...props}
       />
-      {errors[name] && (
-        <span className="text-red">Bắt buộc nhập thông tin</span>
-      )}
     </>
   );
 };
