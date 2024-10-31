@@ -1,8 +1,8 @@
-import { Input } from '@nextui-org/react';
+import { DatePicker } from '@nextui-org/react';
 import React from 'react';
 import { useFormContext } from 'react-hook-form';
 
-const InputField = ({
+const DatePickerField = ({
   type = 'text',
   placeholder = '',
   name,
@@ -12,15 +12,15 @@ const InputField = ({
   ...props
 }) => {
   const { watch } = useFormContext();
+
   return (
     <>
-      <Input
+      <DatePicker
         type={type}
         placeholder={placeholder}
         className={`min-w-72 w-full  bg-transparent ${className}`}
         color={errors?.[name] ? 'danger' : 'default'}
         errorMessage={errors?.[name] && 'Bắt buộc nhập thông tin'}
-        value={watch(name) ? watch(name) : undefined}
         {...register(name)}
         {...props}
       />
@@ -28,4 +28,4 @@ const InputField = ({
   );
 };
 
-export default InputField;
+export default DatePickerField;

@@ -6,5 +6,6 @@ export const RouterPath = {
   DETAIL: '/detail',
   REGISTER_HOST: '/register-host',
   ADMIN: '/admin',
+  PROFILE: '/profile',
   NOT_FOUND: '/*',
 };

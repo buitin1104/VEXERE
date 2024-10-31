@@ -6,6 +6,7 @@ import CreatedSuccessPage from '@pages/created-success/CreatedSuccessPage';
 import DetailPage from '@pages/detail/DetailPage';
 import HomePage from '@pages/homepage/HomePage';
 import NotFoundPage from '@pages/not-found/NotFoundPage';
+import ProfileManagerPage from '@pages/profile/ProfileManagerPage';
 import RegisterHostPage from '@pages/register-host/RegisterHostPage';
 import SearchPage from '@pages/search/SearchPage';
 import { RouterPath } from './RouterPath';
@@ -49,6 +50,12 @@ const routesConfig = [
   {
     path: RouterPath.ADMIN,
     element: AdminPage,
+  },
+  {
+    path: RouterPath.PROFILE,
+    element: ProfileManagerPage,
+    layout: Layout,
+    layoutProps: { showText: false },
   },
   {
     path: '/about',
