@@ -1,4 +1,5 @@
 import { Button } from '@chakra-ui/react';
+import { cn } from '@utils/Utils';
 import React, { useState } from 'react';
 
 // const sidebarItems = [
@@ -21,9 +22,9 @@ const sidebarItems = [
     roles: ['admin'],
   },
   {
-    id: 'host',
+    id: 'busAll',
     icon: 'fa-bus',
-    label: 'Danh sách nhà xe',
+    label: 'Danh sách chuyến xe',
     roles: ['admin'],
   },
   {
@@ -54,13 +55,13 @@ const sidebarItems = [
     roles: ['chuNhaXe'],
   },
   {
-    id: 'bus',
+    id: 'buses',
     icon: 'fa-bus',
-    label: 'Danh sách xe',
+    label: 'Danh sách chuyến xe',
     roles: ['chuNhaXe', 'taiXe', 'phuXe'],
   },
   {
-    id: 'tasks',
+    id: 'tickets',
     icon: 'fa-clipboard-list',
     label: 'Danh sách vé xe',
     roles: ['chuNhaXe', 'nhanVien'],
@@ -73,7 +74,7 @@ const sidebarItems = [
   },
 ];
 export default function AdminSideBar({ selectedItem, onSelectItem }) {
-  const [currentUserRole, setCurrentUserRole] = useState('admin');
+  const [currentUserRole, setCurrentUserRole] = useState('chuNhaXe');
   const filteredItems = sidebarItems.filter((item) =>
     item.roles.includes(currentUserRole),
   );
@@ -81,22 +82,25 @@ export default function AdminSideBar({ selectedItem, onSelectItem }) {
   return (
     <aside className="w-12 bg-white h-screen shadow-md justify-between flex flex-col">
       <div className="flex flex-col items-center py-3">
-        {filteredItems.map((item) => (
-          <Button
-            variant="ghost"
-            color="transparent"
-            size="sm"
-            onClick={() => onSelectItem(item.id, item.label)}
-            className="border-none  items-center justify-center flex   "
-          >
-            <i
-              key={item.id}
-              className={`fas ${item.icon} text-gray-500 cursor-pointer ${
-                selectedItem === item.id ? 'text-blue-500' : 'text-gray-500'
-              }`}
-            ></i>
-          </Button>
-        ))}
+        {filteredItems.map((item) => {
+          return (
+            <Button
+              variant={'ghost'}
+              onClick={() => onSelectItem(item.id, item.label)}
+              className={cn(
+                'w-8 border-none items-center justify-center flex p-none ',
+                selectedItem === item.id && 'bg-blue-100',
+              )}
+            >
+              <i
+                key={item.id}
+                className={`fas ${item.icon} cursor-pointer ${
+                  selectedItem === item.id ? 'text-blue-500' : 'text-gray-500'
+                }`}
+              ></i>
+            </Button>
+          );
+        })}
       </div>
       <div className="flex flex-col">
         <Button onClick={() => setCurrentUserRole('admin')}>A</Button>
