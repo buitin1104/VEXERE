@@ -56,7 +56,7 @@ const routesConfig = [
     layout: PrivateRoute,
   },
   {
-    path: '*',
+    path: RouterPath.NOT_FOUND,
     element: NotFoundPage,
     layout: Layout,
   },

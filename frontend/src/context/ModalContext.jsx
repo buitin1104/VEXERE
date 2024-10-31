@@ -35,6 +35,8 @@ export const ModalProvider = ({ children }) => {
   };
 
   const onClose = () => {
+    console.log('close');
+
     setModalContent(null);
     setModalTitle('Modal Title');
     setModalActions([]);

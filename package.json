@@ -27,6 +27,7 @@
     "express-async-handler": "^1.2.0",
     "express-formidable": "^1.2.0",
     "firebase": "^10.13.1",
+    "js-cookie": "^3.0.5",
     "jsonwebtoken": "^9.0.2",
     "leaflet": "^1.9.4",
     "moment": "^2.30.1",

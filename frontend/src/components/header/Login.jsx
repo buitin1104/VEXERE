@@ -1,19 +1,25 @@
 import { Button } from '@nextui-org/react';
 import React, { useState } from 'react';
 import PhoneInput from 'react-phone-input-2';
+import { useAuth } from '../..//context/AuthContext';
 import { useModalCommon } from '../../context/ModalContext';
 import RegisterModal from './Register';
 
 const LoginModal = () => {
   const [phone, setPhone] = useState('');
-  const { onOpen } = useModalCommon();
-
+  const { onOpen, onClose } = useModalCommon();
+  const { login } = useAuth();
   function openRegister() {
     onOpen({
       view: <RegisterModal />,
       title: 'Đăng ký',
       showFooter: false,
     });
+  }
+
+  function handleLogin() {
+    login({ id: '111', role: '2' });
+    onClose();
   }
 
   return (
@@ -38,7 +44,12 @@ const LoginModal = () => {
       </div>
 
       <div className="mt-4">
-        <Button radius={'sm'} color="primary" className="w-full">
+        <Button
+          radius={'sm'}
+          color="primary"
+          className="w-full"
+          onClick={handleLogin}
+        >
           Đăng nhập với Google
         </Button>
         <div className="flex mt-4">

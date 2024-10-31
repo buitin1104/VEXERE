@@ -42,6 +42,12 @@ const sidebarItems = [
     roles: ['admin'],
   },
   {
+    id: 'request',
+    icon: 'fa-clipboard-list',
+    label: 'Đăng ký nhà xe mới',
+    roles: ['admin'],
+  },
+  {
     id: 'dashboard',
     icon: 'fa-th-large',
     label: 'Tổng quan',
