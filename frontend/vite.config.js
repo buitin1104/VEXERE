@@ -13,6 +13,7 @@ export default defineConfig({
       '@router': path.resolve(__dirname, 'src/router/'),
       '@utils': path.resolve(__dirname, 'src/utils/'),
       '@context': path.resolve(__dirname, 'src/context/'),
+      '@section': path.resolve(__dirname, 'src/section/'),
     },
   },
 });
