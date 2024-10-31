@@ -1,5 +1,5 @@
-import InputField from '@components/conmon/InputField';
-import TextAreaField from '@components/conmon/TextAreaField';
+import InputField from '@components/common/InputField';
+import TextAreaField from '@components/common/TextAreaField';
 import { Button } from '@nextui-org/react';
 import React, { useRef } from 'react';
 import { useForm } from 'react-hook-form';
@@ -13,7 +13,6 @@ export default function RegisterHostPage() {
     setValue,
     formState: { errors },
   } = useForm();
-  console.log('🚀 ~ RegisterHostPage ~ watch:', watch());
 
   function scrollToRegister() {
     if (registerRef.current) {
