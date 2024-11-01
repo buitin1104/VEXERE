@@ -21,8 +21,8 @@ export default function RegisterHostPage() {
   }
 
   return (
-    <div className="translate-y-[-20px] mx-auto bg-blue-500">
-      <div className=" text-white text-center py-16">
+    <div className=" mx-auto bg-blue-500">
+      <div className="text-white text-center py-16">
         <h1 className="text-4xl font-bold mb-4">
           Hệ thống quản lý bán vé Vexere
         </h1>
