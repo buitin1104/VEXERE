@@ -5,6 +5,20 @@ import { useAuth } from '../..//context/AuthContext';
 import { useModalCommon } from '../../context/ModalContext';
 import RegisterModal from './Register';
 
+const userTemplate = {
+  id: 1,
+  name: 'Nguyen Van A',
+  avatar: 'https://example.com/path/to/avatar.jpg',
+  email: 'nguyenvana@example.com',
+  phone: '0123456789',
+  address: '123 Đường ABC, Quận XYZ, Thành phố HCM',
+  dateOfBirth: '1990-01-01',
+  role: '1',
+  isActive: true,
+  createdAt: new Date().toISOString(),
+  updatedAt: new Date().toISOString(),
+};
+
 const LoginModal = () => {
   const [phone, setPhone] = useState('');
   const { onOpen, onClose } = useModalCommon();
@@ -18,7 +32,7 @@ const LoginModal = () => {
   }
 
   function handleLogin() {
-    login({ id: '111', role: '2' });
+    login(userTemplate);
     onClose();
   }
 
