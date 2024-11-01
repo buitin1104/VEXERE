@@ -2,14 +2,18 @@ import InputField from '@components/common/InputField';
 import { Button, Radio, RadioGroup } from '@nextui-org/react';
 import { RouterPath } from '@router/RouterPath';
 import React from 'react';
-import { useForm } from 'react-hook-form';
+import { FormProvider, useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 
 export default function ConfirmPage() {
-  const { register, errors } = useForm();
+  const methods = useForm();
+  const { register, errors } = methods;
   const navigator = useNavigate();
   function createTicker(params) {
     navigator(RouterPath.CREATED_SUCCESS);
+  }
+  function handleSave() {
+    console.log('save');
   }
   return (
     <div className="mx-auto max-w-full px-5 lg:max-w-[70%] lg:px-0 2xl:max-w-[60%] flex  mt-6 gap-4 mb-20">
@@ -17,40 +21,44 @@ export default function ConfirmPage() {
         <div className="w-full border rounded-lg shadow-lg">
           <div className="p-5">
             <p className="text-xl font-bold">Thông tin liên hệ</p>
-            <div className="flex flex-col gap-5 mt-3">
-              <InputField
-                placeholder="Nhập họ và tên"
-                label="Tên người đi"
-                name={'full_name'}
-                isRequired
-                register={register}
-                errors={errors}
-              />
-              <InputField
-                placeholder="Nhập số điện thoại "
-                label="Số điện thoại"
-                name={'phone'}
-                isRequired
-                register={register}
-                errors={errors}
-              />
-              <InputField
-                placeholder="Nhập email"
-                label="Email nhận thông tin"
-                name={'email'}
-                type="email"
-                isRequired
-                register={register}
-                errors={errors}
-              />
-              <div className="py-2 px-3 rounded-lg text-sm  bg-green-100 border border-green-460 text-content-primaryC flex  items-center gap-2">
-                <i className="fa fa-check-circle text-white bg-green-500 rounded-full p-1"></i>
-                <p>
-                  Số điện thoại và email được sử dụng để gửi thông tin đơn hàng
-                  và liên hệ khi cần thiết.
-                </p>
-              </div>
-            </div>
+            <FormProvider {...methods}>
+              <form onSubmit={methods.handleSubmit(handleSave)}>
+                <div className="flex flex-col gap-5 mt-3">
+                  <InputField
+                    placeholder="Nhập họ và tên"
+                    label="Tên người đi"
+                    name={'full_name'}
+                    isRequired
+                    register={register}
+                    errors={errors}
+                  />
+                  <InputField
+                    placeholder="Nhập số điện thoại "
+                    label="Số điện thoại"
+                    name={'phone'}
+                    isRequired
+                    register={register}
+                    errors={errors}
+                  />
+                  <InputField
+                    placeholder="Nhập email"
+                    label="Email nhận thông tin"
+                    name={'email'}
+                    type="email"
+                    isRequired
+                    register={register}
+                    errors={errors}
+                  />
+                  <div className="py-2 px-3 rounded-lg text-sm  bg-green-100 border border-green-460 text-content-primaryC flex  items-center gap-2">
+                    <i className="fa fa-check-circle text-white bg-green-500 rounded-full p-1"></i>
+                    <p>
+                      Số điện thoại và email được sử dụng để gửi thông tin đơn
+                      hàng và liên hệ khi cần thiết.
+                    </p>
+                  </div>
+                </div>
+              </form>
+            </FormProvider>
           </div>
         </div>
         <div className="w-full border rounded-lg shadow-lg p-6">
