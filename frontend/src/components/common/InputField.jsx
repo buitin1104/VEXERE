@@ -1,6 +1,5 @@
 import { Input } from '@nextui-org/react';
 import React from 'react';
-import { useFormContext } from 'react-hook-form';
 
 const InputField = ({
   type = 'text',
@@ -11,7 +10,7 @@ const InputField = ({
   className = '',
   ...props
 }) => {
-  const { watch } = useFormContext();
+  //   const { watch } = useFormContext();
   return (
     <>
       <Input
@@ -20,7 +19,7 @@ const InputField = ({
         className={`min-w-72 w-full  bg-transparent ${className}`}
         color={errors?.[name] ? 'danger' : 'default'}
         errorMessage={errors?.[name] && 'Bắt buộc nhập thông tin'}
-        value={watch(name) ? watch(name) : undefined}
+        // value={watch(name) ? watch(name) : undefined}
         {...register(name)}
         {...props}
       />
