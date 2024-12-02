@@ -1,6 +1,6 @@
-# NODE_PROJECT
+# VEXERE
 
-This is a template for a MERN node project.
+This is VEXERE project.
 
 ## Install packages
 
@@ -26,16 +26,16 @@ yarn install
 
 ## Configuration
 
-| Environment name               | Description                                                                               | Default value |
-|--------------------------------|-------------------------------------------------------------------------------------------|---------------|
-| `PORT`                         | Default PORT of the `backend` application.                                                | 5000          |
+| Environment name               | Description                                                                                | Default value |
+| ------------------------------ | ------------------------------------------------------------------------------------------ | ------------- |
+| `PORT`                         | Default PORT of the `backend` application.                                                 | 5000          |
 | `MONGO_URI`                    | MongoDB URI `srv connection string` to clusters. See [how to get it](#connect-to-mongodb). | **N/A**       |
-| `FIREBASE_API_KEY`             | Firebase project API key. See [how to get it](#connect-to-firebase).                      | **N/A**       |
-| `FIREBASE_AUTH_DOMAIN`         | Firebase authorization domain. See [how to get it](#connect-to-firebase).                 | **N/A**       |
-| `FIREBASE_APP_ID`              | Firebase App ID. See [how to get it](#connect-to-firebase).                               | **N/A**       |
-| `FIREBASE_PROJECT_ID`          | Firebase project ID. See [how to get it](#connect-to-firebase).                           | **N/A**       |
-| `FIREBASE_MESSAGING_SENDER_ID` | Firebase messaging sender id. See [how to get it](#connect-to-firebase).                                                            | **N/A**       |
-| `FIREBASE_STORAGE_BUCKET`      | Firebase storage bucket. See [how to get it](#connect-to-firebase).                                                                 | **N/A**       |
+| `FIREBASE_API_KEY`             | Firebase project API key. See [how to get it](#connect-to-firebase).                       | **N/A**       |
+| `FIREBASE_AUTH_DOMAIN`         | Firebase authorization domain. See [how to get it](#connect-to-firebase).                  | **N/A**       |
+| `FIREBASE_APP_ID`              | Firebase App ID. See [how to get it](#connect-to-firebase).                                | **N/A**       |
+| `FIREBASE_PROJECT_ID`          | Firebase project ID. See [how to get it](#connect-to-firebase).                            | **N/A**       |
+| `FIREBASE_MESSAGING_SENDER_ID` | Firebase messaging sender id. See [how to get it](#connect-to-firebase).                   | **N/A**       |
+| `FIREBASE_STORAGE_BUCKET`      | Firebase storage bucket. See [how to get it](#connect-to-firebase).                        | **N/A**       |
 
 ## Connect to MongoDB
 
@@ -59,7 +59,6 @@ firebase login
 
 Create a **.env** file from the template of **.env.local**.
 Please replace all these environment variables with your respective values.
-
 
 ### Run backend
 
