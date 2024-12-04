@@ -1,8 +1,8 @@
-const BASE_PREFIX = 'api'
+const BASE_PREFIX = 'api';
 const ApiConstants = {
-	BRANCH: `/branches`,
-}
+  BRANCH: `/branches`,
+};
 
-export default ApiConstants
+export default ApiConstants;
 
-export {BASE_PREFIX}
+export { BASE_PREFIX };

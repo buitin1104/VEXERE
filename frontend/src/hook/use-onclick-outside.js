@@ -40,32 +40,32 @@ import { useEffect } from 'react';
  * export default React.memo(ComponentA);
  */
 function useOnClickOutside(ref, handler) {
-    useEffect(() => {
+  useEffect(() => {
     /**
-         * Check is click outfiz or not, if click outfiz then do handler
-         * -----------------------------------------
-         * @author : QuyPN - 2020/12/03 - create
-         * @param  : {Object} event - Event click or touch
-         * @access : private
-         */
-        const listener = (event) => {
-            if (!ref.current || ref.current.contains(event.target)) {
-                return;
-            }
-            // if click outfiz then do handler
-            handler(event);
-        };
+     * Check is click outfiz or not, if click outfiz then do handler
+     * -----------------------------------------
+     * @author : QuyPN - 2020/12/03 - create
+     * @param  : {Object} event - Event click or touch
+     * @access : private
+     */
+    const listener = (event) => {
+      if (!ref.current || ref.current.contains(event.target)) {
+        return;
+      }
+      // if click outfiz then do handler
+      handler(event);
+    };
 
-        // listen event
-        document.addEventListener('mousedown', listener);
-        document.addEventListener('touchstart', listener);
+    // listen event
+    document.addEventListener('mousedown', listener);
+    document.addEventListener('touchstart', listener);
 
-        // remove event handler when unmount component
-        return () => {
-            document.removeEventListener('mousedown', listener);
-            document.removeEventListener('touchstart', listener);
-        };
-    }, [ref, handler]);
+    // remove event handler when unmount component
+    return () => {
+      document.removeEventListener('mousedown', listener);
+      document.removeEventListener('touchstart', listener);
+    };
+  }, [ref, handler]);
 }
 
 export default useOnClickOutside;

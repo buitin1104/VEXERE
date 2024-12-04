@@ -1,26 +1,14 @@
 {
   "compilerOptions": {
-		"jsx": "react",
+    "jsx": "react",
     "baseUrl": "./",
     "paths": {
-      "@components/*": [
-        "src/components/*"
-      ],
-      "@assets/*": [
-        "src/assets/*"
-      ],
-      "@pages/*": [
-        "src/pages/*"
-      ],
-      "@router/*": [
-        "src/router/*"
-      ],
-      "@utils/*": [
-        "src/utils/*"
-      ]
+      "@components/*": ["src/components/*"],
+      "@assets/*": ["src/assets/*"],
+      "@pages/*": ["src/pages/*"],
+      "@router/*": ["src/router/*"],
+      "@utils/*": ["src/utils/*"]
     }
   },
-  "include": [
-    "src"
-  ]
+  "include": ["src"]
 }
