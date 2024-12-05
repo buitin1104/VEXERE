@@ -61,7 +61,81 @@ router.post("/", async (req, res) => {
   }
 });
 
-// TODO: GET list of trips
+router.get("/", async (req, res) => {
+  try {
+    const {
+      fromCity,
+      toCity,
+      departureDate,
+      page = "1",
+      limit = "10",
+    } = req.query;
+
+    if (!fromCity || !toCity || !departureDate) {
+      return res.status(400).json({
+        message: "fromCity, toCity, and departureDate are required",
+      });
+    }
+
+    const pageNumber = parseInt(page, 10);
+    const limitNumber = parseInt(limit, 10);
+
+    const departureDateObj = new Date(departureDate);
+    const startOfDay = new Date(departureDateObj.setHours(0, 0, 0, 0));
+    const endOfDay = new Date(departureDateObj.setHours(23, 59, 59, 999));
+
+    const originLocations = await Location.find({ city: fromCity });
+    const destinationLocations = await Location.find({ city: toCity });
+
+    if (!originLocations.length) {
+      return res
+        .status(404)
+        .json({ message: `Origin location with city ${fromCity} not found` });
+    }
+
+    if (!destinationLocations.length) {
+      return res
+        .status(404)
+        .json({
+          message: `Destination location with city ${toCity} not found`,
+        });
+    }
+
+    let query = {
+      origin: { $in: originLocations.map((location) => location._id) },
+      destination: {
+        $in: destinationLocations.map((location) => location._id),
+      },
+      departureTime: { $gte: startOfDay, $lte: endOfDay }, // departureDate trùng với ngày yêu cầu
+    };
+
+    const busTrips = await BusTrip.find(query)
+      .skip((pageNumber - 1) * limitNumber)
+      .limit(limitNumber)
+      .populate("origin", "name city")
+      .populate("destination", "name city");
+
+    const total = await BusTrip.countDocuments(query);
+
+    const pagination = {
+      total,
+      pages: Math.ceil(total / limitNumber),
+      pageSize: limitNumber,
+      current: pageNumber,
+    };
+
+    res.status(200).json({
+      busTrips,
+      pagination,
+    });
+  } catch (error) {
+    console.error(error);
+    res
+      .status(500)
+      .json({ message: "Error fetching bus trips", error: error.message });
+  }
+});
+
 // TODO: GET trip by ID
 // TODO: PATCH update status of trip
 export default router;
