@@ -134,6 +134,83 @@ router.get("/", async (req, res) => {
   }
 });
 
+router.put("/:id", async (req, res) => {
+  try {
+    const { id } = req.params;
+    const updates = req.body;
+
+    if (!updates || Object.keys(updates).length === 0) {
+      return res.status(400).json({ message: "No fields to update" });
+    }
+
+    const existingBusTrip = await BusTrip.findById(id);
+    if (!existingBusTrip) {
+      return res.status(404).json({ message: "BusTrip not found" });
+    }
+
+    if (updates.bus && updates.bus !== existingBusTrip.bus.toString()) {
+      const newBus = await Bus.findById(updates.bus);
+      if (!newBus) {
+        return res.status(404).json({ message: "New bus not found" });
+      }
+
+      const oldBus = await Bus.findById(existingBusTrip.bus);
+      if (oldBus) {
+        oldBus.trips = oldBus.trips.filter(
+          (tripId) => tripId.toString() !== id,
+        );
+        await oldBus.save();
+      }
+
+      newBus.trips.push(id);
+      await newBus.save();
+    }
+
+    if (
+      updates.departureTime &&
+      updates.arrivalTime &&
+      new Date(updates.departureTime) >= new Date(updates.arrivalTime)
+    ) {
+      return res
+        .status(400)
+        .json({ message: "Departure time must be before arrival time" });
+    }
+
+    if (updates.origin) {
+      const originExists = await Location.findById(updates.origin);
+      if (!originExists) {
+        return res.status(404).json({ message: "Origin location not found" });
+      }
+    }
+
+    if (updates.destination) {
+      const destinationExists = await Location.findById(updates.destination);
+      if (!destinationExists) {
+        return res
+          .status(404)
+          .json({ message: "Destination location not found" });
+      }
+    }
+
+    const updatedBusTrip = await BusTrip.findByIdAndUpdate(id, updates, {
+      new: true,
+    })
+      .populate("origin", "name city")
+      .populate("destination", "name city");
+
+    if (!updatedBusTrip) {
+      return res.status(404).json({ message: "BusTrip not found" });
+    }
+
+    res.status(200).json(updatedBusTrip);
+  } catch (error) {
+    console.error(error);
+    res
+      .status(500)
+      .json({ message: "Error updating BusTrip", error: error.message });
+  }
+});
+
 // TODO: GET trip by ID
 // TODO: PATCH update status of trip
 export default router;
