@@ -94,11 +94,9 @@ router.get("/", async (req, res) => {
     }
 
     if (!destinationLocations.length) {
-      return res
-        .status(404)
-        .json({
-          message: `Destination location with city ${toCity} not found`,
-        });
+      return res.status(404).json({
+        message: `Destination location with city ${toCity} not found`,
+      });
     }
 
     let query = {

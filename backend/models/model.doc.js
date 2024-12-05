@@ -2,10 +2,9 @@
  * @typedef {Object} User
  * @property {string} id - Unique identifier for the user.
  * @property {string} email - User's email address.
+ * @property {string} password - User's password.
  * @property {string} fullName - User's full name.
  * @property {string} role - User's role in the system. Can be one of 'Admin', 'BusOwner', 'TicketController', 'User'.
-// * @property {Array<string>} [ownedBusIds] - List of bus IDs the user owns (for BusOwner).
-// * @property {Array<string>} [assignedBusTripIds] - List of bus trip IDs the user can control (for TicketController).
  * @property {string} [profilePictureUrl] - URL to the user's profile picture.
  */
 

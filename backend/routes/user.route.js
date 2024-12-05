@@ -1,5 +1,6 @@
 import express from "express";
 import BusSchema from "../models/bus.schema.js";
+import User from "../models/user.schema.js";
 
 const router = express.Router();
 
@@ -32,6 +33,47 @@ router.get("/:id/buses", async (req, res) => {
   } catch (error) {
     res.status(500).json({
       message: "Error retrieving bus of current owner",
+      error: error.message,
+    });
+  }
+});
+
+router.patch("/:userId", async (req, res) => {
+  try {
+    const { userId } = req.params;
+    const updates = req.body;
+
+    if (!updates || Object.keys(updates).length === 0) {
+      return res.status(400).json({ message: "No fields to update" });
+    }
+
+    const allowedFields = ["fullName", "profilePictureUrl", "email"];
+    const fieldsToUpdate = Object.keys(updates).filter((field) =>
+      allowedFields.includes(field),
+    );
+
+    if (fieldsToUpdate.length === 0) {
+      return res.status(400).json({ message: "No valid fields to update" });
+    }
+
+    const validUpdates = fieldsToUpdate.reduce((acc, field) => {
+      acc[field] = updates[field];
+      return acc;
+    }, {});
+
+    const updatedUser = await User.findByIdAndUpdate(userId, validUpdates, {
+      new: true,
+    });
+
+    if (!updatedUser) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    res.status(200).json(updatedUser);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({
+      message: "Error updating profile",
       error: error.message,
     });
   }
