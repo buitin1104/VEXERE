@@ -58,25 +58,13 @@ const RegisterModal = () => {
         openLogin();
       })
       .catch((error) => {
-        if (
-          error.response.data.error ===
-          'Firebase: Error (auth/email-already-in-use).'
-        ) {
-          ToastNotiError('Email đã được sử dụng');
-          setLoading(false);
-          return;
-        }
-        if (
-          error.response.data.error === 'Firebase: Error (auth/invalid-email).'
-        ) {
-          ToastNotiError('Email sai định dạng');
-          setLoading(false);
-          return;
-        }
-        ToastNotiError(
-          `Lỗi không xác định: ${error.message || 'Vui lòng thử lại sau!'}`,
-        );
         setLoading(false);
+        const dataE = error.response.data.error;
+        if (dataE.includes('E11000')) {
+          ToastNotiError('Email đã tồn tại');
+          return;
+        }
+        ToastNotiError(dataE);
       });
   };
 

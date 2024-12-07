@@ -1,18 +1,24 @@
 import InputField from '@components/common/InputField';
 import TextAreaField from '@components/common/TextAreaField';
 import { Button } from '@nextui-org/react';
-import React, { useRef } from 'react';
-import { useForm } from 'react-hook-form';
+import { ROLES } from '@utils/constants';
+import { ToastInfo, ToastNotiError } from '@utils/Utils';
+import React, { useRef, useState } from 'react';
+import { FormProvider, useForm } from 'react-hook-form';
+import { useNavigate } from 'react-router-dom';
+import { factories } from '../../factory';
 
 export default function RegisterHostPage() {
   const registerRef = useRef();
+  const [loading, setLoading] = useState(false);
+  const navigator = useNavigate();
+  const methods = useForm();
   const {
     register,
     handleSubmit,
-    watch,
     setValue,
     formState: { errors },
-  } = useForm();
+  } = methods;
 
   function scrollToRegister() {
     if (registerRef.current) {
@@ -20,6 +26,51 @@ export default function RegisterHostPage() {
     }
   }
 
+  const handleSignUpEmail = (values) => {
+    console.log('🚀 ~ handleSignUpEmail ~ values:', values);
+    setLoading(true);
+    if (!values.email) {
+      ToastNotiError('Vui lòng nhập email');
+      return;
+    }
+    if (!values.phone) {
+      ToastNotiError('Vui lòng số điện thoại');
+      return;
+    }
+    if (!values.fullName) {
+      ToastNotiError('Vui lòng nhập hộ và tên');
+      return;
+    }
+    if (!values.name) {
+      ToastNotiError('Vui lòng nhập tên hãng xe');
+      return;
+    }
+    const metaData = {
+      email: values.email,
+      password: 'Host@123456',
+      fullName: values.fullName,
+      profilePictureUrl: 'https://ui-avatars.com/api/?name=' + values.fullName,
+      roles: [ROLES.BUS_OWNER],
+    };
+    factories
+      .getSignUpEmail(metaData)
+      .then((data) => {
+        ToastInfo(
+          'Đăng ký tài khoản thành công, chúng tôi sẽ liên hệ với bạn trong thời gian tới',
+        );
+        setLoading(false);
+        navigator('/');
+      })
+      .catch((error) => {
+        setLoading(false);
+        const dataE = error.response.data.error;
+        if (dataE.includes('E11000')) {
+          ToastNotiError('Email đã tồn tại');
+          return;
+        }
+        ToastNotiError(dataE);
+      });
+  };
   return (
     <div className=" mx-auto bg-blue-500">
       <div className="text-white text-center py-16">
@@ -126,55 +177,62 @@ export default function RegisterHostPage() {
             Cùng 700+ nhà xe dùng thử miễn phí phần mềm quản lý xe khách Vexere
           </p>
 
-          <div className="mt-10 px-6 py-8 rounded-lg gap-8 bg-white flex flex-col shadow-lg max-w-2xl">
-            <p className="w-full font-bold text-center text-2xl">
-              Đăng ký thông tin ngay
-            </p>
-            <div className="flex gap-8">
-              <InputField
-                label="Họ và tên"
-                placeholder="Nhập họ và tên"
-                name={'fullName'}
-                register={register}
-                isRequired
-                errors={errors}
-              />
-              <InputField
-                placeholder="Nhập số điện thoại"
-                label="Số điện thoại"
-                name={'phone'}
-                isRequired
-                register={register}
-                errors={errors}
-              />
-            </div>
-            <div className="flex gap-8">
-              <InputField
-                placeholder="Nhập email"
-                label="Email"
-                isRequired
-                name={'email'}
-                register={register}
-                errors={errors}
-              />
-              <InputField
-                placeholder="Nhập tên hãng xe"
-                label="Tên hãng xe"
-                name={'name'}
-                isRequired
-                register={register}
-                errors={errors}
-              />
-            </div>
-            <div className="flex gap-8 w-full">
-              <TextAreaField
-                label={'Thông tin liên hệ'}
-                register={register}
-                errors={errors}
-                name={'information'}
-              />
-            </div>
-          </div>
+          <FormProvider {...methods}>
+            <form onSubmit={handleSubmit(handleSignUpEmail)}>
+              <div className="mt-10 px-6 py-8 rounded-lg gap-8 bg-white flex flex-col shadow-lg max-w-2xl">
+                <p className="w-full font-bold text-center text-2xl">
+                  Đăng ký thông tin ngay
+                </p>
+                <div className="flex gap-8">
+                  <InputField
+                    label="Họ và tên"
+                    placeholder="Nhập họ và tên"
+                    name={'fullName'}
+                    register={register}
+                    isRequired
+                    errors={errors}
+                  />
+                  <InputField
+                    placeholder="Nhập số điện thoại"
+                    label="Số điện thoại"
+                    name={'phone'}
+                    isRequired
+                    register={register}
+                    errors={errors}
+                  />
+                </div>
+                <div className="flex gap-8">
+                  <InputField
+                    placeholder="Nhập email"
+                    label="Email"
+                    isRequired
+                    name={'email'}
+                    register={register}
+                    errors={errors}
+                  />
+                  <InputField
+                    placeholder="Nhập tên hãng xe"
+                    label="Tên hãng xe"
+                    name={'name'}
+                    isRequired
+                    register={register}
+                    errors={errors}
+                  />
+                </div>
+                <div className="flex gap-8 w-full">
+                  <TextAreaField
+                    label={'Thông tin liên hệ'}
+                    register={register}
+                    errors={errors}
+                    name={'information'}
+                  />
+                </div>
+                <Button loading={loading} type="submit">
+                  Đăng ký
+                </Button>
+              </div>
+            </form>
+          </FormProvider>
         </div>
       </div>
     </div>
