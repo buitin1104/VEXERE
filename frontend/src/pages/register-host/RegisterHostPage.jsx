@@ -27,7 +27,6 @@ export default function RegisterHostPage() {
   }
 
   const handleSignUpEmail = (values) => {
-    console.log('🚀 ~ handleSignUpEmail ~ values:', values);
     setLoading(true);
     if (!values.email) {
       ToastNotiError('Vui lòng nhập email');
@@ -49,6 +48,8 @@ export default function RegisterHostPage() {
       email: values.email,
       password: 'Host@123456',
       fullName: values.fullName,
+      phone: values.phone,
+      branchName: values.name,
       profilePictureUrl: 'https://ui-avatars.com/api/?name=' + values.fullName,
       roles: [ROLES.BUS_OWNER],
     };

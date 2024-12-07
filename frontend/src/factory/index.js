@@ -39,8 +39,13 @@ export const factories = {
       data,
     });
   },
-  ///
-
+  ///admin
+  getRequestHost: () => {
+    return ApiOperation.request({
+      url: ApiConstants.REQUESTS,
+      method: 'GET',
+    });
+  },
   // getAccommodations: data => {
   // 	return ApiOperation.request({
   // 		url: ApiConstants.ACCOMMODATIONS,

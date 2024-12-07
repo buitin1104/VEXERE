@@ -1,5 +1,7 @@
 import HeaderAdmin from '@components/header/HeaderAdmin';
-import React, { useState } from 'react';
+import LoginModal from '@components/header/Login';
+import { ROLES, sidebarItems } from '@utils/constants';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import { useModalCommon } from '../../context/ModalContext';
@@ -13,29 +15,36 @@ import Dashboard from '../../section/admin/Dashboard';
 export default function AdminPage() {
   const [selectedItem, setSelectedItem] = useState('dashboardAll');
   const [selectedName, setSelectedName] = useState('Tổng quan');
+  const [filterItems, setFilterItems] = useState([]);
+
   const { auth, loading } = useAuth();
   const { onOpen } = useModalCommon();
   const navigator = useNavigate();
+
+  useEffect(() => {
+    if (!loading) {
+      if (auth?.roles?.[0] !== ROLES.ADMIN) {
+        navigator(RouterPath.NOT_FOUND);
+        return;
+      }
+      if (!auth) {
+        onOpen({
+          view: <LoginModal />,
+          title: 'Đăng nhập',
+          showFooter: false,
+        });
+      }
+      const newList = sidebarItems.filter((item) =>
+        item.roles.includes(auth.roles[0]),
+      );
+      setFilterItems(newList);
+    }
+  }, [auth, loading]);
+
   const handleItemClick = (itemId, name) => {
     setSelectedItem(itemId);
     setSelectedName(name);
   };
-
-  //   useEffect(() => {
-  //     if (!loading) {
-  //       // if (auth?.role !== '1') {
-  //       //   navigator(RouterPath.NOT_FOUND);
-  //       //   return;
-  //       // }
-  //       // if (!auth) {
-  //       //   onOpen({
-  //       //     view: <LoginModal />,
-  //       //     title: 'Đăng nhập',
-  //       //     showFooter: false,
-  //       //   });
-  //       // }
-  //     }
-  //   }, [auth, loading]);
 
   const renderContent = () => {
     switch (selectedItem) {
@@ -71,6 +80,7 @@ export default function AdminPage() {
           onSelectItem={(id, label) => {
             return handleItemClick(id, label);
           }}
+          filteredItems={filterItems}
         />
         <main className="flex-1 items-start overflow-scroll h-screen">
           <HeaderAdmin title={selectedName} />

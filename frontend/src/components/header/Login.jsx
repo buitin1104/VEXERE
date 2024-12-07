@@ -59,13 +59,8 @@ const LoginModal = () => {
         setIsLoading(false);
       })
       .catch((error) => {
-        if (
-          error.response.data.error ===
-          'Firebase: Error (auth/invalid-credential).'
-        ) {
-          ToastNotiError(
-            'Không tìm thấy tài khoản hoặc thông tin không chính xác!',
-          );
+        if (error.response.data.message === 'Invalid credentials') {
+          ToastNotiError('Email hoặc mật khẩu không chính xác!');
         } else {
           ToastNotiError(
             `Lỗi không xác định: ${error.message || 'Vui lòng thử lại sau!'}`,

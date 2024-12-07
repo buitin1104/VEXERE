@@ -241,3 +241,69 @@ export const ROLES = Object.freeze({
   TICKET_CONTROLLER: 'ticketController',
   USER: 'user',
 });
+
+export const sidebarItems = [
+  {
+    id: 'dashboardAll',
+    icon: 'fa-th-large',
+    label: 'Tổng quan',
+    roles: ['admin'],
+  },
+  {
+    id: 'busAll',
+    icon: 'fa-bus',
+    label: 'Danh sách chuyến xe',
+    roles: ['admin'],
+  },
+  {
+    id: 'usersAll',
+    icon: 'fa-users',
+    label: 'Danh sách tài khoản',
+    active: true,
+    roles: ['admin'],
+  },
+  {
+    id: 'ticketAll',
+    icon: 'fa-tasks',
+    label: 'Danh sách vé xe',
+    active: true,
+    roles: ['admin'],
+  },
+  {
+    id: 'request',
+    icon: 'fa-clipboard-list',
+    label: 'Đăng ký nhà xe mới',
+    roles: ['admin'],
+  },
+  {
+    id: 'dashboard',
+    icon: 'fa-th-large',
+    label: 'Tổng quan',
+    roles: ['chuNhaXe'],
+  },
+  {
+    id: 'users',
+    icon: 'fa-users',
+    label: 'Danh sách tài khoản',
+    active: true,
+    roles: ['chuNhaXe'],
+  },
+  {
+    id: 'buses',
+    icon: 'fa-bus',
+    label: 'Danh sách chuyến xe',
+    roles: ['chuNhaXe', 'taiXe', 'phuXe'],
+  },
+  {
+    id: 'tickets',
+    icon: 'fa-clipboard-list',
+    label: 'Danh sách vé xe',
+    roles: ['chuNhaXe', 'nhanVien'],
+  },
+  {
+    id: 'profile',
+    icon: 'fa-smile',
+    label: 'Thông tin tài khoản',
+    roles: ['chuNhaXe', 'nhanVien', 'taiXe', 'phuXe'],
+  },
+];

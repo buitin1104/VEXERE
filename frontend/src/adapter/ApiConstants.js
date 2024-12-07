@@ -3,6 +3,7 @@ const ApiConstants = {
   USERS: 'users',
   AUTH: 'auth',
   PAYMENT: 'payments',
+  REQUESTS: 'requests',
 };
 
 export default ApiConstants;

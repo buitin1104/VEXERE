@@ -1,90 +1,20 @@
 import { Button } from '@chakra-ui/react';
 import { cn } from '@utils/Utils';
-import React, { useState } from 'react';
+import React from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../../context/AuthContext';
 
-// const sidebarItems = [
-//   //   { id: 'menu', icon: 'fa-bars', label: 'Menu' },
-//   { id: 'dashboard', icon: 'fa-th-large', label: 'Dashboard' },
-//   { id: 'users', icon: 'fa-users', label: 'Users', active: true },
-//   { id: 'bus', icon: 'fa-bus', label: 'Bus' },
-//   { id: 'tasks', icon: 'fa-clipboard-list', label: 'Tasks' },
-//   //   { id: 'profile', icon: 'fa-smile', label: 'Profile' },
-//   //   { id: 'files', con: 'fa-file-alt', label: 'Files' },
-//   //   { id: 'favorites', icon: 'fa-star', label: 'Favorites' },
-//   //   { id: 'settings', icon: 'fa-cog', label: 'Settings' },
-// ];
-
-const sidebarItems = [
-  {
-    id: 'dashboardAll',
-    icon: 'fa-th-large',
-    label: 'Tổng quan',
-    roles: ['admin'],
-  },
-  {
-    id: 'busAll',
-    icon: 'fa-bus',
-    label: 'Danh sách chuyến xe',
-    roles: ['admin'],
-  },
-  {
-    id: 'usersAll',
-    icon: 'fa-users',
-    label: 'Danh sách tài khoản',
-    active: true,
-    roles: ['admin'],
-  },
-  {
-    id: 'ticketAll',
-    icon: 'fa-tasks',
-    label: 'Danh sách vé xe',
-    active: true,
-    roles: ['admin'],
-  },
-  {
-    id: 'request',
-    icon: 'fa-clipboard-list',
-    label: 'Đăng ký nhà xe mới',
-    roles: ['admin'],
-  },
-  {
-    id: 'dashboard',
-    icon: 'fa-th-large',
-    label: 'Tổng quan',
-    roles: ['chuNhaXe'],
-  },
-  {
-    id: 'users',
-    icon: 'fa-users',
-    label: 'Danh sách tài khoản',
-    active: true,
-    roles: ['chuNhaXe'],
-  },
-  {
-    id: 'buses',
-    icon: 'fa-bus',
-    label: 'Danh sách chuyến xe',
-    roles: ['chuNhaXe', 'taiXe', 'phuXe'],
-  },
-  {
-    id: 'tickets',
-    icon: 'fa-clipboard-list',
-    label: 'Danh sách vé xe',
-    roles: ['chuNhaXe', 'nhanVien'],
-  },
-  {
-    id: 'profile',
-    icon: 'fa-smile',
-    label: 'Thông tin tài khoản',
-    roles: ['chuNhaXe', 'nhanVien', 'taiXe', 'phuXe'],
-  },
-];
-export default function AdminSideBar({ selectedItem, onSelectItem }) {
-  const [currentUserRole, setCurrentUserRole] = useState('chuNhaXe');
-  const filteredItems = sidebarItems.filter((item) =>
-    item.roles.includes(currentUserRole),
-  );
-
+export default function AdminSideBar({
+  selectedItem,
+  onSelectItem,
+  filteredItems = [],
+}) {
+  const { logout } = useAuth();
+  const navigator = useNavigate();
+  function handleLogout() {
+    logout();
+    navigator('/');
+  }
   return (
     <aside className="w-12 bg-white h-screen shadow-md justify-between flex flex-col">
       <div className="flex flex-col items-center py-3">
@@ -107,12 +37,6 @@ export default function AdminSideBar({ selectedItem, onSelectItem }) {
             </Button>
           );
         })}
-      </div>
-      <div className="flex flex-col">
-        <Button onClick={() => setCurrentUserRole('admin')}>A</Button>
-        <Button onClick={() => setCurrentUserRole('chuNhaXe')}>B</Button>
-        <Button onClick={() => setCurrentUserRole('taiXe')}>C</Button>
-        <Button onClick={() => setCurrentUserRole('phuXe')}>D</Button>
       </div>
     </aside>
   );

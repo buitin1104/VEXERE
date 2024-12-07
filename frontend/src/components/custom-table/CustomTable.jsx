@@ -1,5 +1,6 @@
 import {
   Pagination,
+  Spinner,
   Table,
   TableBody,
   TableCell,
@@ -9,7 +10,13 @@ import {
 } from '@nextui-org/react';
 import React from 'react';
 
-export function CustomTable({ columns, data, page = 1, totalPage = 1 }) {
+export function CustomTable({
+  columns,
+  data,
+  page = 1,
+  totalPage = 1,
+  isLoading,
+}) {
   return (
     <Table
       bottomContent={
@@ -34,7 +41,10 @@ export function CustomTable({ columns, data, page = 1, totalPage = 1 }) {
           </TableColumn>
         ))}
       </TableHeader>
-      <TableBody>
+      <TableBody
+        isLoading={isLoading}
+        loadingContent={<Spinner label="Loading..." />}
+      >
         {data.map((row) => (
           <TableRow key={row.id}>
             {columns.map((column) => (
