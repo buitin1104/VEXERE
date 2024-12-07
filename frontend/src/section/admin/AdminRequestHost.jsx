@@ -1,42 +1,8 @@
 import { CustomTable } from '@components/custom-table/CustomTable';
 import { Button, Input } from '@nextui-org/react';
-import { getDate } from '@utils/Utils';
+import { getDate, ToastInfo, ToastNotiError } from '@utils/Utils';
 import React, { useEffect, useState } from 'react';
 import { factories } from '../../factory';
-
-const columns = [
-  {
-    id: 'PassengerName',
-    label: 'Họ và Tên',
-    renderCell: (row) => <div className="w-40">{row.targetId?.fullName}</div>,
-  },
-  {
-    id: 'BranchName',
-    label: 'Tên Nhà xe',
-    renderCell: (row) => <div className="w-40">{row.targetId?.branchName}</div>,
-  },
-  {
-    id: 'PhoneNumber',
-    label: 'Số Điện Thoại',
-    renderCell: (row) => <span>{row.targetId?.phone}</span>,
-  },
-  {
-    id: 'time',
-    label: 'Thời Gian',
-    renderCell: (row) => <span>{getDate(row.targetId?.createdAt, 3)}</span>,
-  },
-  {
-    id: 'Status',
-    label: 'Trạng Thái',
-    renderCell: (row) => (
-      <div className="">
-        <Button size="sm" color={'default'}>
-          Duyệt
-        </Button>
-      </div>
-    ),
-  },
-];
 
 export default function AdminRequestHost() {
   const [loading, setLoading] = useState(true);
@@ -45,6 +11,10 @@ export default function AdminRequestHost() {
 
   useEffect(() => {
     setLoading(true);
+    loadList();
+  }, []);
+
+  function loadList() {
     factories
       .getRequestHost()
       .then((data) => {
@@ -52,7 +22,72 @@ export default function AdminRequestHost() {
         setPagination(data.pagination);
       })
       .finally(() => setLoading(false));
-  }, []);
+  }
+
+  const columns = [
+    {
+      id: 'PassengerName',
+      label: 'Họ và Tên',
+      renderCell: (row) => <div className="w-40">{row.targetId?.fullName}</div>,
+    },
+    {
+      id: 'BranchName',
+      label: 'Tên Nhà xe',
+      renderCell: (row) => (
+        <div className="w-40">{row.targetId?.branchName}</div>
+      ),
+    },
+    {
+      id: 'PhoneNumber',
+      label: 'Số Điện Thoại',
+      renderCell: (row) => <span>{row.targetId?.phone}</span>,
+    },
+    {
+      id: 'time',
+      label: 'Thời Gian',
+      renderCell: (row) => <span>{getDate(row.targetId?.createdAt, 3)}</span>,
+    },
+    {
+      id: 'Status',
+      label: '',
+      renderCell: (row) => (
+        <Button
+          size="sm"
+          color="primary"
+          onClick={() => handleChangeStatus(row._id, 1)}
+        >
+          Duyệt
+        </Button>
+      ),
+    },
+    {
+      id: 'Status',
+      label: '',
+      renderCell: (row) => (
+        <Button
+          size="sm"
+          color={'danger'}
+          onClick={() => handleChangeStatus(row._id, 2)}
+        >
+          Từ chối
+        </Button>
+      ),
+    },
+  ];
+
+  function handleChangeStatus(id, status) {
+    factories
+      .updateStatusRequest(id, status)
+      .then((e) => {
+        ToastInfo(e.message);
+        loadList();
+      })
+      .catch((error) => {
+        const dataE = error.response.data.message;
+        loadList();
+        ToastNotiError(dataE);
+      });
+  }
 
   return (
     <div
