@@ -20,23 +20,24 @@ export const ModalProvider = ({ children }) => {
   const [modalContent, setModalContent] = useState(null);
   const [modalTitle, setModalTitle] = useState('Modal Title');
   const [modalActions, setModalActions] = useState([]);
+  const [size, setSize] = useState('sm');
 
   const onOpen = ({
     view,
     title = 'Modal Title',
     actions = [],
     showFooter = true,
+    size = 'sm',
   }) => {
     setModalContent(view);
     setModalTitle(title);
     setModalActions(actions);
     setIsOpen(true);
     setIsShowFooter(showFooter);
+    setSize(size);
   };
 
   const onClose = () => {
-    console.log('close');
-
     setModalContent(null);
     setModalTitle('Modal Title');
     setModalActions([]);
@@ -46,7 +47,7 @@ export const ModalProvider = ({ children }) => {
   return (
     <ModalContext.Provider value={{ onOpen, onClose }}>
       {children}
-      <Modal isOpen={isOpen} onOpenChange={onClose}>
+      <Modal isOpen={isOpen} onOpenChange={onClose} size={size}>
         <ModalContent>
           {() => (
             <>

@@ -25,7 +25,7 @@ export default function Sidebar({ active }) {
         to="/change-password"
         title="Đổi mật khẩu"
       />
-      <Tab key="/my-ticket" as={Link} to="/my-ticket" title="Vé của tôi" />
+      <Tab key="/my-ticket" as={Link} to="/my-ticket" title="Lịch sử đặt vé" />
       <Tab
         key="/my-review"
         as={Link}

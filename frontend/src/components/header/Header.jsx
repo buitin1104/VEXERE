@@ -15,10 +15,12 @@ import {
 
 import { getLocalTimeZone, now } from '@internationalized/date';
 import { RouterPath } from '@router/RouterPath';
-import { cn } from '@utils/Utils';
+import { cn, getDate } from '@utils/Utils';
+import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import { useModalCommon } from '../../context/ModalContext';
+import useRouter from '../../hook/use-router';
 import LoginModal from './Login';
 import RegisterModal from './Register';
 
@@ -26,9 +28,25 @@ function Header({ showText, showSearch }) {
   const navigate = useNavigate();
   const { onOpen } = useModalCommon();
   const { auth, logout } = useAuth();
+  const router = useRouter();
 
+  const [date, setDate] = useState();
+  const [from, setFrom] = useState();
+  const [to, setTo] = useState();
   function handleSearch() {
-    navigate('/search');
+    const newParams = {
+      fromCity: from,
+      fromDate: to,
+      departureDate: getDate(date, 13),
+      //   roomQuantity: roomCount,
+      //   capacity: personCount,
+      //   isWithPet: Boolean(havePet),
+      //   pricePerNight: '100000, 2000000',
+    };
+    router.push({
+      pathname: RouterPath.SEARCH,
+      params: newParams,
+    });
   }
 
   const openLogin = () => {
@@ -133,7 +151,7 @@ function Header({ showText, showSearch }) {
                         onClick={() => navigate('/my-ticket')}
                       >
                         <i className="fas fa-ticket-alt mr-2"></i>
-                        <span>Vé của tôi</span>
+                        <span>Lịch sử đặt vé</span>
                       </DropdownItem>
                       <DropdownItem
                         key="review"
@@ -205,21 +223,19 @@ function Header({ showText, showSearch }) {
               <div className=" w-full xl:w-[70%] flex h-full flex-col items-center justify-center gap-1 rounded-xl bg-white p-1 shadow-lg xl:flex-row">
                 <Select
                   className="flex-4 xl:flex-3 border-nonet"
-                  //   style={{
-                  //     backgroundColor: 'transparent',
-                  //   }}
                   variant="flat"
                   radius="sm"
                   label="Nơi xuất phát"
                   defaultSelectedKeys={[1]}
+                  onChange={(e) => setFrom(e.target.value)}
                   placeholder="Bạn muốn đến đâu?"
                   startContent={
                     <i className="fas fa-dot-circle text-blue-500"></i>
                   }
                 >
-                  <SelectItem key={1}>{'Hội An'}</SelectItem>
-                  <SelectItem key={2}>{'Đà Nẵng'}</SelectItem>
-                  <SelectItem key={3}>{'Đà Lạt'}</SelectItem>
+                  <SelectItem key={'Hanoi'}>{'Hà Nội'}</SelectItem>
+                  <SelectItem key={'Danang'}>{'Đà Nẵng'}</SelectItem>
+                  <SelectItem key={'Dalat'}>{'Đà Lạt'}</SelectItem>
                 </Select>
 
                 <div className=" flex flex-col h-full rounded-full p-2 bg-gray-200 border-blue-500 justify-center items-center ">
@@ -231,7 +247,9 @@ function Header({ showText, showSearch }) {
                   //   style={{
                   //     backgroundColor: 'transparent',
                   //   }}
+                  id="toCity"
                   variant="flat"
+                  onChange={(e) => setTo(e.target.value)}
                   radius="sm"
                   label="Nơi đến"
                   defaultSelectedKeys={[1]}
@@ -240,9 +258,9 @@ function Header({ showText, showSearch }) {
                     <i className="fas fa-map-marker-alt text-error"></i>
                   }
                 >
-                  <SelectItem key={1}>{'Hội An'}</SelectItem>
-                  <SelectItem key={2}>{'Đà Nẵng'}</SelectItem>
-                  <SelectItem key={3}>{'Đà Lạt'}</SelectItem>
+                  <SelectItem key={'Hanoi'}>{'Hà Nội'}</SelectItem>
+                  <SelectItem key={'Danang'}>{'Đà Nẵng'}</SelectItem>
+                  <SelectItem key={'Dalat'}>{'Đà Lạt'}</SelectItem>
                 </Select>
 
                 <div className="flex flex-col h-full rounded-full p-2 mx-0 justify-center items-center ">
@@ -260,6 +278,7 @@ function Header({ showText, showSearch }) {
                   }}
                   hideTimeZone
                   showMonthAndYearPickers
+                  onChange={setDate}
                   className="bg-white"
                   defaultValue={now(getLocalTimeZone())}
                 />

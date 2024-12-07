@@ -9,10 +9,10 @@ function SuggestionAI() {
         <h2 className="mb-8 text-2xl font-extrabold">Gợi ý cho bạn</h2>
         <div className="grid grid-cols-3 gap-8">
           <CardDestination
-            name="Da Nang Resort"
+            name="Xe Hoàng Long"
             rate={8}
             src={
-              'https://cf.bstatic.com/xdata/images/hotel/square600/410511403.webp?k=f6c3c7c8dd3fea47504616cc969176c3789d474371287ac11ad0f4b04bbab016&o='
+              'https://static.vexere.com/production/images/1732087569487.jpeg?w=250&h=250'
             }
             from={'Đà Nẵng'}
             to="Quy Nhơn"
@@ -20,43 +20,47 @@ function SuggestionAI() {
             price="120.000"
           />
           <CardDestination
-            name="Temple Da Nang Resort"
+            name="Đà Lạt ơi"
             rate={8.8}
             src={
-              'https://cf.bstatic.com/xdata/images/hotel/square600/590363117.webp?k=413b0573b92283ebbe9cd94f33c5c42d8706093c990d31f3242e70c4b4a37089&o='
+              'https://static.vexere.com/production/images/1723530067929.jpeg?w=250&h=250'
             }
             from={'Đà Nẵng'}
             to="Quy Nhơn"
             comments={130}
+            price="220.000"
           />
 
           <CardDestination
-            name="Temple Da Nang Resort"
+            name="Long Vân Lemouse"
             rate={8.8}
             src={
-              'https://cf.bstatic.com/xdata/images/hotel/square600/410511403.webp?k=f6c3c7c8dd3fea47504616cc969176c3789d474371287ac11ad0f4b04bbab016&o='
+              'https://static.vexere.com/production/images/1694430418331.jpeg?w=250&h=250'
+            }
+            price="320.000"
+            from={'Đà Nẵng'}
+            to="Quy Nhơn"
+            comments={130}
+          />
+          <CardDestination
+            name="Bình Minh BUS"
+            price="320.000"
+            rate={8.8}
+            src={
+              'https://static.vexere.com/production/images/1732087569487.jpeg?w=250&h=250'
             }
             from={'Đà Nẵng'}
             to="Quy Nhơn"
             comments={130}
           />
           <CardDestination
-            name="Temple Da Nang Resort"
-            rate={8.8}
-            src={
-              'https://cf.bstatic.com/xdata/images/hotel/square600/410511403.webp?k=f6c3c7c8dd3fea47504616cc969176c3789d474371287ac11ad0f4b04bbab016&o='
-            }
-            from={'Đà Nẵng'}
-            to="Quy Nhơn"
-            comments={130}
-          />
-          <CardDestination
-            name="Temple Da Nang Resort"
+            name="Hạnh CAFE"
+            price="320.000"
             rate={8.8}
             from={'Đà Nẵng'}
             to="Quy Nhơn"
             src={
-              'https://cf.bstatic.com/xdata/images/hotel/square600/557216248.webp?k=d2182538b0f14e85db9b90b1027442f3e5db5a9a2e95f71ddd580bf1f6af6a2b&o='
+              'https://static.vexere.com/production/images/1728527263430.jpeg?w=250&h=250'
             }
             comments={130}
           />
