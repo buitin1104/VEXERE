@@ -1,27 +1,20 @@
-import { Button } from '@nextui-org/react';
+import { Button, Input } from '@nextui-org/react';
+import { ROLES } from '@utils/constants';
 import React, { useState } from 'react';
-import PhoneInput from 'react-phone-input-2';
 import { useAuth } from '../..//context/AuthContext';
 import { useModalCommon } from '../../context/ModalContext';
+import { factories } from '../../factory';
+import { RouterPath } from '../../router/RouterPath';
+import { ToastNotiError } from '../../utils/Utils';
 import RegisterModal from './Register';
 
-const userTemplate = {
-  id: 1,
-  name: 'Nguyen Van A',
-  avatar: 'https://example.com/path/to/avatar.jpg',
-  email: 'nguyenvana@example.com',
-  phone: '0123456789',
-  address: '123 Đường ABC, Quận XYZ, Thành phố HCM',
-  dateOfBirth: '1990-01-01',
-  role: '1',
-  isActive: true,
-  createdAt: new Date().toISOString(),
-  updatedAt: new Date().toISOString(),
-};
-
 const LoginModal = () => {
-  const [phone, setPhone] = useState('');
   const { onOpen, onClose } = useModalCommon();
+  const [isVisible, setIsVisible] = useState(false);
+  const [loading, setIsLoading] = useState(false);
+
+  const toggleVisibility = () => setIsVisible(!isVisible);
+
   const { login } = useAuth();
   function openRegister() {
     onOpen({
@@ -31,46 +24,118 @@ const LoginModal = () => {
     });
   }
 
-  function handleLogin() {
-    login(userTemplate);
+  // const handleGoogleLogin = async () => {
+  // 	try {
+  // 		setIsLoading(true)
+  // 		const result = await signInWithPopup(auth, googleProvider)
+  // 		const user = result.user
+  // 		if (user) {
+  // 			handleLoginEmail(user.email, user.uid)
+  // 			setIsLoading(false)
+  // 			return
+  // 		}
+  // 		setIsLoading(false)
+  // 		ToastNotiError('Đăng nhập thất bại, vui lòng thử lại.')
+  // 	} catch (error) {
+  // 		setIsLoading(false)
+  // 		ToastNotiError('Đăng nhập thất bại, vui lòng thử lại.')
+  // 	}
+  // }
+
+  function getUserInfo(data) {
+    login(data);
     onClose();
+    if (data.roles[0] === ROLES.ADMIN) {
+      window.location.href = RouterPath.ADMIN;
+    }
   }
+
+  const handleLoginEmail = (email, password) => {
+    setIsLoading(true);
+    factories
+      .getLoginEmail(email, password)
+      .then((data) => {
+        getUserInfo(data.user);
+        setIsLoading(false);
+      })
+      .catch((error) => {
+        if (
+          error.response.data.error ===
+          'Firebase: Error (auth/invalid-credential).'
+        ) {
+          ToastNotiError(
+            'Không tìm thấy tài khoản hoặc thông tin không chính xác!',
+          );
+        } else {
+          ToastNotiError(
+            `Lỗi không xác định: ${error.message || 'Vui lòng thử lại sau!'}`,
+          );
+        }
+        setIsLoading(false);
+      });
+  };
 
   return (
     <div>
       <div className="w-full">
-        <PhoneInput
-          placeholder="Enter phone number"
-          value={phone}
-          country={'vn'}
-          onChange={(e) => setPhone(e)}
-          containerStyle={{ width: '100%', borderRadius: '20px' }}
-          inputStyle={{ width: '100%' }}
+        <Input type="email" label="Email" id="email" />
+        <Input
+          id="password"
+          label="Mật khẩu"
+          placeholder="Nhập mật khẩu"
+          className="mt-5"
+          endContent={
+            <button
+              className="focus:outline-none"
+              type="button"
+              aria-label="toggle password visibility"
+              onClick={toggleVisibility}
+            >
+              {isVisible ? (
+                <i className="fa fa-eye-slash" aria-hidden="true"></i>
+              ) : (
+                <i className="fa fa-eye" aria-hidden="true"></i>
+              )}
+            </button>
+          }
+          type={isVisible ? 'text' : 'password'}
         />
       </div>
 
-      <Button className="w-full rounded-lg mt-8">Tiếp tục</Button>
+      <Button
+        className="mt-8 w-full rounded-lg"
+        isLoading={loading}
+        color="primary"
+        onClick={() =>
+          handleLoginEmail(
+            document.getElementById('email').value,
+            document.getElementById('password').value,
+          )
+        }
+      >
+        Đăng nhập
+      </Button>
 
-      <div className="mt-4 w-full flex items-center">
-        <div className="flex-grow h-[1px] bg-neutral-200" />
+      <div className="mt-4 flex w-full items-center">
+        <div className="h-[1px] flex-grow bg-neutral-200" />
         <p className="px-2">hoặc</p>
-        <div className="flex-grow h-[1px] bg-neutral-200" />
+        <div className="h-[1px] flex-grow bg-neutral-200" />
       </div>
 
       <div className="mt-4">
-        <Button
-          radius={'sm'}
-          color="primary"
-          className="w-full"
-          onClick={handleLogin}
-        >
-          Đăng nhập với Google
-        </Button>
-        <div className="flex mt-4">
+        {/* <Button
+					radius={'sm'}
+					color="primary"
+					className="w-full"
+					onClick={handleGoogleLogin}
+				>
+					Đăng nhập với Google
+				</Button> */}
+        <div className="mt-4 flex">
           <p>Bạn chưa có tài khoản?</p>
           <button
             onClick={() => openRegister()}
-            className="px-2 text-cyan-dark font-bold"
+            className="px-2 font-bold text-cyan-dark"
           >
             Đăng ký
           </button>

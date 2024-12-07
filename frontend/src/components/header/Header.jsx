@@ -16,7 +16,7 @@ import {
 import { getLocalTimeZone, now } from '@internationalized/date';
 import { RouterPath } from '@router/RouterPath';
 import { cn } from '@utils/Utils';
-import { Link, NavLink, useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import { useModalCommon } from '../../context/ModalContext';
 import LoginModal from './Login';
@@ -25,7 +25,7 @@ import RegisterModal from './Register';
 function Header({ showText, showSearch }) {
   const navigate = useNavigate();
   const { onOpen } = useModalCommon();
-  const { auth } = useAuth();
+  const { auth, logout } = useAuth();
 
   function handleSearch() {
     navigate('/search');
@@ -58,14 +58,16 @@ function Header({ showText, showSearch }) {
               </Link>
             </div>
             <div className="flex items-center space-x-2">
-              <Button
-                variant="light"
-                color="white"
-                className="rounded-xl font-bold hover:bg-blue-600"
-                onClick={() => navigate(RouterPath.REGISTER_HOST)}
-              >
-                Trở thành đối tác
-              </Button>
+              {!auth && (
+                <Button
+                  variant="light"
+                  color="white"
+                  className="rounded-xl font-bold hover:bg-blue-600"
+                  onClick={() => navigate(RouterPath.REGISTER_HOST)}
+                >
+                  Trở thành đối tác
+                </Button>
+              )}
 
               <Popover placement="bottom" offset={10}>
                 <PopoverTrigger>
@@ -111,27 +113,36 @@ function Header({ showText, showSearch }) {
                         className="border-none hover:bg-transparent"
                       >
                         <Avatar
-                          src={auth.src}
+                          src={auth.profilePictureUrl}
                           className="w-6 h-6 bg-gray-200"
                         />
-                        <p className="text-white">{auth.name} </p>
+                        <p className="text-white">{auth.fullName} </p>
                         <i className="fa fa-caret-down text-white"></i>
                       </Button>
                     </DropdownTrigger>
                     <DropdownMenu aria-label="Static Actions">
-                      <DropdownItem key="profile" as={NavLink} to="/profile">
+                      <DropdownItem
+                        key="profile"
+                        onClick={() => navigate('/profile')}
+                      >
                         <i className="fas fa-user mr-2"></i>
                         <span>Thông tin tài khoản</span>
                       </DropdownItem>
-                      <DropdownItem key="ticket">
+                      <DropdownItem
+                        key="ticket"
+                        onClick={() => navigate('/my-ticket')}
+                      >
                         <i className="fas fa-ticket-alt mr-2"></i>
                         <span>Vé của tôi</span>
                       </DropdownItem>
-                      <DropdownItem key="review">
+                      <DropdownItem
+                        key="review"
+                        onClick={() => navigate('/my-review')}
+                      >
                         <i className="fas fa-comment-dots mr-2"></i>
                         <span>Nhận xét chuyến đi</span>
                       </DropdownItem>
-                      <DropdownItem color="danger">
+                      <DropdownItem onClick={logout} color="danger">
                         <i className="fas fa-power-off mr-2"></i>
                         <span>Đăng xuất</span>
                       </DropdownItem>

@@ -234,3 +234,10 @@ export const FEATURE = [
     icon: 'fa fa-hammer text-gray-500',
   },
 ];
+
+export const ROLES = Object.freeze({
+  ADMIN: 'admin',
+  BUS_OWNER: 'busOwner',
+  TICKET_CONTROLLER: 'ticketController',
+  USER: 'user',
+});

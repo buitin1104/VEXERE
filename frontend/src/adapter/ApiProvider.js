@@ -1,14 +1,11 @@
 import axios from 'axios';
 import { v4 as uuidv4 } from 'uuid';
-import { setupInterceptersTo } from './AxiosConfig';
 import { BASE_PREFIX } from './ApiConstants';
-
-// const BASE_URL = process.env.REACT_APP_API_URL
-const BASE_URL = 'http://localhost:4096';
+import { setupInterceptersTo } from './AxiosConfig';
 
 const api = setupInterceptersTo(
   axios.create({
-    baseURL: BASE_URL,
+    baseURL: BASE_PREFIX,
     headers: {
       'Content-Type': 'application/json',
       // 'x-apikey': process.env.REACT_APP_API_KEY,
@@ -19,14 +16,14 @@ const api = setupInterceptersTo(
 
 export const fetchAll = (path, params) => {
   return api
-    .get(`${BASE_URL}/${path}`, { params })
+    .get(`${BASE_PREFIX}/${path}`, { params })
     .then((resp) => resp.data)
     .catch((error) => console.log(error));
 };
 
 export const fetchSingle = (path, id) => {
   return api
-    .get(`${BASE_URL}/${path}/${id}`)
+    .get(`${BASE_PREFIX}/${path}/${id}`)
     .then((resp) => resp.data)
     .catch((error) => {
       console.log(error);
@@ -36,7 +33,7 @@ export const fetchSingle = (path, id) => {
 
 export const post = (path, model) => {
   return api
-    .post(`${BASE_URL}/${path}`, model)
+    .post(`${BASE_PREFIX}/${path}`, model)
     .then((resp) => resp.data)
     .catch((error) => {
       console.log(error);
@@ -46,7 +43,7 @@ export const post = (path, model) => {
 
 export const patch = (path, model) => {
   return api
-    .patch(`${BASE_URL}/${path}`, model)
+    .patch(`${BASE_PREFIX}/${path}`, model)
     .then((resp) => resp.data)
     .catch((error) => {
       console.log(error);
@@ -56,7 +53,7 @@ export const patch = (path, model) => {
 
 export const remove = (path, id) => {
   return api
-    .delete(`${BASE_URL}/${path}/${id}`)
+    .delete(`${BASE_PREFIX}/${path}/${id}`)
     .then((resp) => resp.data)
     .catch((error) => {
       console.log(error);

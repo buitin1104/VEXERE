@@ -6,9 +6,11 @@ import CreatedSuccessPage from '@pages/created-success/CreatedSuccessPage';
 import DetailPage from '@pages/detail/DetailPage';
 import HomePage from '@pages/homepage/HomePage';
 import NotFoundPage from '@pages/not-found/NotFoundPage';
+import ChangePasswordPage from '@pages/profile/ChangePasswordPage';
 import ProfileManagerPage from '@pages/profile/ProfileManagerPage';
 import RegisterHostPage from '@pages/register-host/RegisterHostPage';
 import SearchPage from '@pages/search/SearchPage';
+import MyTicketPage from '@pages/ticket/MyTicket';
 import { RouterPath } from './RouterPath';
 
 const routesConfig = [
@@ -56,6 +58,18 @@ const routesConfig = [
     element: ProfileManagerPage,
     layout: Layout,
     layoutProps: { showText: false },
+  },
+  {
+    path: RouterPath.MY_TICKET,
+    element: MyTicketPage,
+    layout: Layout,
+    layoutProps: { showText: false },
+  },
+  {
+    path: RouterPath.CHANGE_PASSWORD,
+    element: ChangePasswordPage,
+    layout: Layout,
+    layoutProps: { showText: false, showSearch: false },
   },
   {
     path: '/about',
