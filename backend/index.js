@@ -7,8 +7,8 @@ import authRoute from "./routes/auth.route.js";
 import busRoute from "./routes/bus.route.js";
 import busTripRoute from "./routes/busTrip.route.js";
 import locationRoute from "./routes/location.route.js";
-import userRoute from "./routes/user.route.js";
 import requestRoute from "./routes/request.route.js";
+import userRoute from "./routes/user.route.js";
 
 dotenv.config();
 const port = process.env.PORT || 5000;
@@ -19,7 +19,7 @@ const app = express();
 
 const corsOptions = {
   origin: "*",
-  methods: ["GET", "POST", "PUT", "DELETE"],
+  methods: ["GET", "POST", "PUT", "DELETE", "PATCH"],
   credentials: true,
 };
 

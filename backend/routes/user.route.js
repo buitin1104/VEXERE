@@ -47,7 +47,7 @@ router.patch("/:userId", async (req, res) => {
       return res.status(400).json({ message: "No fields to update" });
     }
 
-    const allowedFields = ["fullName", "profilePictureUrl", "email"];
+    const allowedFields = ["fullName", "profilePictureUrl", "email", 'phone', 'dob', 'gender'];
     const fieldsToUpdate = Object.keys(updates).filter((field) =>
       allowedFields.includes(field),
     );
@@ -74,6 +74,20 @@ router.patch("/:userId", async (req, res) => {
     console.error(error);
     res.status(500).json({
       message: "Error updating profile",
+      error: error.message,
+    });
+  }
+});
+
+router.get("/:userId", async (req, res) => {
+  try {
+    const { userId } = req.params;
+    const userInfo = await User.findById(userId);
+    res.status(200).json(userInfo);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({
+      message: "Error get info profile",
       error: error.message,
     });
   }

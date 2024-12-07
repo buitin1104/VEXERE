@@ -1,10 +1,9 @@
 import { Tab, Tabs } from '@nextui-org/react';
 import React, { useEffect, useState } from 'react';
-import { useLocation } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 
 export default function Sidebar({ active }) {
   const { pathname } = useLocation();
-  console.log('🚀 ~ Sidebar ~ pathname:', pathname);
   const [activeTab, setActiveTab] = useState();
 
   useEffect(() => {
@@ -19,10 +18,21 @@ export default function Sidebar({ active }) {
       placement="start"
       selectedKey={pathname}
     >
-      <Tab key="/profile" href="/profile" title="Thông tin cá nhân" />
-      <Tab key="/my-ticket" href="/my-ticket" title="Vé của tôi" />
-      <Tab key="/my-review" href="/my-review" title="Nhận xét của tôi" />
-      <Tab key="/my-wallet" href="/my-wallet" title="Ví của tôi" />
+      <Tab key="/profile" as={Link} to="/profile" title="Thông tin cá nhân" />
+      <Tab
+        key="/change-password"
+        as={Link}
+        to="/change-password"
+        title="Đổi mật khẩu"
+      />
+      <Tab key="/my-ticket" as={Link} to="/my-ticket" title="Vé của tôi" />
+      <Tab
+        key="/my-review"
+        as={Link}
+        to="/my-review"
+        title="Nhận xét của tôi"
+      />
+      <Tab key="/my-wallet" as={Link} to="/my-wallet" title="Ví của tôi" />
     </Tabs>
   );
 }

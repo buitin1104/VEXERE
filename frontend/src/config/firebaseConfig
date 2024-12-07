@@ -1,0 +1,30 @@
+// Import the functions you need from the SDKs you need
+import { initializeApp } from 'firebase/app';
+import { getAuth, GoogleAuthProvider } from 'firebase/auth';
+import { initializeFirestore } from 'firebase/firestore';
+import { getStorage } from 'firebase/storage';
+
+// Firebase configuration from environment variables
+const firebaseConfig = {
+  apiKey: 'AIzaSyC2CrhhDkmucwgpw4LnWXHf9jgKyRcpCkc',
+  authDomain: 'co-velo.firebaseapp.com',
+  projectId: 'co-velo',
+  storageBucket: 'co-velo.appspot.com',
+  messagingSenderId: '37346108711',
+  appId: '1:37346108711:web:f491a03d5dfd1073ae7502',
+  measurementId: 'G-2JDTZ2S9CP',
+};
+// Initialize Firebase
+const app = initializeApp(firebaseConfig);
+
+// Initialize Firestore
+initializeFirestore(app, {
+  ignoreUndefinedProperties: true, // Avoid errors with undefined values
+});
+
+// Initialize Firebase services
+const auth = getAuth(app);
+const storage = getStorage(app);
+const googleProvider = new GoogleAuthProvider();
+
+export { auth, googleProvider, storage };
