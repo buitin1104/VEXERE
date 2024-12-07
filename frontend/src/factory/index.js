@@ -11,7 +11,7 @@ export const factories = {
   updateUserInfo: (id, data) => {
     return ApiOperation.request({
       url: ApiConstants.USERS + '/' + id,
-      method: 'PUT',
+      method: 'PATCH',
       data: data,
     });
   },
@@ -25,15 +25,11 @@ export const factories = {
       },
     });
   },
-  getSignUpEmail: (email, pass, metadata) => {
+  getSignUpEmail: (metadata) => {
     return ApiOperation.request({
-      url: ApiConstants.AUTH + '/signup',
+      url: ApiConstants.AUTH + '/sign-up',
       method: 'POST',
-      data: {
-        email: email,
-        password: pass,
-        metadata: metadata,
-      },
+      data: metadata,
     });
   },
   updatePassword: (data) => {

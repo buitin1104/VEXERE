@@ -1,10 +1,10 @@
-import express from "express";
 import bcrypt from "bcryptjs";
-import User from "../models/user.schema.js";
-import Request from "../models/request.schema.js";
-import { Role } from "../constants/role.constant.js";
-import { RequestActionConstant } from "../constants/requestAction.constant.js";
+import express from "express";
 import jwt from "jsonwebtoken";
+import { RequestActionConstant } from "../constants/requestAction.constant.js";
+import { Role } from "../constants/role.constant.js";
+import Request from "../models/request.schema.js";
+import User from "../models/user.schema.js";
 
 const router = express.Router();
 
@@ -82,4 +82,26 @@ router.post("/login", async (req, res) => {
   }
 });
 
+router.post("/change-password", async (req, res) => {
+  const { userId, oldPassword, newPassword } = req.body;
+  if (!userId || !oldPassword || !newPassword) {
+    return res.status(400).json({ message: "Missing required fields" });
+  }
+  try {
+    const user = await User.findById(userId);
+    if (!user || !(await bcrypt.compare(oldPassword, user.password))) {
+      return res.status(401).json({ message: "Invalid credentials" });
+    }
+
+    const hashedPassword = await bcrypt.hash(newPassword, 10);
+    await User.findByIdAndUpdate(userId, { password: hashedPassword });
+
+    res.status(200).json({ message: "Password updated successfully." });
+  } catch (error) {
+    console.error("Error changing password:", error);
+    res
+      .status(500)
+      .json({ message: "Failed to update password.", error: error.message });
+  }
+});
 export default router;
