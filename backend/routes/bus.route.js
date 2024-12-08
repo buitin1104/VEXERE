@@ -62,7 +62,6 @@ router.put("/:id", async (req, res) => {
 router.get("/admin/buses", async (req, res) => {
     try {
         const { keyword, ownerId, page = "1", limit = "10" } = req.query;
-
         const pageNumber = parseInt(page, 10);
         const limitNumber = parseInt(limit, 10);
 

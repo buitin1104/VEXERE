@@ -62,7 +62,27 @@ export const factories = {
             params,
         });
     },
-
+    getListBuses: (params) => {
+        return ApiOperation.request({
+            url: ApiConstants.LIST_BUSES,
+            method: 'GET',
+            params: params,
+        });
+    },
+    getListBusesTrip: (params) => {
+        return ApiOperation.request({
+            url: ApiConstants.BUS_TRIP,
+            method: 'GET',
+            params: params,
+        });
+    },
+    createNewBus: (data) => {
+        return ApiOperation.request({
+            url: ApiConstants.BUSES,
+            method: 'POST',
+            data: data,
+        });
+    },
     // getAccommodations: data => {
     // 	return ApiOperation.request({
     // 		url: ApiConstants.ACCOMMODATIONS,

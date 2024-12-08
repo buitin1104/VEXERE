@@ -76,8 +76,7 @@ export default class Constants {
 export const BUSES_LIST = [
     {
         id: 1,
-        label: '40-Seater Sleeper Bus',
-        name: 'Xe Giường Nằm 40 Chỗ',
+        label: 'Xe Giường Nằm 40 Chỗ',
         seats: 40,
         rowsPerLevel: 5, // Số hàng mỗi tầng
         seatsPerRow: 3,
@@ -86,8 +85,7 @@ export const BUSES_LIST = [
     },
     {
         id: 2,
-        label: '46-Seater Sleeper Bus',
-        name: 'Xe Giường Nằm 46 Chỗ',
+        label: 'Xe Giường Nằm 46 Chỗ',
         seats: 46,
         seatsPerRow: 3,
         levels: 2,
@@ -96,8 +94,7 @@ export const BUSES_LIST = [
     },
     {
         id: 4,
-        label: '29-Seater Coach',
-        name: 'Xe Khách 32 Chỗ',
+        label: 'Xe Khách 32 Chỗ',
         seats: 32,
         rowsPerLevel: 4,
         seatsPerRow: 3,
@@ -106,8 +103,7 @@ export const BUSES_LIST = [
     },
     {
         id: 5,
-        label: '34-Seater Coach',
-        name: 'Xe Khách 34 Chỗ',
+        label: 'Xe Khách 34 Chỗ',
         seats: 34,
         rowsPerLevel: 5,
         seatsPerRow: 3,
@@ -117,8 +113,7 @@ export const BUSES_LIST = [
 
     {
         id: 3,
-        label: '9-Seater Limousine',
-        name: 'Xe Limousine 20 giường',
+        label: 'Xe Limousine 20 giường',
         seats: 20,
         rowsPerLevel: 5,
         seatsPerRow: 2,
@@ -127,8 +122,7 @@ export const BUSES_LIST = [
     },
     {
         id: 6,
-        label: '45-Seater Coach',
-        name: 'Xe Khách 44 Chỗ',
+        label: 'Xe Khách 44 Chỗ',
         seats: 44,
         rowsPerLevel: 10,
         seatsPerRow: 4,
@@ -137,8 +131,7 @@ export const BUSES_LIST = [
     },
     {
         id: 7,
-        label: 'VIP Sleeper Bus',
-        name: 'Xe Giường Nằm VIP',
+        label: 'Xe Giường Nằm VIP',
         seats: 40,
         rowsPerLevel: 5,
         seatsPerRow: 4,
@@ -147,8 +140,7 @@ export const BUSES_LIST = [
     },
     {
         id: 8,
-        label: '16-Seater Van',
-        name: 'Xe Du Lịch 16 Chỗ',
+        label: 'Xe Du Lịch 16 Chỗ',
         seats: 16,
         rowsPerLevel: 4,
         seatsPerRow: 4,
@@ -157,8 +149,7 @@ export const BUSES_LIST = [
     },
     {
         id: 9,
-        label: '30-Seater Tour Bus',
-        name: 'Xe Du Lịch 30 Chỗ',
+        label: 'Xe Du Lịch 30 Chỗ',
         seats: 30,
         rowsPerLevel: 8,
         seatsPerRow: 4,
@@ -167,8 +158,7 @@ export const BUSES_LIST = [
     },
     {
         id: 10,
-        label: 'Long-Distance Bus',
-        name: 'Xe Buýt Đường Dài',
+        label: 'Xe Buýt Đường Dài',
         seats: 50,
         rowsPerLevel: 6,
         seatsPerRow: 5,

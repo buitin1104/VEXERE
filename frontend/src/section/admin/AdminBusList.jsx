@@ -1,101 +1,50 @@
 import { CustomTable } from '@components/custom-table/CustomTable';
-import { Button, Chip, Input, Tab, Tabs, Tooltip } from '@nextui-org/react';
-import React, { useState } from 'react';
-
-const dataBusList = [
-  {
-    Address: 'Điện Biên Phủ',
-    PhoneNumber: '0987654321',
-    BusName: 'Duy Anh',
-    BranchName: 'Nhà xe Duy Anh',
-    TicketCount: '3',
-    TripFrom: '14:30',
-    TripTo: '14:30',
-    Route: 'Hà Nội - Thanh Hóa',
-    status: 'Đang làm việc',
-    Type: 'Pickup',
-  },
-  {
-    Address: 'Điện Biên Phủ',
-    PhoneNumber: '0987654321',
-    BusName: 'Duy Anh',
-    BranchName: 'Nhà xe Duy Anh',
-    TicketCount: '2',
-    TripFrom: '14:30',
-    TripTo: '14:30',
-    Trip: '14:30',
-    Route: 'Hà Nội - Thanh Hóa',
-    status: 'Đang tạm nghỉ',
-    Type: 'Pickup',
-  },
-  {
-    Address: 'Điện Biên Phủ',
-    PhoneNumber: '0987654321',
-    BusName: 'Duy Anh',
-    BranchName: 'Nhà xe Duy Anh',
-    TripFrom: '14:30',
-    TripTo: '14:30',
-    TicketCount: '1',
-    Trip: '14:30',
-    status: 'Đang làm việc',
-    Route: 'Hà Nội - Thanh Hóa',
-    Type: 'Pickup',
-  },
-  {
-    Address: 'Điện Biên Phủ',
-    PhoneNumber: '0987654321',
-    BusName: 'Duy Anh',
-    TicketCount: '1',
-    TripFrom: '14:30',
-    TripTo: '14:30',
-    BranchName: 'Nhà xe Duy Anh',
-    status: 'Đang làm việc',
-    Trip: '14:30',
-    Route: 'Hà Nội - Thanh Hóa',
-    Type: 'Pickup',
-  },
-];
+import { Button, Input, Tooltip } from '@nextui-org/react';
+import { BUSES_LIST } from '@utils/constants';
+import React, { useEffect, useState } from 'react';
+import { useAuth } from '../../context/AuthContext';
+import { useModalCommon } from '../../context/ModalContext';
+import { factories } from '../../factory/index';
+import CreateBusModal from './modal/CreateBusModal';
 
 const columns = [
   {
     id: 'BusName',
-    label: 'Tên xe',
-    renderCell: (row) => <div className="w-40">{row.BusName}</div>,
+    label: 'Biển số xe',
+    renderCell: (row) => <div className="w-40">{row.busNumber}</div>,
   },
   {
     id: 'BranchName',
-    label: 'Nhà xe',
-    renderCell: (row) => <div className="w-40">{row.BranchName}</div>,
+    label: 'Mẫu xe',
+    renderCell: (row) => (
+      <div className="w-40">
+        {BUSES_LIST.find((x) => x.id.toString() === row.busModel)?.label}
+      </div>
+    ),
   },
   {
-    id: 'Route',
-    label: 'Tuyến đường',
-    renderCell: (row) => <span>{row.Route}</span>,
+    id: 'seats',
+    label: 'Số ghế',
+    renderCell: (row) => (
+      <div className="w-40">
+        {BUSES_LIST.find((x) => x.id.toString() === row.busModel)?.seats}
+      </div>
+    ),
   },
   {
     id: 'phone',
-    label: 'Số điện thoại',
-    renderCell: (row) => <span>{row.PhoneNumber}</span>,
+    label: 'Số điện thoại chủ xe',
+    renderCell: (row) => <span>{row.owner?.phone}</span>,
   },
   {
-    id: 'trip',
-    label: 'Thời gian',
-    renderCell: (row) => (
-      <span>
-        {row.TripFrom} - {row.TripTo}
-      </span>
-    ),
+    id: 'name',
+    label: 'Tên chủ xe',
+    renderCell: (row) => <span>{row.owner?.fullName}</span>,
   },
   {
-    id: 'status',
-    label: 'Trạng thái',
-    renderCell: (row) => (
-      <div className="w-36">
-        <Chip color={row.status === 'Đang làm việc' ? 'primary' : 'default'}>
-          {row.status}
-        </Chip>
-      </div>
-    ),
+    id: 'mail',
+    label: 'Email chủ xe',
+    renderCell: (row) => <span>{row.owner?.email}</span>,
   },
   {
     id: 'action',
@@ -113,13 +62,45 @@ const columns = [
   },
 ];
 
-export default function AdminBusList() {
-  const [activeTab, setActiveTab] = useState();
+export default function AdminBusList({ isAdmin }) {
+  const [keyword, setKeyword] = useState();
+  const [data, setData] = useState([]);
+  const [pagination, setPagination] = useState();
+  const { auth } = useAuth();
+  const [loading, setLoading] = useState(true);
+  const { onOpen } = useModalCommon();
+  useEffect(() => {
+    loadList();
+  }, [keyword, pagination?.current]);
+
+  function createBus() {
+    onOpen({
+      view: <CreateBusModal onReload={loadList} />,
+      title: 'Tạo xe mới',
+      size: '2xl',
+    });
+  }
+  function loadList() {
+    setLoading(true);
+    const params = {
+      ownerId: isAdmin ? '' : auth._id,
+      page: pagination?.current,
+      ...(keyword ? { keyword } : {}),
+    };
+    factories
+      .getListBuses(params)
+      .then((data) => {
+        setData(data?.buses);
+        setLoading(false);
+        setPagination(data.pagination);
+      })
+      .finally(() => setLoading(false));
+  }
   return (
     <div className="bg-white rounded shadow-md px-4 py-3 h-full">
       <div className="flex items-center justify-between mb-3">
-        <div className="flex">
-          <Tabs
+        <div className="mt-2 flex justify-end items-center w-full">
+          {/* <Tabs
             variant="light"
             color="primary"
             aria-label="Tabs colors"
@@ -130,18 +111,22 @@ export default function AdminBusList() {
             <Tab key="1" title="Tất cả" />
             <Tab key="2" title="Đang hoạt động" />
             <Tab key="3" title="Đang tạm nghỉ" />
-          </Tabs>
+          </Tabs> */}
+          <Button onClick={createBus} size="sm" color="primary">
+            Tạo mới xe
+          </Button>
         </div>
       </div>
 
       <Input
         type="text"
-        placeholder="Tìm kiếm tên, số điện thoại"
+        onChange={(e) => setKeyword(e.target.value)}
+        placeholder="Tìm kiếm biển số"
         className="w-full outline-none bg-gray-100 rounded-lg"
         startContent={<i className="fas fa-search text-gray-500 mr-2"></i>}
       />
       <div className="mt-4">
-        <CustomTable columns={columns} data={dataBusList} />
+        <CustomTable columns={columns} data={data} isLoading={loading} />
       </div>
     </div>
   );

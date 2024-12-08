@@ -12,12 +12,7 @@ export default function Sidebar({ active }) {
   }, [active]);
 
   return (
-    <Tabs
-      isVertical
-      className="text-left"
-      placement="start"
-      selectedKey={pathname}
-    >
+    <Tabs isVertical className="" placement="start" selectedKey={pathname}>
       <Tab key="/profile" as={Link} to="/profile" title="Thông tin cá nhân" />
       <Tab
         key="/change-password"

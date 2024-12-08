@@ -6,25 +6,28 @@ const InputField = ({
   type = 'text',
   placeholder = '',
   name,
-  register,
-  errors,
+  label,
+  validate = {},
   className = '',
   ...props
 }) => {
-  const { watch } = useFormContext();
+  const { register, formState } = useFormContext();
+  const error = formState.errors?.[name]?.message;
+
   return (
-    <>
+    <div className="flex flex-col">
       <Input
         type={type}
+        label={label}
         placeholder={placeholder}
-        className={`w-full min-w-72 bg-transparent ${className}`}
-        color={errors?.[name] ? 'danger' : 'default'}
-        errorMessage={errors?.[name] && 'Bắt buộc nhập thông tin'}
-        value={watch(name) ? watch(name) : undefined}
-        {...register(name)}
+        className={`w-full bg-transparent ${className}`}
+        color={error ? 'danger' : 'default'}
+        errorMessage={error}
+        {...register(name, validate)}
         {...props}
       />
-    </>
+      {error && <p className="text-red text-sm">{error}</p>}
+    </div>
   );
 };
 
