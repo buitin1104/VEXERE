@@ -16,7 +16,13 @@ export default function AdminSideBar({
     navigator('/');
   }
   return (
-    <aside className="w-12 bg-white h-screen shadow-md justify-between flex flex-col">
+    <aside
+      className="w-12 sticky left-4 rounded-xl top-[10px]  flex-col bg-white bg-white/80 backdrop-blur-2xl border-b border-gray-200 shadow-xl z-50 flex items-center justify-center transition-all duration-300"
+      style={{
+        background: 'rgba(255, 255, 255, 0.10)',
+        height: 'fit-content',
+      }}
+    >
       <div className="flex flex-col items-center py-3">
         {filteredItems.map((item) => {
           return (

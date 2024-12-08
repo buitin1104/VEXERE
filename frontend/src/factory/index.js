@@ -55,6 +55,14 @@ export const factories = {
             },
         });
     },
+    getListUser: (params) => {
+        return ApiOperation.request({
+            url: ApiConstants.USERS,
+            method: 'GET',
+            params,
+        });
+    },
+
     // getAccommodations: data => {
     // 	return ApiOperation.request({
     // 		url: ApiConstants.ACCOMMODATIONS,

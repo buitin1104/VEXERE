@@ -45,15 +45,16 @@ export function CustomTable({
         isLoading={isLoading}
         loadingContent={<Spinner label="Loading..." />}
       >
-        {data.map((row) => (
-          <TableRow key={row.id}>
-            {columns.map((column) => (
-              <TableCell key={column.id}>
-                {column.renderCell ? column.renderCell(row) : row[column.id]}
-              </TableCell>
-            ))}
-          </TableRow>
-        ))}
+        {!isLoading &&
+          data.map((row) => (
+            <TableRow key={row.id}>
+              {columns.map((column) => (
+                <TableCell key={column.id}>
+                  {column.renderCell ? column.renderCell(row) : row[column.id]}
+                </TableCell>
+              ))}
+            </TableRow>
+          ))}
       </TableBody>
     </Table>
   );

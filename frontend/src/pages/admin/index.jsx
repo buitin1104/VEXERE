@@ -1,11 +1,14 @@
 import HeaderAdmin from '@components/header/HeaderAdmin';
 import LoginModal from '@components/header/Login';
+import { RouterPath } from '@router/RouterPath';
 import { ROLES, sidebarItems } from '@utils/constants';
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import { useModalCommon } from '../../context/ModalContext';
 import AdminBusList from '../../section/admin/AdminBusList';
+import AdminBusRoute from '../../section/admin/AdminBusRoute';
+import AdminProfile from '../../section/admin/AdminProfile';
 import AdminRequestHost from '../../section/admin/AdminRequestHost';
 import AdminSideBar from '../../section/admin/AdminSideBar';
 import AdminTicketList from '../../section/admin/AdminTicketList';
@@ -23,10 +26,6 @@ export default function AdminPage() {
 
   useEffect(() => {
     if (!loading) {
-      if (auth?.roles?.[0] !== ROLES.ADMIN) {
-        navigator(RouterPath.NOT_FOUND);
-        return;
-      }
       if (!auth) {
         onOpen({
           view: <LoginModal />,
@@ -34,9 +33,15 @@ export default function AdminPage() {
           showFooter: false,
         });
       }
+      if (auth.roles?.[0] === ROLES.USER) {
+        navigator(RouterPath.NOT_FOUND);
+        return;
+      }
       const newList = sidebarItems.filter((item) =>
         item.roles.includes(auth.roles[0]),
       );
+      setSelectedItem(newList[0].id);
+      setSelectedName(newList[0].label);
       setFilterItems(newList);
     }
   }, [auth, loading]);
@@ -62,10 +67,14 @@ export default function AdminPage() {
         return <AdminUser />;
       case 'buses':
         return <AdminBusList />;
+      case 'bus-trip':
+        return <AdminBusRoute />;
       case 'ticketAll':
         return <AdminTicketList />;
       case 'tickets':
         return <AdminTicketList />;
+      case 'profile':
+        return <AdminProfile />;
       default:
         return null;
     }
@@ -73,8 +82,8 @@ export default function AdminPage() {
 
   //   if (loading)
   return (
-    <div className="flex flex-row">
-      <div className="flex w-full">
+    <div className="flex flex-row bg-white relative">
+      <div className="flex w-full  relative">
         <AdminSideBar
           selectedItem={selectedItem}
           onSelectItem={(id, label) => {
@@ -82,7 +91,7 @@ export default function AdminPage() {
           }}
           filteredItems={filterItems}
         />
-        <main className="flex-1 items-start overflow-scroll h-screen">
+        <main className="flex-1 items-start h-screen pl-5">
           <HeaderAdmin title={selectedName} />
           {renderContent()}
         </main>

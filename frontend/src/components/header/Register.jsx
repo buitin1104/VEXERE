@@ -2,19 +2,19 @@ import { Button, Input } from '@nextui-org/react';
 import { ROLES } from '@utils/constants';
 import { EmailAuthProvider, linkWithCredential } from 'firebase/auth';
 import React, { useState } from 'react';
-import { useAuth } from '../../context/AuthContext';
 import { useModalCommon } from '../../context/ModalContext';
 import { factories } from '../../factory';
 import { ToastInfo, ToastNotiError } from '../../utils/Utils';
 import LoginModal from './Login';
 
-const RegisterModal = () => {
+const RegisterModal = ({ addEmployee, onReload }) => {
   const { onOpen, onClose } = useModalCommon();
-  const { login } = useAuth();
 
   const [isVisible, setIsVisible] = useState(false);
+  const [isVisible2, setIsVisible2] = useState(false);
   const [loading, setLoading] = useState(false);
   const toggleVisibility = () => setIsVisible(!isVisible);
+  const toggleVisibility2 = () => setIsVisible2(!isVisible2);
 
   const openLogin = () => {
     onOpen({
@@ -48,13 +48,18 @@ const RegisterModal = () => {
       fullName: email.replace('@gmail.com', ''),
       profilePictureUrl:
         'https://ui-avatars.com/api/?name=' + email.replace('@gmail.com', ''),
-      roles: [ROLES.USER],
+      roles: [addEmployee ? ROLES.TICKET_CONTROLLER : ROLES.USER],
     };
     factories
       .getSignUpEmail(metaData)
       .then((data) => {
         ToastInfo('Đăng ký tài khoản thành công');
         setLoading(false);
+        if (addEmployee) {
+          onClose();
+          onReload();
+          return;
+        }
         openLogin();
       })
       .catch((error) => {
@@ -137,16 +142,16 @@ const RegisterModal = () => {
               className="focus:outline-none"
               type="button"
               aria-label="toggle password visibility"
-              onClick={toggleVisibility}
+              onClick={toggleVisibility2}
             >
-              {isVisible ? (
+              {isVisible2 ? (
                 <i class="fa fa-eye-slash" aria-hidden="true"></i>
               ) : (
                 <i class="fa fa-eye" aria-hidden="true"></i>
               )}
             </button>
           }
-          type={isVisible ? 'text' : 'password'}
+          type={isVisible2 ? 'text' : 'password'}
         />
       </div>
 
@@ -168,22 +173,24 @@ const RegisterModal = () => {
 
       <div className="mt-4">
         {/* <Button
-					radius={'sm'}
-					color="primary"
-					className="w-full"
-					onClick={handleGoogleSignUp}
-				>
-					Đăng ký với Google
-				</Button> */}
-        <div className="mt-4 flex">
-          <p>Bạn đã có tài khoản?</p>
-          <button
-            onClick={() => openLogin()}
-            className="px-2 font-bold text-cyan-dark"
-          >
-            Đăng nhập
-          </button>
-        </div>
+            radius={'sm'}
+            color="primary"
+            className="w-full"
+            onClick={handleGoogleSignUp}
+        >
+            Đăng ký với Google
+        </Button> */}
+        {!addEmployee && (
+          <div className="mt-4 flex pb-4">
+            <p>Bạn đã có tài khoản?</p>
+            <button
+              onClick={() => openLogin()}
+              className="px-2 font-bold text-cyan-dark"
+            >
+              Đăng nhập
+            </button>
+          </div>
+        )}
       </div>
     </div>
   );

@@ -28,6 +28,7 @@ function Header({ showText, showSearch }) {
   const navigate = useNavigate();
   const { onOpen } = useModalCommon();
   const { auth, logout } = useAuth();
+  console.log('🚀 ~ Header ~ auth:', auth);
   const router = useRouter();
 
   const [date, setDate] = useState();
@@ -141,24 +142,10 @@ function Header({ showText, showSearch }) {
                     <DropdownMenu aria-label="Static Actions">
                       <DropdownItem
                         key="profile"
-                        onClick={() => navigate('/profile')}
+                        onClick={() => navigate('/admin')}
                       >
                         <i className="fas fa-user mr-2"></i>
-                        <span>Thông tin tài khoản</span>
-                      </DropdownItem>
-                      <DropdownItem
-                        key="ticket"
-                        onClick={() => navigate('/my-ticket')}
-                      >
-                        <i className="fas fa-ticket-alt mr-2"></i>
-                        <span>Lịch sử đặt vé</span>
-                      </DropdownItem>
-                      <DropdownItem
-                        key="review"
-                        onClick={() => navigate('/my-review')}
-                      >
-                        <i className="fas fa-comment-dots mr-2"></i>
-                        <span>Nhận xét chuyến đi</span>
+                        <span>Quản lý nhà xe</span>
                       </DropdownItem>
                       <DropdownItem onClick={logout} color="danger">
                         <i className="fas fa-power-off mr-2"></i>
