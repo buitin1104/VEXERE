@@ -4,62 +4,94 @@ import Bus from "../models/bus.schema.js";
 const router = express.Router();
 
 router.post("/", async (req, res) => {
-  try {
-    const { busNumber, busModel, capacity, owner } = req.body;
+    try {
+        const { busNumber, busModel, owner, gallery } = req.body;
 
-    // TODO: Validate ownerId
-
-    const newBus = new Bus({
-      busNumber,
-      busModel,
-      capacity,
-      owner,
-    });
-
-    await newBus.save();
-
-    res.status(201).json(newBus);
-  } catch (error) {
-    res
-      .status(500)
-      .json({ message: "Error creating bus", error: error.message });
-  }
+        // TODO: Validate ownerId
+        const newBus = new Bus({
+            busNumber,
+            busModel,
+            owner,
+            gallery,
+        });
+        await newBus.save();
+        res.status(201).json(newBus);
+    } catch (error) {
+        res
+            .status(500)
+            .json({ message: "Error creating bus", error: error.message });
+    }
 });
 
 router.get("/:id", async (req, res) => {
-  try {
-    const { id } = req.params;
+    try {
+        const { id } = req.params;
 
-    const bus = await Bus.findById(id).populate("trips");
-    res.status(200).json(bus);
-  } catch (error) {
-    res
-      .status(500)
-      .json({ message: "Error retrieve bus", error: error.message });
-  }
+        const bus = await Bus.findById(id).populate("trips");
+        res.status(200).json(bus);
+    } catch (error) {
+        res
+            .status(500)
+            .json({ message: "Error retrieve bus", error: error.message });
+    }
 });
 
 router.put("/:id", async (req, res) => {
-  try {
-    const { id } = req.params;
-    const updates = req.body;
+    try {
+        const { id } = req.params;
+        const updates = req.body;
 
-    if (!updates) {
-      return res.status(400).json({ message: "No fields to update" });
+        if (!updates) {
+            return res.status(400).json({ message: "No fields to update" });
+        }
+
+        const updatedBus = await Bus.findByIdAndUpdate(id, updates, { new: true });
+
+        if (!updatedBus) {
+            return res.status(404).json({ message: "Bus not found" });
+        }
+
+        res.status(200).json(updatedBus);
+    } catch (error) {
+        res
+            .status(500)
+            .json({ message: "Error updating bus", error: error.message });
     }
-
-    const updatedBus = await Bus.findByIdAndUpdate(id, updates, { new: true });
-
-    if (!updatedBus) {
-      return res.status(404).json({ message: "Bus not found" });
-    }
-
-    res.status(200).json(updatedBus);
-  } catch (error) {
-    res
-      .status(500)
-      .json({ message: "Error updating bus", error: error.message });
-  }
 });
 
+router.get("/admin/buses", async (req, res) => {
+    try {
+        const { keyword, ownerId, page = "1", limit = "10" } = req.query;
+
+        const pageNumber = parseInt(page, 10);
+        const limitNumber = parseInt(limit, 10);
+
+        let query = {};
+        if (ownerId) {
+            query.owner = ownerId;
+        }
+        if (keyword) {
+            query.busNumber = { $regex: `.*${keyword}.*`, $options: "i" };
+        }
+        const total = await Bus.find(query).countDocuments();
+        const buses = await Bus.find(query)
+            .populate("owner")
+            .skip((pageNumber - 1) * limitNumber)
+            .limit(limitNumber);
+
+        const pagination = {
+            total,
+            pages: Math.ceil(total / limitNumber),
+            pageSize: limitNumber,
+            current: pageNumber,
+        };
+
+        res.status(200).json({ buses, pagination });
+    } catch (error) {
+        res.status(500).json({
+            message: "Error retrieving buses for owner",
+            error: error.message,
+        });
+    }
+});
 export default router;
