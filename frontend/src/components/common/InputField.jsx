@@ -15,7 +15,7 @@ const InputField = ({
   const error = formState.errors?.[name]?.message;
 
   return (
-    <div className="flex flex-col">
+    <div className="flex w-full flex-col">
       <Input
         type={type}
         label={label}

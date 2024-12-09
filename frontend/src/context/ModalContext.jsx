@@ -9,31 +9,19 @@ export const useModalCommon = () => {
 
 export const ModalProvider = ({ children }) => {
   const [isOpen, setIsOpen] = useState(false);
-  const [isShowFooter, setIsShowFooter] = useState(true);
   const [modalContent, setModalContent] = useState(null);
   const [modalTitle, setModalTitle] = useState('Modal Title');
-  const [modalActions, setModalActions] = useState([]);
   const [size, setSize] = useState('sm');
-
-  const onOpen = ({
-    view,
-    title = 'Modal Title',
-    actions = [],
-    showFooter = true,
-    size = 'sm',
-  }) => {
+  const onOpen = ({ view, title = 'Modal Title', size = 'sm' }) => {
     setModalContent(view);
     setModalTitle(title);
-    setModalActions(actions);
     setIsOpen(true);
-    setIsShowFooter(showFooter);
     setSize(size);
   };
 
   const onClose = () => {
     setModalContent(null);
     setModalTitle('Modal Title');
-    setModalActions([]);
     setIsOpen(false);
   };
 

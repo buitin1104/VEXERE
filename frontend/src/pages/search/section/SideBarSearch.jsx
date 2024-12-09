@@ -11,7 +11,7 @@ import {
   Slider,
   TimeInput,
 } from '@nextui-org/react';
-import { BUSES_LIST, FEATURE } from '@utils/constants';
+import { AMENITIES, BUSES_LIST } from '@utils/constants';
 import React from 'react';
 export default function SideBarSearch() {
   return (
@@ -63,7 +63,7 @@ export default function SideBarSearch() {
             <AccordionItem key="3" title="Tiêu chí phổ biến">
               <div className="flex flex-col gap-1 ">
                 <CheckboxGroup label="">
-                  {FEATURE.map((x) => (
+                  {AMENITIES.map((x) => (
                     <Checkbox value={x.id}>{x.name}</Checkbox>
                   ))}
                 </CheckboxGroup>

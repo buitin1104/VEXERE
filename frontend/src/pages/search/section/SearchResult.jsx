@@ -4,7 +4,7 @@ import Review from '@components/review';
 import { Button, Chip, ScrollShadow, Tab, Tabs } from '@nextui-org/react';
 import { imageBus, reviewsData, searchCar } from '@pages/detail/mock';
 import { RouterPath } from '@router/RouterPath';
-import { BUSES_LIST, FEATURE } from '@utils/constants';
+import { AMENITIES, BUSES_LIST } from '@utils/constants';
 import { cn, convertStringToNumber } from '@utils/Utils';
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -156,7 +156,7 @@ function CardSearch({ item }) {
 
                 <Tab key="feature" title="Tiện ích">
                   <div className="flex justify-start items-start flex-wrap gap-8 w-full  p-6 rounded-lg">
-                    {FEATURE.map((x) => (
+                    {AMENITIES.map((x) => (
                       <div
                         key={x.id}
                         className="flex items-center min-w-[100px] gap-3"
