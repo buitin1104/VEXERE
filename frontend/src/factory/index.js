@@ -71,7 +71,7 @@ export const factories = {
     },
     getListBusesTrip: (params) => {
         return ApiOperation.request({
-            url: ApiConstants.BUS_TRIP,
+            url: ApiConstants.BUS_TRIP + '/admin/trip',
             method: 'GET',
             params: params,
         });
@@ -81,6 +81,27 @@ export const factories = {
             url: ApiConstants.BUSES,
             method: 'POST',
             data: data,
+        });
+    },
+    createNewBusTrip: (data) => {
+        return ApiOperation.request({
+            url: ApiConstants.BUS_TRIP,
+            method: 'POST',
+            data: data,
+        });
+    },
+    createNewLocation: (data) => {
+        return ApiOperation.request({
+            url: ApiConstants.LOCATIONS,
+            method: 'POST',
+            data: data,
+        });
+    },
+    getListLocation: (params) => {
+        return ApiOperation.request({
+            url: ApiConstants.LOCATIONS,
+            method: 'GET',
+            params: params,
         });
     },
     // getAccommodations: data => {
