@@ -90,12 +90,16 @@ router.get("/", async (req, res) => {
         const {
             fromCity,
             toCity,
-            departureDate,
+            departureDateTime,
+            amenities,
+            price,
+            sort,
+            type,
             page = "1",
             limit = "10",
         } = req.query;
 
-        if (!fromCity || !toCity || !departureDate) {
+        if (!fromCity || !toCity || !departureDateTime) {
             return res.status(400).json({
                 message: "fromCity, toCity, and departureDate are required",
             });
@@ -104,12 +108,8 @@ router.get("/", async (req, res) => {
         const pageNumber = parseInt(page, 10);
         const limitNumber = parseInt(limit, 10);
 
-        const departureDateObj = new Date(departureDate);
-        const startOfDay = new Date(departureDateObj.setHours(0, 0, 0, 0));
-        const endOfDay = new Date(departureDateObj.setHours(23, 59, 59, 999));
-
-        const originLocations = await Location.find({ city: fromCity });
-        const destinationLocations = await Location.find({ city: toCity });
+        const originLocations = await Location.find({ city: fromCity.toString() });
+        const destinationLocations = await Location.find({ city: toCity.toString() });
 
         if (!originLocations.length) {
             return res
@@ -123,17 +123,45 @@ router.get("/", async (req, res) => {
             });
         }
 
+        const amenitiesArray = amenities
+            ? amenities.split(",").map((a) => a.trim())
+            : [];
+        const typeBus = type
+            ? type.split(",").map((a) => a.trim())
+            : [];
+        const priceRange = price
+            .split(",")
+            .map((price) => parseInt(price.trim(), 10));
         let query = {
             origin: { $in: originLocations.map((location) => location._id) },
             destination: {
                 $in: destinationLocations.map((location) => location._id),
             },
-            departureTime: { $gte: startOfDay, $lte: endOfDay }, // departureDate trùng với ngày yêu cầu
         };
+
+        if (amenitiesArray.length > 0) {
+            query.amenity = { $all: amenitiesArray };
+        }
+        if (typeBus.length > 0) {
+            const buses = await Bus.find({
+                busModel: { $in: typeBus.map((model) => model.toLowerCase()) },
+            });
+
+            query.bus = { $in: buses.map((bus) => bus._id) };
+        }
+        query.departureTime = { $gte: new Date(departureDateTime) };
+
+        if (price) {
+            query.price = {
+                $gte: priceRange[0],
+                $lte: priceRange[1],
+            };
+        }
 
         const busTrips = await BusTrip.find(query)
             .skip((pageNumber - 1) * limitNumber)
             .limit(limitNumber)
+            .populate('bus')
             .populate("origin", "name city")
             .populate("destination", "name city");
 
