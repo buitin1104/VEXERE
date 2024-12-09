@@ -42,6 +42,26 @@ router.post("/", async (req, res) => {
             return res.status(404).json({ message: "Destination not found" });
         }
 
+        const duplicateTrip = await BusTrip.findOne({
+            bus,
+            departureTime: { $lte: arrivalTime },
+            arrivalTime: { $gte: departureTime },
+        });
+
+        if (duplicateTrip) {
+            return res.status(400).json({ message: "Xe đã có chuyến trong thời gian này" });
+        }
+
+        const duplicateDriver = await BusTrip.findOne({
+            driverId,
+            departureTime: { $lte: arrivalTime },
+            arrivalTime: { $gte: departureTime },
+        });
+
+        if (duplicateDriver) {
+            return res.status(400).json({ message: "Tài xế đã có chuyến trong thời gian này" });
+        }
+
         const newBusTrip = new BusTrip({
             bus,
             driverId,
@@ -51,7 +71,6 @@ router.post("/", async (req, res) => {
             departureTime,
             arrivalTime,
             price,
-            status,
             amenity,
             policy,
             paymentMethods,

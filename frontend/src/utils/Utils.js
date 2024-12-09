@@ -135,16 +135,14 @@ export const getDate = (timestamp, type = 1) => {
             result = moment(newDate, 'YYYY/MM/DD').format('YYYY-MM-DD');
             break;
         case 14:
-            result = new Date(
-                Date.UTC(
-                    timestamp.year,
-                    timestamp.month - 1,
-                    timestamp.day,
-                    timestamp.hour,
-                    timestamp.minute,
-                    timestamp.second,
-                    timestamp.millisecond
-                ) + timestamp.offset
+            result = result = new Date(
+                timestamp.year,
+                timestamp.month - 1, // Tháng bắt đầu từ 0
+                timestamp.day,
+                timestamp.hour,
+                timestamp.minute,
+                timestamp.second,
+                timestamp.millisecond
             );
             break;
         case 15:

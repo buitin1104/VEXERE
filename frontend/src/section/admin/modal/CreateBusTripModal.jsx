@@ -92,6 +92,7 @@ export default function CreateBusTripModal({ onReload }) {
       arrivalTime: getDate(values.arrivalTime, 14),
       amenity: amenities,
     };
+    console.log('🚀 ~ handleSave ~ data:', data);
     factories
       .createNewBusTrip(data)
       .then(() => {
