@@ -39,6 +39,13 @@ export const factories = {
             data,
         });
     },
+    getBusTripSearch: (params) => {
+        return ApiOperation.request({
+            url: ApiConstants.BUS_TRIP,
+            method: 'GET',
+            params,
+        });
+    },
     ///admin
     getRequestHost: () => {
         return ApiOperation.request({

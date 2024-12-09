@@ -143,6 +143,7 @@ export default function ProfileManagerPage() {
                       isRequired
                       name={'email'}
                       register={register}
+                      disabled
                       errors={errors}
                     />
                     <DatePickerField

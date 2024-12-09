@@ -43,7 +43,7 @@ const columns = [
     label: 'Lộ trình',
     renderCell: (row) => (
       <div className="w-42">
-        {row.origin.name} - {row.destination.name}
+        {row.origin.name} - {row?.destination?.name}
       </div>
     ),
   },

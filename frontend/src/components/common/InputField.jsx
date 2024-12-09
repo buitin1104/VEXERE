@@ -7,11 +7,12 @@ const InputField = ({
   placeholder = '',
   name,
   label,
+  disabled,
   validate = {},
   className = '',
   ...props
 }) => {
-  const { register, formState } = useFormContext();
+  const { register, formState, watch } = useFormContext();
   const error = formState.errors?.[name]?.message;
 
   return (
@@ -20,9 +21,11 @@ const InputField = ({
         type={type}
         label={label}
         placeholder={placeholder}
+        isDisabled={disabled}
         className={`w-full bg-transparent ${className}`}
         color={error ? 'danger' : 'default'}
         errorMessage={error}
+        value={watch(name)}
         {...register(name, validate)}
         {...props}
       />

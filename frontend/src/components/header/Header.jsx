@@ -15,6 +15,7 @@ import {
 
 import { getLocalTimeZone, now } from '@internationalized/date';
 import { RouterPath } from '@router/RouterPath';
+import { PROVINCES, ROLES } from '@utils/constants';
 import { cn, getDate } from '@utils/Utils';
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
@@ -28,21 +29,16 @@ function Header({ showText, showSearch }) {
   const navigate = useNavigate();
   const { onOpen } = useModalCommon();
   const { auth, logout } = useAuth();
-  console.log('🚀 ~ Header ~ auth:', auth);
   const router = useRouter();
 
-  const [date, setDate] = useState();
-  const [from, setFrom] = useState();
-  const [to, setTo] = useState();
+  const [date, setDate] = useState(now(getLocalTimeZone()));
+  const [from, setFrom] = useState('5');
+  const [to, setTo] = useState('2');
   function handleSearch() {
     const newParams = {
       fromCity: from,
-      fromDate: to,
-      departureDate: getDate(date, 13),
-      //   roomQuantity: roomCount,
-      //   capacity: personCount,
-      //   isWithPet: Boolean(havePet),
-      //   pricePerNight: '100000, 2000000',
+      toCity: to,
+      departureDateTime: getDate(date, 14),
     };
     router.push({
       pathname: RouterPath.SEARCH,
@@ -139,19 +135,54 @@ function Header({ showText, showSearch }) {
                         <i className="fa fa-caret-down text-white"></i>
                       </Button>
                     </DropdownTrigger>
-                    <DropdownMenu aria-label="Static Actions">
-                      <DropdownItem
-                        key="profile"
-                        onClick={() => navigate('/admin')}
-                      >
-                        <i className="fas fa-user mr-2"></i>
-                        <span>Quản lý nhà xe</span>
-                      </DropdownItem>
-                      <DropdownItem onClick={logout} color="danger">
-                        <i className="fas fa-power-off mr-2"></i>
-                        <span>Đăng xuất</span>
-                      </DropdownItem>
-                    </DropdownMenu>
+                    {auth.roles[0] === ROLES.USER ? (
+                      <DropdownMenu aria-label="Static Actions">
+                        <DropdownItem
+                          key="profile"
+                          onClick={() => navigate('/profile')}
+                        >
+                          <i className="fas fa-user mr-2"></i>
+                          <span>Thông tin tài khoản</span>
+                        </DropdownItem>
+                        <DropdownItem
+                          key="ticket"
+                          onClick={() => navigate('/my-ticket')}
+                        >
+                          <i className="fas fa-ticket-alt mr-2"></i>
+                          <span>Vé của tôi</span>
+                        </DropdownItem>
+                        <DropdownItem
+                          key="review"
+                          onClick={() => navigate('/my-review')}
+                        >
+                          <i className="fas fa-comment-dots mr-2"></i>
+                          <span>Nhận xét chuyến đi</span>
+                        </DropdownItem>
+                        <DropdownItem onClick={logout} color="danger">
+                          <i className="fas fa-power-off mr-2"></i>
+                          <span>Đăng xuất</span>
+                        </DropdownItem>
+                      </DropdownMenu>
+                    ) : (
+                      <DropdownMenu aria-label="Static Actions">
+                        <DropdownItem
+                          key="review"
+                          onClick={() => navigate('/admin')}
+                        >
+                          <i className="fas fa-comment-dots mr-2"></i>
+                          <span>Quản lý hệ thống</span>
+                        </DropdownItem>
+                        <DropdownItem onClick={logout} color="danger">
+                          <i className="fas fa-power-off mr-2"></i>
+                          <span>Đăng xuất</span>
+                        </DropdownItem>
+                      </DropdownMenu>
+                    )}
+
+                    <DropdownItem onClick={logout} color="danger">
+                      <i className="fas fa-power-off mr-2"></i>
+                      <span>Đăng xuất</span>
+                    </DropdownItem>
                   </Dropdown>
                 </>
               ) : (
@@ -213,16 +244,18 @@ function Header({ showText, showSearch }) {
                   variant="flat"
                   radius="sm"
                   label="Nơi xuất phát"
-                  defaultSelectedKeys={[1]}
+                  defaultSelectedKeys={['2']}
                   onChange={(e) => setFrom(e.target.value)}
                   placeholder="Bạn muốn đến đâu?"
                   startContent={
                     <i className="fas fa-dot-circle text-blue-500"></i>
                   }
                 >
-                  <SelectItem key={'Hanoi'}>{'Hà Nội'}</SelectItem>
-                  <SelectItem key={'Danang'}>{'Đà Nẵng'}</SelectItem>
-                  <SelectItem key={'Dalat'}>{'Đà Lạt'}</SelectItem>
+                  {PROVINCES.map((province) => (
+                    <SelectItem key={province.value}>
+                      {province.label}
+                    </SelectItem>
+                  ))}
                 </Select>
 
                 <div className=" flex flex-col h-full rounded-full p-2 bg-gray-200 border-blue-500 justify-center items-center ">
@@ -231,28 +264,27 @@ function Header({ showText, showSearch }) {
 
                 <Select
                   className="flex-4 xl:flex-3 border-none"
-                  //   style={{
-                  //     backgroundColor: 'transparent',
-                  //   }}
                   id="toCity"
                   variant="flat"
                   onChange={(e) => setTo(e.target.value)}
                   radius="sm"
                   label="Nơi đến"
-                  defaultSelectedKeys={[1]}
+                  defaultSelectedKeys={['4']}
                   placeholder="Bạn muốn đến đâu?"
                   startContent={
                     <i className="fas fa-map-marker-alt text-error"></i>
                   }
                 >
-                  <SelectItem key={'Hanoi'}>{'Hà Nội'}</SelectItem>
-                  <SelectItem key={'Danang'}>{'Đà Nẵng'}</SelectItem>
-                  <SelectItem key={'Dalat'}>{'Đà Lạt'}</SelectItem>
+                  {PROVINCES.filter((province) => province.value !== from).map(
+                    (province) => (
+                      <SelectItem key={province.value}>
+                        {province.label}
+                      </SelectItem>
+                    ),
+                  )}
                 </Select>
 
-                <div className="flex flex-col h-full rounded-full p-2 mx-0 justify-center items-center ">
-                  {/* <i className="fas fa-exchange-alt text-gray-400"></i> */}
-                </div>
+                <div className="flex flex-col h-full rounded-full p-2 mx-0 justify-center items-center "></div>
                 <DatePicker
                   label="Ngày đi"
                   radius="sm"
@@ -265,9 +297,9 @@ function Header({ showText, showSearch }) {
                   }}
                   hideTimeZone
                   showMonthAndYearPickers
+                  defaultValue={now(getLocalTimeZone())}
                   onChange={setDate}
                   className="bg-white"
-                  defaultValue={now(getLocalTimeZone())}
                 />
                 <div className="flex flex-col h-full rounded-full p-2 mx-0 justify-center items-center "></div>
                 <Button

@@ -13,7 +13,6 @@ export default function CreateBusDestinationModal({ onReload }) {
   const { onClose } = useModalCommon();
   const methods = useForm();
   const { register, errors, watch } = methods;
-  console.log('🚀 ~ CreateBusDestinationModal ~ watch:', watch());
 
   async function handleSave(values) {
     setIsLoading(true);

@@ -1,10 +1,64 @@
 import { getLocalTimeZone, now } from '@internationalized/date';
-import { Button, DatePicker, Select, SelectItem } from '@nextui-org/react';
-import React from 'react';
+import {
+  Button,
+  DatePicker,
+  Select,
+  SelectItem,
+  Spinner,
+} from '@nextui-org/react';
+import React, { useEffect, useState } from 'react';
+import { factories } from '../../factory';
+import useRouter from '../../hook/use-router';
 import SearchResult from './section/SearchResult';
 import SideBarSearch from './section/SideBarSearch';
 
 export default function SearchPage() {
+  const router = useRouter();
+  const {
+    fromCity,
+    toCity,
+    departureDateTime,
+    amenities,
+    isWithPet,
+    price,
+    page = 1,
+    limit = 10,
+    sort,
+    type,
+  } = router.getAll();
+  const [loading, setLoading] = useState(false);
+  const [data, setData] = useState([]);
+
+  useEffect(() => {
+    setLoading(true);
+    const newData = {
+      fromCity,
+      toCity,
+      departureDateTime,
+      amenities,
+      isWithPet,
+      price,
+      page,
+      limit,
+      sort,
+      type,
+    };
+    factories
+      .getBusTripSearch(newData)
+      .then((data) => setData(data ?? []))
+      .finally(() => setLoading(false));
+  }, [
+    fromCity,
+    toCity,
+    departureDateTime,
+    amenities,
+    price,
+    page,
+    limit,
+    sort,
+    type,
+  ]);
+
   function handleSearch() {
     console.log('/search');
   }
@@ -81,15 +135,21 @@ export default function SearchPage() {
   }
   return (
     <div className="mx-auto max-w-full px-5 lg:max-w-[80%] lg:px-0 2xl:max-w-[60%]">
-      <div className="w-full ">
+      {/* <div className="w-full ">
         <Search />
-      </div>
-      <div className="flex flex-row gap-4">
+      </div> */}
+      <div className="mt-16 flex flex-row gap-4">
         <div className="w-64">
           <SideBarSearch />
         </div>
         <div className="flex-grow ">
-          <SearchResult />
+          {loading ? (
+            <div className="flex flex-row justify-center items-center mt-10">
+              <Spinner />
+            </div>
+          ) : (
+            <SearchResult data={data} />
+          )}
         </div>
       </div>
     </div>

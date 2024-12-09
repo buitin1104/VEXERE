@@ -2,27 +2,67 @@ import SteeringWheelIcon from '@assets/base/icon/SteeringWheelIcon';
 import ImageGallery from '@components/galery/Galery';
 import Review from '@components/review';
 import { Button, Chip, ScrollShadow, Tab, Tabs } from '@nextui-org/react';
-import { imageBus, reviewsData, searchCar } from '@pages/detail/mock';
+import { reviewsData } from '@pages/detail/mock';
 import { RouterPath } from '@router/RouterPath';
-import { AMENITIES, BUSES_LIST } from '@utils/constants';
-import { cn, convertStringToNumber } from '@utils/Utils';
-import React, { useState } from 'react';
+import { AMENITIES, BUSES_LIST, PROVINCES } from '@utils/constants';
+import { differenceInHours } from '@utils/dateTime';
+import { cn, convertStringToNumber, getDate } from '@utils/Utils';
+import React, { useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import useRouter from '../../../hook/use-router';
 
-export default function SearchResult() {
+export default function SearchResult({ data }) {
+  console.log('🚀 ~ SearchResult ~ data:', data);
+  const router = useRouter();
+  const {
+    fromCity,
+    toCity,
+    departureDateTime,
+    amenities,
+    isWithPet,
+    price,
+    page = 1,
+    limit = 10,
+    sort,
+    type,
+  } = router.getAll();
+  const priceList = useMemo(() => {
+    return price?.split(',');
+  }, [price]);
+
   return (
     <div className="w-full flex flex-col gap-2">
-      <p className="font-bold text-2xl">Kết quả: 222 chuyến xe</p>
+      <p className="font-bold text-2xl">
+        Kết quả: {data?.pagination?.total ?? 0} chuyến xe
+      </p>
       <div className="flex flex-wrap gap-2 mb-2">
-        <Chip color="success" className="text-white">
-          12:00 - 24:00
+        <Chip color="primary" className="text-white">
+          Khởi hành: {getDate(departureDateTime, 5)}
         </Chip>
-        <Chip color="success" className="text-white">
-          Giá vé: 120.000 - 500000
-        </Chip>
+        {sort && (
+          <Chip color="success" className="text-white">
+            {sort}
+          </Chip>
+        )}
+        {amenities?.split(',')?.map((item, index) => {
+          const data = AMENITIES.find((x) => x.id === item)?.name;
+          if (data) {
+            return (
+              <Chip key={index} color="success" className="text-white">
+                {data}
+              </Chip>
+            );
+          }
+          return null;
+        })}
+        {priceList && (
+          <Chip color="warning" className="text-white">
+            Giá: {priceList[0]} - {priceList[1]}
+          </Chip>
+        )}
       </div>
       <div className="w-full flex flex-col gap-5">
-        {searchCar?.map((x) => (
+        {data?.busTrips?.map((x) => (
           <CardSearch item={x} />
         ))}
       </div>
@@ -39,46 +79,66 @@ function CardSearch({ item }) {
         <div className="relative">
           <img
             src={
-              item.busImage ??
+              item?.bus.gallery[0] ??
               'https://static.vexere.com/production/images/1716953194738.jpeg?w=250&h=250'
             }
             alt="Bus image"
-            className="w-40 h-40 rounded-md"
+            className="h-52 rounded-md aspect-square"
           />
         </div>
-        <div className="ml-4 flex-1">
-          <div className="flex justify-between ">
+        <div className="ml-4 flex-1 ">
+          <div className="flex justify-between">
             <div>
-              <h2 className="text-lg font-bold">{item.branchName}</h2>
-              <div className="text-sm text-gray-500">
-                {BUSES_LIST.find((x) => x.id === item.busId)?.name}
+              <h2 className="text-xl font-bold">
+                {PROVINCES.find((x) => x.value === item?.origin.city).label}{' '}
+                {` - `}
+                {
+                  PROVINCES.find((x) => x.value === item?.destination.city)
+                    .label
+                }
+              </h2>
+              <div className="text-md font-bold text-grey-500">
+                {
+                  BUSES_LIST.find(
+                    (x) => x.id.toString() === item?.bus?.busModel,
+                  )?.label
+                }
               </div>
             </div>
             <div className="flex flex-col items-end">
               <div className="text-blue-600 text-lg font-bold">
-                Từ {item.price}
+                Giá vé: {convertStringToNumber(item?.price)}
               </div>
               <div className="flex items-center text-sm text-gray-500">
                 <span className="bg-blue-500 text-white px-2 py-1 rounded-md">
-                  {item.rating} ({item.ratingCount})
+                  {item?.rating ?? 'Chưa có đánh giá'}
+                  {item?.ratingCount && <p>({item?.ratingCount})</p>}
                 </span>
               </div>
             </div>
           </div>
 
-          <div className="mt-2">
+          <div className="mt-2 flex flex-col gap-2">
             <div className="flex items-center text-gray-700">
               <i className="fas fa-map-marker-alt text-blue-500"></i>
               <span className="ml-2 font-bold text-lg">
-                {item.departureTime}
+                {getDate(item?.departureTime, 6)}
               </span>
-              <span className="ml-2">· {item.departureLocation}</span>
+              <span className="ml-2">- {item?.origin.name}</span>
             </div>
-            <div className="ml-6 text-gray-500">7h</div>
+            <div className="ml-6 text-gray-500">
+              {differenceInHours(
+                new Date(item?.departureTime),
+                new Date(item?.arrivalTime),
+              )}
+              h
+            </div>
             <div className="flex items-center text-gray-700">
-              <i className="fas fa-map-marker-alt text-red"></i>
-              <span className="ml-2 font-bold text-lg">{item.arrivalTime}</span>
-              <span className="ml-2">· {item.arrivalLocation}</span>
+              <i className="fas fa-map-marker-alt text-red text-sm"></i>
+              <span className="ml-2 font-bold text-lg">
+                {getDate(item?.arrivalTime, 6)}
+              </span>
+              <span className="ml-2">- {item?.destination.name}</span>
             </div>
           </div>
         </div>
@@ -86,10 +146,10 @@ function CardSearch({ item }) {
       <div className="flex justify-between items-center mt-0 mb-2 w-full ">
         <div className="flex flex-col ">
           <div className="text-lg text-content font-bold">
-            {item?.feature.includes('F1') && 'KHÔNG CẦN THANH TOÁN TRƯỚC'}
+            {item?.amenity?.includes('F1') && 'KHÔNG CẦN THANH TOÁN TRƯỚC'}
           </div>
           <div className="text-gray-500">
-            Còn {item.availableSeats} chỗ trống
+            Còn {item?.availableSeats} chỗ trống
           </div>
         </div>
         <div className="flex flex-col items-end gap-2">
@@ -129,8 +189,12 @@ function CardSearch({ item }) {
                 radius="full"
               >
                 <Tab key="policy" title="Chính sách">
-                  <div className="w-full ">
-                    {item.policy && <div>{item.policy}</div>}
+                  <div className="w-full bg-neutral-100 p-4 rounded-md">
+                    {item.policy && (
+                      <div
+                        dangerouslySetInnerHTML={{ __html: item.policy }}
+                      ></div>
+                    )}
                   </div>
                 </Tab>
                 <Tab
@@ -140,7 +204,7 @@ function CardSearch({ item }) {
                 >
                   <div className="w-full flex justify-center items-center">
                     <div className="w-[600px]">
-                      <ImageGallery images={imageBus} />
+                      <ImageGallery images={item.bus.gallery} />
                     </div>
                   </div>
                 </Tab>
@@ -155,18 +219,21 @@ function CardSearch({ item }) {
                 </Tab>
 
                 <Tab key="feature" title="Tiện ích">
-                  <div className="flex justify-start items-start flex-wrap gap-8 w-full  p-6 rounded-lg">
-                    {AMENITIES.map((x) => (
-                      <div
-                        key={x.id}
-                        className="flex items-center min-w-[100px] gap-3"
-                      >
-                        <div className="bg-gray-100  w-8 h-8 flex items-center justify-center  rounded">
-                          <i className={`${x.icon}`}></i>
+                  <div className="flex justify-start items-start flex-wrap gap-8 w-full p-6 rounded-lg">
+                    {item.amenity.map((x) => {
+                      const itemAM = AMENITIES.find((y) => y.id === x);
+                      return (
+                        <div
+                          key={itemAM.id}
+                          className="flex items-center min-w-[100px] gap-3"
+                        >
+                          <div className="bg-gray-100 w-8 h-8 flex items-center justify-center rounded">
+                            <i className={`${itemAM?.icon}`}></i>
+                          </div>
+                          <span className="text-black">{itemAM?.name}</span>
                         </div>
-                        <span className="text-black">{x.name}</span>
-                      </div>
-                    ))}
+                      );
+                    })}
                   </div>
                 </Tab>
               </Tabs>
