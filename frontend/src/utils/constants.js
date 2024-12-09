@@ -4,7 +4,6 @@ export default class Constants {
         { label: 'Đã xác nhận', value: 2 },
         { label: 'Đã khám', value: 3 },
         { label: 'BS Đã đánh giá', value: 4 },
-        // { label: "BN Đã đánh giá", value: 5 },
     ];
     static vietnamProvinces = [
         { label: 'Hà Nội', value: 1 },
@@ -73,6 +72,16 @@ export default class Constants {
     ];
 }
 
+export const PROVINCES = [
+    { label: 'Đà Nẵng', value: '1' },
+    { label: 'Hà Nội', value: '2' },
+    { label: 'Hải Phòng', value: '3' },
+    { label: 'Đà Lạt', value: '4' },
+    { label: 'Sài Gòn', value: '5' },
+    { label: 'Nha Trang', value: '6' },
+    { label: 'Vũng Tàu', value: '7' },
+    { label: 'Buôn Ma Thuột', value: '8' },
+];
 export const BUSES_LIST = [
     {
         id: 1,
@@ -167,16 +176,11 @@ export const BUSES_LIST = [
     },
 ];
 
-export const FEATURE = [
+export const AMENITIES = [
     {
         id: 'F1',
         name: 'Không cần thanh toán trước',
         icon: 'fa fa-credit-card text-green-500',
-    },
-    {
-        id: 'F2',
-        name: 'Có trung chuyển đón/trả',
-        icon: 'fa fa-shuttle-van text-blue-500',
     },
     {
         id: 'F3',
@@ -315,3 +319,23 @@ export const STATUS = {
     true: 'Hoạt động',
     false: 'Vô hiệu hóa',
 }
+
+export const PAYMENT_METHODS = [
+    {
+        id: '1',
+        label: 'Thanh toán khi lên xe',
+    },
+    {
+        id: '2',
+        label: 'Thanh toán qua VNPAY',
+    },
+    {
+        id: '3',
+        label: 'Thanh toán qua ví MOMO',
+    },
+]
+export const BusTripStatusConstant = Object.freeze({
+    SCHEDULED: "Scheduled",
+    COMPLETED: "Completed",
+    CANCELLED: "Cancelled",
+});
