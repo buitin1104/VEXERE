@@ -8,6 +8,7 @@ import busRoute from "./routes/bus.route.js";
 import busTripRoute from "./routes/busTrip.route.js";
 import locationRoute from "./routes/location.route.js";
 import requestRoute from "./routes/request.route.js";
+import ticketRouter from "./routes/ticket.route.js";
 import userRoute from "./routes/user.route.js";
 
 dotenv.config();
@@ -18,9 +19,9 @@ await connectDB();
 const app = express();
 
 const corsOptions = {
-  origin: "*",
-  methods: ["GET", "POST", "PUT", "DELETE", "PATCH"],
-  credentials: true,
+    origin: "*",
+    methods: ["GET", "POST", "PUT", "DELETE", "PATCH"],
+    credentials: true,
 };
 
 app.use(cors(corsOptions));
@@ -31,9 +32,10 @@ app.use("/buses", busRoute);
 app.use("/bus-trips", busTripRoute);
 app.use("/locations", locationRoute);
 app.use("/users", userRoute);
+app.use("/ticket", ticketRouter);
 app.use("/requests", requestRoute);
 app.use(cookieParser());
 
 app.listen(port, () => {
-  console.log(`Server running on port ${port}`);
+    console.log(`Server running on port ${port}`);
 });
