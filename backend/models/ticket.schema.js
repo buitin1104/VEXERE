@@ -5,7 +5,7 @@ const TicketSchema = new mongoose.Schema({
     driverId: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
     status: { type: Number, required: true, },
     reason: { type: String, required: false },
-    seats: { type: String, required: false },
+    seats: [{ type: Number, required: false }],
     price: { type: Number, required: false },
     tripId: { type: mongoose.Schema.Types.ObjectId, ref: "BusTrip", required: true },
     paymentMethod: { type: String, required: false },

@@ -6,6 +6,7 @@ const ApiConstants = {
     REQUESTS: 'requests',
     BUSES: 'buses',
     LOCATIONS: 'locations',
+    TICKET: 'ticket',
     LIST_BUSES: 'buses/admin/buses',
     BUS_TRIP: 'bus-trips',
 };
