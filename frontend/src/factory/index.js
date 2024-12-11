@@ -90,6 +90,13 @@ export const factories = {
             data: data,
         });
     },
+    createNeưTicket: (data) => {
+        return ApiOperation.request({
+            url: ApiConstants.TICKET,
+            method: 'POST',
+            data: data,
+        });
+    },
     createNewBusTrip: (data) => {
         return ApiOperation.request({
             url: ApiConstants.BUS_TRIP,

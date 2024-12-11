@@ -321,17 +321,18 @@ export const STATUS = {
 }
 
 export const PAYMENT_METHODS = [
+    // {
+    //     id: '1',
+    //     label: 'Thanh toán khi lên xe',
+    // },
     {
         id: '1',
-        label: 'Thanh toán khi lên xe',
-    },
-    {
-        id: '2',
         label: 'Thanh toán qua VNPAY',
     },
     {
-        id: '3',
+        id: '2',
         label: 'Thanh toán qua ví MOMO',
+        disable: true
     },
 ]
 export const BusTripStatusConstant = Object.freeze({
@@ -339,3 +340,13 @@ export const BusTripStatusConstant = Object.freeze({
     COMPLETED: "Completed",
     CANCELLED: "Cancelled",
 });
+
+export const WEEKDAYS = [
+    'Chủ nhật ',
+    'Thứ hai',
+    'Thứ ba',
+    'Thứ tư',
+    'Thứ năm',
+    'Thứ sáu',
+    'Thứ bảy',
+]

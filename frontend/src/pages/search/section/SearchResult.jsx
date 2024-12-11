@@ -8,11 +8,10 @@ import { AMENITIES, BUSES_LIST, PROVINCES } from '@utils/constants';
 import { differenceInHours } from '@utils/dateTime';
 import { cn, convertStringToNumber, getDate } from '@utils/Utils';
 import React, { useMemo, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../../../context/AuthContext';
 import useRouter from '../../../hook/use-router';
 
 export default function SearchResult({ data }) {
-  console.log('🚀 ~ SearchResult ~ data:', data);
   const router = useRouter();
   const {
     fromCity,
@@ -149,7 +148,11 @@ function CardSearch({ item }) {
             {item?.amenity?.includes('F1') && 'KHÔNG CẦN THANH TOÁN TRƯỚC'}
           </div>
           <div className="text-gray-500">
-            Còn {item?.availableSeats} chỗ trống
+            Còn{' '}
+            {BUSES_LIST.find((x) => x.id == item.bus.busModel)?.seats -
+              item.ticketBooked.length}
+            {` `}
+            chỗ trống
           </div>
         </div>
         <div className="flex flex-col items-end gap-2">
@@ -244,8 +247,9 @@ function CardSearch({ item }) {
 
       {showBooking && (
         <BookingSection
-          busId={item.busId}
-          seatsLocked={'1,19'}
+          item={item}
+          busModel={item.bus.busModel}
+          seatsLocked={item.ticketBooked}
           price={item.price}
         />
       )}
@@ -253,9 +257,9 @@ function CardSearch({ item }) {
   );
 }
 
-function BookingSection({ busId, seatsLocked, price }) {
-  const navigator = useNavigate();
-  const bus = BUSES_LIST.find((b) => b.id === busId);
+function BookingSection({ item, busModel, seatsLocked, price }) {
+  const { auth } = useAuth();
+  const bus = BUSES_LIST.find((b) => b.id == busModel);
   const [selectedSeats, setSelectedSeats] = useState([]);
   // Kiểm tra nếu xe trên 30 chỗ thì chia thành hai tầng
   const totalSeats = bus.seats;
@@ -263,7 +267,7 @@ function BookingSection({ busId, seatsLocked, price }) {
   const seatsPerRow = bus.seatsPerRow;
   const seatsPerFloor = isDoubleDeck ? Math.ceil(totalSeats / 2) : totalSeats;
   const rowsPerLevel = bus.rowsPerLevel; // Số hàng trên mỗi tầng
-
+  const router = useRouter();
   // Hàm xử lý chọn ghế
   const toggleSeatSelection = (seatNumber) => {
     setSelectedSeats((prevSelected) =>
@@ -273,7 +277,17 @@ function BookingSection({ busId, seatsLocked, price }) {
     );
   };
   function confirmBooking() {
-    navigator(RouterPath.CONFIRM_INFORMATION);
+    const ticket = {
+      ...item,
+      seats: selectedSeats,
+    };
+    const encodedItem = encodeURIComponent(JSON.stringify(ticket));
+    router.push({
+      pathname: RouterPath.CONFIRM_INFORMATION,
+      params: {
+        item: encodedItem,
+      },
+    });
   }
   // Hàm render ghế cho một tầng
   const renderSeats = (startSeatNumber, totalSeatsInFloor) => {
@@ -285,9 +299,7 @@ function BookingSection({ busId, seatsLocked, price }) {
       for (let j = 0; j < seatsPerRow; j++) {
         const seatNumber = startSeatNumber + j * rowsPerLevel + i;
         if (seatNumber > startSeatNumber + totalSeatsInFloor - 1) break;
-
-        const newSeatsLocked = seatsLocked.split(',');
-        const isLocked = newSeatsLocked.includes(seatNumber.toString());
+        const isLocked = seatsLocked.includes(seatNumber.toString());
         seats.push(
           <div
             key={seatNumber}
@@ -335,8 +347,7 @@ function BookingSection({ busId, seatsLocked, price }) {
       for (let j = 0; j < lastRowSeats; j++) {
         const seatNumber = lastRowStartSeat + j;
 
-        const newSeatsLocked = seatsLocked.split(',');
-        const isLocked = newSeatsLocked.includes(seatNumber.toString());
+        const isLocked = seatsLocked.includes(seatNumber.toString());
         lastRow.push(
           <div
             key={seatNumber}
@@ -447,12 +458,15 @@ function BookingSection({ busId, seatsLocked, price }) {
                 {convertStringToNumber(price * selectedSeats.length)}
               </span>
             </div>
-            <Button
-              onClick={confirmBooking}
-              className="bg-blue-500 text-white px-4 py-2 rounded"
-            >
-              Tiếp tục
-            </Button>
+            {auth && (
+              <Button
+                isDisabled={selectedSeats.length === 0}
+                onClick={confirmBooking}
+                className="bg-blue-500 text-white px-4 py-2 rounded"
+              >
+                Tiếp tục
+              </Button>
+            )}
           </div>
         </div>
       </div>

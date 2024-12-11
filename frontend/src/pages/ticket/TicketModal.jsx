@@ -3,7 +3,6 @@ import { Chip } from '@nextui-org/react';
 import { convertStringToNumber } from '@utils/Utils';
 
 export default function TicketModal({ item }) {
-  console.log('🚀 ~ TicketModal ~ item:', item);
   return (
     <div className="">
       <div className=" ">
