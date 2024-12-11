@@ -31,6 +31,7 @@ export default function ConfirmPage() {
   function handleSave(values) {
     setLoading(true);
     const newTicket = {
+      userId: auth._id,
       name: values.fullName,
       phone: values.phone,
       email: values?.email,

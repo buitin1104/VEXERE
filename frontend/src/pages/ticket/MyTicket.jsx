@@ -1,8 +1,9 @@
 import { CustomTable } from '@components/custom-table/CustomTable';
 import { Button, Card, CardBody, Chip } from '@nextui-org/react';
-import { default as React } from 'react';
+import { default as React, useState } from 'react';
 import Sidebar from '../../components/sidebar/SideBar';
 import { useModalCommon } from '../../context/ModalContext';
+import { factories } from '../../factory';
 import TicketModal from './TicketModal';
 
 const ticketData = [
@@ -97,8 +98,26 @@ export default function MyTicketPage() {
       ),
     },
   ];
-
+  const [loading, setLoading] = useState(true);
+  const [data, setData] = useState([]);
+  const [pagination, setPagination] = useState();
   const { onOpen, onClose } = useModalCommon();
+  function loadList() {
+    setLoading(true);
+    const params = {
+      ownerId: isAdmin ? '' : auth._id,
+      page: pagination?.current,
+      ...(keyword ? { keyword } : {}),
+    };
+    factories
+      .getListBuses(params)
+      .then((data) => {
+        setData(data?.buses);
+        setLoading(false);
+        setPagination(data.pagination);
+      })
+      .finally(() => setLoading(false));
+  }
   function openDetail(row) {
     onOpen({
       view: <TicketModal item={row} />,

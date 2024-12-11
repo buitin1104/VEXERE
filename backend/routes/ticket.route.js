@@ -7,6 +7,10 @@ const router = express.Router();
 router.post("/", async (req, res) => {
     try {
         const {
+            userId,
+            name,
+            email,
+            phone,
             bus,
             driverId,
             status = 1,
@@ -26,6 +30,10 @@ router.post("/", async (req, res) => {
         }
 
         const newTicket = new Ticket({
+            userId,
+            name,
+            email,
+            phone,
             bus,
             driverId,
             status,
