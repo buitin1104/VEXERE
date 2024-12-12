@@ -1,7 +1,10 @@
 import { CustomTable } from '@components/custom-table/CustomTable';
 import { Button, Card, CardBody, Chip } from '@nextui-org/react';
-import { default as React, useState } from 'react';
+import { TICKET_STATUS } from '@utils/constants';
+import { getDate } from '@utils/Utils';
+import { default as React, useEffect, useState } from 'react';
 import Sidebar from '../../components/sidebar/SideBar';
+import { useAuth } from '../../context/AuthContext';
 import { useModalCommon } from '../../context/ModalContext';
 import { factories } from '../../factory';
 import TicketModal from './TicketModal';
@@ -47,21 +50,25 @@ const ticketData = [
 export default function MyTicketPage() {
   const columns = [
     {
-      id: 'BranchName',
-      label: 'Nhà xe',
-      renderCell: (row) => <div className="w-40">{row.BranchName}</div>,
-    },
-    {
       id: 'BusName',
       label: 'Tên xe',
-      renderCell: (row) => <div className="w-40">{row.BusName}</div>,
+      renderCell: (row) => <div className="w-28">{row.bus.busNumber}</div>,
     },
     {
       id: 'Route',
-      label: 'Tuyến Đường',
+      label: 'Đi từ',
       renderCell: (row) => (
-        <div className="w-44">
-          <span>{row.Route}</span>
+        <div className="w-32">
+          <span>{row.tripId.origin.name}</span>
+        </div>
+      ),
+    },
+    {
+      id: 'Route2',
+      label: 'Đi đên',
+      renderCell: (row) => (
+        <div className="w-32">
+          <span>{row.tripId.destination.name}</span>
         </div>
       ),
     },
@@ -69,17 +76,18 @@ export default function MyTicketPage() {
       id: 'time',
       label: 'Thời Gian',
       renderCell: (row) => (
-        <div className="w-32">
-          {row.DepartureTime} - {row.ArrivalTime}
-        </div>
+        <div className="w-32">{getDate(row.tripId.departureTime, 3)}</div>
       ),
     },
     {
       id: 'Status',
       label: 'Trạng Thái',
       renderCell: (row) => (
-        <Chip color={row.Status === 'Đã đặt' ? 'primary' : 'default'}>
-          {row.Status}
+        <Chip
+          color={TICKET_STATUS.find((x) => x.value === row.status)?.color}
+          className="text-white"
+        >
+          {TICKET_STATUS.find((x) => x.value === row.status)?.label}
         </Chip>
       ),
     },
@@ -101,18 +109,23 @@ export default function MyTicketPage() {
   const [loading, setLoading] = useState(true);
   const [data, setData] = useState([]);
   const [pagination, setPagination] = useState();
-  const { onOpen, onClose } = useModalCommon();
+  const { onOpen } = useModalCommon();
+  const { auth } = useAuth();
+  useEffect(() => {
+    if (auth) {
+      loadList();
+    }
+  }, [auth]);
   function loadList() {
     setLoading(true);
     const params = {
-      ownerId: isAdmin ? '' : auth._id,
+      userId: auth._id,
       page: pagination?.current,
-      ...(keyword ? { keyword } : {}),
     };
     factories
-      .getListBuses(params)
+      .getListTicket(params)
       .then((data) => {
-        setData(data?.buses);
+        setData(data?.tickets);
         setLoading(false);
         setPagination(data.pagination);
       })
@@ -132,14 +145,18 @@ export default function MyTicketPage() {
         <div className="w-fit">
           <Sidebar />
         </div>
-        <div className="flex flex-grow">
+        <div className="flex flex-grow max-w-[900px]">
           <Card className="w-full">
             <CardBody className="w-full gap-4">
               <div className="flex flex-row justify-between p-2">
                 <h5 className="text-2xl font-bold">Lịch sử đặt vé</h5>
               </div>
               <div>
-                <CustomTable columns={columns} data={ticketData} />
+                <CustomTable
+                  columns={columns}
+                  data={data ?? []}
+                  isLoading={loading}
+                />
               </div>
             </CardBody>
           </Card>

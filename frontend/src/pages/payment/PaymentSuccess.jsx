@@ -1,4 +1,11 @@
-import { Button, Card, CardBody, CardHeader, Divider } from '@nextui-org/react';
+import {
+  Button,
+  Card,
+  CardBody,
+  CardHeader,
+  Divider,
+  Spinner,
+} from '@nextui-org/react';
 import { convertStringToNumber, ToastNotiError } from '@utils/Utils';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -9,7 +16,7 @@ export default function PaymentSuccessPage() {
   const navigator = useNavigate();
   const urlParams = new URLSearchParams(window.location.search);
   const params = Object.fromEntries(urlParams);
-  const { auth, loading } = useAuth();
+  const { auth } = useAuth();
   const vnp_Amount = params.vnp_Amount / 100;
   const vnp_BankCode = params.vnp_BankCode;
   const vnp_BankTranNo = params.vnp_BankTranNo;
@@ -18,6 +25,7 @@ export default function PaymentSuccessPage() {
   //   const vnp_TransactionNo = params.vnp_TransactionNo;
   const vnp_TxnRef = params.vnp_TxnRef;
   const [status, setStatus] = useState();
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     if (auth && vnp_TxnRef) {
@@ -27,12 +35,14 @@ export default function PaymentSuccessPage() {
         .then((resp) => {
           if (resp.status === 200) {
             setStatus(true);
+            setLoading(false);
           } else {
             setStatus(false);
           }
         })
         .catch((error) => {
           ToastNotiError(error?.response?.data?.message);
+          setLoading(false);
           setStatus(false);
         });
     }
@@ -41,24 +51,32 @@ export default function PaymentSuccessPage() {
     <div className="mx-auto max-w-full px-5 flex  mt-32 gap-4 mb-20 justify-center">
       <Card css={{ mw: '400px', p: '$10' }}>
         <CardHeader className="flex gap-3">
-          {status ? (
-            <div className="w-full flex flex-col gap-4 items-center justify-center">
-              <div className="flex rounded-full bg-green-100 p-4 w-14 h-14 justify-center items-center">
-                <i className="fa fa-check text-green-600 text-xl"></i>
-              </div>
-              <p className="text-center font-bold">
-                Thanh toán giao dịch thành công
-              </p>
+          {loading ? (
+            <div className="flex justify-center items-center w-full">
+              <Spinner />
             </div>
           ) : (
-            <div className="w-full flex flex-col gap-4 items-center justify-center">
-              <div className="flex rounded-full bg-red p-4 w-14 h-14 justify-center items-center">
-                <i className="fa fa-check text-white text-xl"></i>
-              </div>
-              <p className="text-center font-bold">
-                Thanh toán giao dịch thất bại
-              </p>
-            </div>
+            <>
+              {status ? (
+                <div className="w-full flex flex-col gap-4 items-center justify-center">
+                  <div className="flex rounded-full bg-green-100 p-4 w-14 h-14 justify-center items-center">
+                    <i className="fa fa-check text-green-600 text-xl"></i>
+                  </div>
+                  <p className="text-center font-bold">
+                    Thanh toán giao dịch thành công
+                  </p>
+                </div>
+              ) : (
+                <div className="w-full flex flex-col gap-4 items-center justify-center">
+                  <div className="flex rounded-full bg-red p-4 w-14 h-14 justify-center items-center">
+                    <i className="fa fa-check text-white text-xl"></i>
+                  </div>
+                  <p className="text-center font-bold">
+                    Thanh toán giao dịch thất bại
+                  </p>
+                </div>
+              )}
+            </>
           )}
         </CardHeader>
         <Divider />
