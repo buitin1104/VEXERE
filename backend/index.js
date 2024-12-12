@@ -7,6 +7,7 @@ import authRoute from "./routes/auth.route.js";
 import busRoute from "./routes/bus.route.js";
 import busTripRoute from "./routes/busTrip.route.js";
 import locationRoute from "./routes/location.route.js";
+import paymentRoute from "./routes/payment.route.js";
 import requestRoute from "./routes/request.route.js";
 import ticketRouter from "./routes/ticket.route.js";
 import userRoute from "./routes/user.route.js";
@@ -34,6 +35,7 @@ app.use("/locations", locationRoute);
 app.use("/users", userRoute);
 app.use("/ticket", ticketRouter);
 app.use("/requests", requestRoute);
+app.use("/payment", paymentRoute);
 app.use(cookieParser());
 
 app.listen(port, () => {

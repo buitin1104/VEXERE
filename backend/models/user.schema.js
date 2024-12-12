@@ -14,6 +14,7 @@ const userSchema = new mongoose.Schema(
             ],
         },
         password: { type: String, required: true },
+        balance: { type: Number, required: false, default: 0 },
         fullName: { type: String, required: true },
         phone: { type: String, required: false },
         dob: { type: String, required: false },
