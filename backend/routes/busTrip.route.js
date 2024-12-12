@@ -162,6 +162,7 @@ router.get("/", async (req, res) => {
             .skip((pageNumber - 1) * limitNumber)
             .limit(limitNumber)
             .populate('bus')
+            .populate('driverId', 'phone')
             .populate("origin", "name city")
             .populate("destination", "name city");
 

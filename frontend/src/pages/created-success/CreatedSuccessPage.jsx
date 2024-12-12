@@ -9,7 +9,6 @@ export default function CreatedSuccessPage() {
   const router = useRouter();
   const params = router.getAll();
   const data = JSON.parse(decodeURIComponent(params.item));
-  console.log('🚀 ~ CreatedSuccessPage ~ data:', data);
   return (
     <div className="mx-auto max-w-full px-5 lg:max-w-[70%] lg:px-0 2xl:max-w-[60%] flex  mt-6 gap-4 mb-20">
       <div className="max-w-2xl mx-auto bg-white shadow-md rounded-lg overflow-hidden mt-10">

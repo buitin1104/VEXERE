@@ -73,11 +73,11 @@
 // }
 
 export const PROVINCES = [
-    { label: 'Đà Nẵng', value: '1' },
+    { label: 'Đà Nẵng', value: '5' },
+    { label: 'Sài Gòn', value: '1' },
     { label: 'Hà Nội', value: '2' },
     { label: 'Hải Phòng', value: '3' },
     { label: 'Đà Lạt', value: '4' },
-    { label: 'Sài Gòn', value: '5' },
     { label: 'Nha Trang', value: '6' },
     { label: 'Vũng Tàu', value: '7' },
     { label: 'Buôn Ma Thuột', value: '8' },

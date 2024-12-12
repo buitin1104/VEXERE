@@ -244,7 +244,7 @@ function Header({ showText, showSearch }) {
                   variant="flat"
                   radius="sm"
                   label="Nơi xuất phát"
-                  defaultSelectedKeys={['2']}
+                  defaultSelectedKeys={['5']}
                   onChange={(e) => setFrom(e.target.value)}
                   placeholder="Bạn muốn đến đâu?"
                   startContent={
@@ -269,7 +269,7 @@ function Header({ showText, showSearch }) {
                   onChange={(e) => setTo(e.target.value)}
                   radius="sm"
                   label="Nơi đến"
-                  defaultSelectedKeys={['4']}
+                  defaultSelectedKeys={['2']}
                   placeholder="Bạn muốn đến đâu?"
                   startContent={
                     <i className="fas fa-map-marker-alt text-error"></i>

@@ -1,6 +1,8 @@
 import express from "express";
 import Bus from "../models/bus.schema.js";
+import Payment from "../models/payment.schema.js";
 import Ticket from "../models/ticket.schema.js";
+import User from "../models/user.schema.js";
 
 const router = express.Router();
 
@@ -28,7 +30,23 @@ router.post("/", async (req, res) => {
         if (!existingBus) {
             return res.status(404).json({ message: "Bus not found" });
         }
-
+        const user = await User.findById(userId);
+        if (!user) {
+            return res.status(404).json({ message: "Tài khoản không tồn tại, vui lòng đăng nhập" });
+        }
+        if (user.balance < seats.length * price) {
+            return res.status(400).json({ message: "Số dư không đủ, vui lòng nạp thêm tiền vào ví thanh toán" });
+        }
+        user.balance -= seats.length * price;
+        await user.save();
+        const newPayment = new Payment({
+            txnRef: Date.now().toString(),
+            amount: seats.length * price,
+            userId,
+            status: 1,
+            description: "Thanh toán vé xe " + existingBus.busNumber,
+        });
+        await newPayment.save();
         const newTicket = new Ticket({
             userId,
             name,
