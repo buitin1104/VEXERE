@@ -150,5 +150,19 @@ router.put("/:id", async (req, res) => {
         res.status(500).json({ message: "Error updating ticket", error: error.message });
     }
 });
+router.get("/reviews", async (req, res) => {
+    try {
+        const { userId } = req.query;
 
+        if (userId) {
+            query.userId = userId;
+        }
+        const reviews = await Ticket.find(query);
+
+        res.status(200).json(reviews);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: "Error fetching reviews", error: error.message });
+    }
+});
 export default router;
