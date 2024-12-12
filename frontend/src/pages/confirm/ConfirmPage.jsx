@@ -44,7 +44,7 @@ export default function ConfirmPage() {
       paymentMethod: values.payment ?? 1,
     };
     factories
-      .createNeưTicket(newTicket)
+      .addMoneyToWallet(newTicket)
       .then(() => {
         setLoading(false);
         ToastInfo('Đặt vé thành công');

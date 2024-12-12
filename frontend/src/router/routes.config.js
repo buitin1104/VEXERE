@@ -6,7 +6,9 @@ import CreatedSuccessPage from '@pages/created-success/CreatedSuccessPage';
 import DetailPage from '@pages/detail/DetailPage';
 import HomePage from '@pages/homepage/HomePage';
 import NotFoundPage from '@pages/not-found/NotFoundPage';
+import PaymentSuccessPage from '@pages/payment/PaymentSuccess';
 import ChangePasswordPage from '@pages/profile/ChangePasswordPage';
+import MyWalletPage from '@pages/profile/MyWallet';
 import ProfileManagerPage from '@pages/profile/ProfileManagerPage';
 import RegisterHostPage from '@pages/register-host/RegisterHostPage';
 import SearchPage from '@pages/search/SearchPage';
@@ -66,8 +68,20 @@ const routesConfig = [
         layoutProps: { showText: false },
     },
     {
+        path: RouterPath.MY_WALLET,
+        element: MyWalletPage,
+        layout: Layout,
+        layoutProps: { showText: false },
+    },
+    {
         path: RouterPath.CHANGE_PASSWORD,
         element: ChangePasswordPage,
+        layout: Layout,
+        layoutProps: { showText: false, showSearch: false },
+    },
+    {
+        path: RouterPath.VNPAY_RETURN,
+        element: PaymentSuccessPage,
         layout: Layout,
         layoutProps: { showText: false, showSearch: false },
     },

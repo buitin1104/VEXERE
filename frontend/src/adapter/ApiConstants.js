@@ -2,11 +2,12 @@ const BASE_PREFIX = 'http://localhost:5000';
 const ApiConstants = {
     USERS: 'users',
     AUTH: 'auth',
-    PAYMENT: 'payments',
+    PAYMENT: 'payment',
     REQUESTS: 'requests',
     BUSES: 'buses',
     LOCATIONS: 'locations',
     TICKET: 'ticket',
+    WALLET: 'wallet',
     LIST_BUSES: 'buses/admin/buses',
     BUS_TRIP: 'bus-trips',
 };

@@ -46,11 +46,24 @@ export const factories = {
             params,
         });
     },
+    getWalletInfo: (id) => {
+        return ApiOperation.request({
+            url: ApiConstants.PAYMENT + '/user/' + id,
+            method: 'GET',
+        });
+    },
     ///admin
     getRequestHost: () => {
         return ApiOperation.request({
             url: ApiConstants.REQUESTS,
             method: 'GET',
+        });
+    },
+    updatePayment: (data) => {
+        return ApiOperation.request({
+            url: ApiConstants.PAYMENT,
+            method: 'PUT',
+            data,
         });
     },
     updateStatusRequest: (id, value) => {
@@ -90,9 +103,16 @@ export const factories = {
             data: data,
         });
     },
-    createNeưTicket: (data) => {
+    addMoneyToWallet: (data) => {
         return ApiOperation.request({
             url: ApiConstants.TICKET,
+            method: 'POST',
+            data: data,
+        });
+    },
+    createPayment: (data) => {
+        return ApiOperation.request({
+            url: ApiConstants.PAYMENT + '/create_payment_url',
             method: 'POST',
             data: data,
         });

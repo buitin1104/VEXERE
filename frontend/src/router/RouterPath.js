@@ -8,6 +8,8 @@ export const RouterPath = {
     ADMIN: '/admin',
     PROFILE: '/profile',
     MY_TICKET: '/my-ticket',
+    MY_WALLET: '/my-wallet',
     CHANGE_PASSWORD: '/change-password',
+    VNPAY_RETURN: '/vnpay/return',
     NOT_FOUND: '/*',
 };
