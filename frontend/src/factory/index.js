@@ -110,6 +110,13 @@ export const factories = {
       data: data,
     });
   },
+  createReview: (data) => {
+    return ApiOperation.request({
+      url: ApiConstants.REVIEW + '/' + data.id,
+      method: 'POST',
+      data: data,
+    });
+  },
   addMoneyToWallet: (data) => {
     return ApiOperation.request({
       url: ApiConstants.TICKET,

@@ -1,18 +1,48 @@
 import TextAreaField from '@components/common/TextAreaField';
 import GoogleMapLink from '@components/map/GoogleMapLink';
-import { Chip } from '@nextui-org/react';
+import { Button, Chip } from '@nextui-org/react';
 import { BUSES_LIST, PROVINCES, TICKET_STATUS } from '@utils/constants';
-import { convertStringToNumber, getDate } from '@utils/Utils';
-import { useState } from 'react';
+import {
+  convertStringToNumber,
+  getDate,
+  ToastInfo,
+  ToastNotiError,
+} from '@utils/Utils';
+import { useEffect, useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
+import { useModalCommon } from '../../context/ModalContext';
+import { factories } from '../../factory';
 
 const maxStars = 5;
-export default function TicketModal({ item }) {
+export default function TicketModal({ item, onReload }) {
   const methods = useForm();
-  const [rating, setRating] = useState(0);
+  const [rating, setRating] = useState(item.rating);
   const [hover, setHover] = useState(0);
+  const { onClose } = useModalCommon();
+  useEffect(() => {
+    if (item.star) {
+      setRating(Number(item.star));
+      methods.setValue('content', item.review);
+    }
+  }, [item?.star]);
   const onSubmit = () => {
-    console.log(';22');
+    const values = methods.watch();
+    factories
+      .createReview({
+        review: values.content,
+        star: rating,
+        id: item._id,
+      })
+      .then((data) => {
+        if (data._id) {
+          ToastInfo('Cảm ơn bạn đã đánh giá dịch vụ của chúng tôi');
+          onReload();
+          onClose();
+        }
+      })
+      .catch((err) => {
+        ToastNotiError(err.response.data.message);
+      });
   };
   return (
     <div className="">
@@ -79,7 +109,7 @@ export default function TicketModal({ item }) {
             </div>
           </div>
         </div>
-        <div className="flex justify-around bg-gray-100 p-2">
+        <div className="flex justify-around bg-gray-100 p-2  rounded-t-lg">
           <div className="text-center">
             <i className="fas fa-map-marker-alt text-blue-500 text-2xl"></i>
             <p className="mt-2">Điểm đón</p>
@@ -98,7 +128,7 @@ export default function TicketModal({ item }) {
             </div>
           )}
         </div>
-        <div className="bg-gray-100 p-0">
+        <div className="bg-gray-100 p-3 rounded-b-lg">
           <h2 className="font-bold">Hướng dẫn lên xe</h2>
           <p className="mt-1">
             Bạn cần ra điểm đón trước 15 phút, đọc SĐT cho nhân viên để nhân
@@ -132,9 +162,13 @@ export default function TicketModal({ item }) {
             </div>
 
             <TextAreaField label="Đánh giá" name={'content'} />
+            <div className="flex justify-end  w-full">
+              <Button type="submit" className="mt-4">
+                Gửi đánh giá
+              </Button>
+            </div>
           </form>
         </FormProvider>
-        <div className="p-4"></div>
       </div>
     </div>
   );

@@ -177,43 +177,48 @@ router.put('/:id', async (req, res) => {
       .json({ message: 'Error updating ticket', error: error.message });
   }
 });
-router.post("/review/:ticketId", async (req, res) => {
-    try {
-        const { ticketId } = req.params;
-        const { star, review } = req.body;
+router.post('/review/:ticketId', async (req, res) => {
+  try {
+    const { ticketId } = req.params;
+    const { star, review } = req.body;
 
-        if (!star) {
-            return res.status(400).json({ message: "Vui lòng chọn số sao đánh giá" });
-        }
-
-        const ticket = await Ticket.findById(ticketId);
-        if (!ticket) {
-            return res.status(404).json({ message: "Không tìm thấy thông tin vé xe" });
-        }
-
-        ticket.star = star;
-        ticket.review = review;
-        await ticket.save();
-
-        res.status(200).json(ticket);
-    } catch (error) {
-        console.error(error);
-        res.status(500).json({ message: "Xảy ra lỗi hệ thông", error: error.message });
+    if (!star) {
+      return res.status(400).json({ message: 'Vui lòng chọn số sao đánh giá' });
     }
+
+    const ticket = await Ticket.findById(ticketId);
+    if (!ticket) {
+      return res
+        .status(404)
+        .json({ message: 'Không tìm thấy thông tin vé xe' });
+    }
+    ticket.star = star;
+    ticket.review = review;
+    await ticket.save();
+
+    res.status(200).json(ticket);
+  } catch (error) {
+    console.error(error);
+    res
+      .status(500)
+      .json({ message: 'Xảy ra lỗi hệ thông', error: error.message });
+  }
 });
-router.get("/reviews", async (req, res) => {
-    try {
-        const { userId } = req.query;
+router.get('/reviews', async (req, res) => {
+  try {
+    const { userId } = req.query;
 
-        if (userId) {
-            query.userId = userId;
-        }
-        const reviews = await Ticket.find(query);
-
-        res.status(200).json(reviews);
-    } catch (error) {
-        console.error(error);
-        res.status(500).json({ message: "Error fetching reviews", error: error.message });
+    if (userId) {
+      query.userId = userId;
     }
+    const reviews = await Ticket.find(query);
+
+    res.status(200).json(reviews);
+  } catch (error) {
+    console.error(error);
+    res
+      .status(500)
+      .json({ message: 'Error fetching reviews', error: error.message });
+  }
 });
 export default router;

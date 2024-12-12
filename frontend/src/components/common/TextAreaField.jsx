@@ -10,12 +10,13 @@ const TextAreaField = ({
   errors,
   ...props
 }) => {
-  const { register } = useFormContext();
+  const { register, watch } = useFormContext();
   return (
     <>
       <Textarea
         placeholder={placeholder}
         className={` w-full bg-transparent ${className}`}
+        value={watch(name)}
         {...register(name)}
         {...props}
       />

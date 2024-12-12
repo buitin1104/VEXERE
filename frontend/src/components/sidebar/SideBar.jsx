@@ -22,12 +22,12 @@ export default function Sidebar({ active }) {
       />
       <Tab key="/my-wallet" as={Link} to="/my-wallet" title="Ví của tôi" />
       <Tab key="/my-ticket" as={Link} to="/my-ticket" title="Lịch sử đặt vé" />
-      <Tab
+      {/* <Tab
         key="/my-review"
         as={Link}
         to="/my-review"
         title="Nhận xét của tôi"
-      />
+      /> */}
     </Tabs>
   );
 }

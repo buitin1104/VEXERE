@@ -191,9 +191,15 @@ function CardSearch({ item }) {
                 className=""
                 radius="full"
               >
-                <Tab key="policy" title="Chính sách">
+                <Tab
+                  key="policy"
+                  title="Chính sách"
+                  className="flex items-center justify-center w-full"
+                >
                   <div className="w-full bg-neutral-100 p-4 rounded-md">
-                    {item.policy && (
+                    {!item.policy ? (
+                      <p>Chưa có chính sách nào được thêm</p>
+                    ) : (
                       <div
                         dangerouslySetInnerHTML={{ __html: item.policy }}
                       ></div>
@@ -299,11 +305,11 @@ function BookingSection({ item, busModel, seatsLocked, price }) {
       for (let j = 0; j < seatsPerRow; j++) {
         const seatNumber = startSeatNumber + j * rowsPerLevel + i;
         if (seatNumber > startSeatNumber + totalSeatsInFloor - 1) break;
-        const isLocked = seatsLocked.includes(seatNumber.toString());
+        const isLocked = seatsLocked.includes(seatNumber);
         seats.push(
           <div
             key={seatNumber}
-            onClick={() => toggleSeatSelection(seatNumber)}
+            onClick={() => !isLocked && toggleSeatSelection(seatNumber)}
             className={cn(
               'relative border-grey-600 w-6 h-12 border-2 rounded flex pt-2 justify-center cursor-pointer',
               isLocked

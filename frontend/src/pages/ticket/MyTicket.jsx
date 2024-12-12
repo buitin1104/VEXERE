@@ -133,7 +133,7 @@ export default function MyTicketPage() {
   }
   function openDetail(row) {
     onOpen({
-      view: <TicketModal item={row} />,
+      view: <TicketModal item={row} onReload={loadList} />,
       title: 'Chi tiết vé',
       size: 'xl',
     });
