@@ -71,7 +71,7 @@ router.post("/", async (req, res) => {
 });
 router.get("/", async (req, res) => {
     try {
-        const { date, keyword, page = "1", limit = "10" } = req.query;
+        const { userId, date, keyword, page = "1", limit = "10" } = req.query;
 
         const pageNumber = parseInt(page, 10);
         const limitNumber = parseInt(limit, 10);
@@ -79,6 +79,9 @@ router.get("/", async (req, res) => {
         let query = {};
         if (date) {
             query.createdAt = { $gte: new Date(date) };
+        }
+        if (userId) {
+            query.userId = userId;
         }
         if (keyword) {
             query.$or = [
@@ -91,14 +94,17 @@ router.get("/", async (req, res) => {
             .skip((pageNumber - 1) * limitNumber)
             .limit(limitNumber)
             .populate('tripId')
+            .populate({
+                path: "tripId",
+                populate: {
+                    path: "origin",
+                    select: "name"
+                }
+            })
             .populate("driverId")
             .populate({
                 path: "driverId",
                 select: "phone",
-            })
-            .populate({
-                path: "origin",
-                select: "name city coordinates",
             })
             .populate("user")
             .populate("bus")
