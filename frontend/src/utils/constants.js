@@ -73,280 +73,301 @@
 // }
 
 export const PROVINCES = [
-    { label: 'Đà Nẵng', value: '5' },
-    { label: 'Sài Gòn', value: '1' },
-    { label: 'Hà Nội', value: '2' },
-    { label: 'Hải Phòng', value: '3' },
-    { label: 'Đà Lạt', value: '4' },
-    { label: 'Nha Trang', value: '6' },
-    { label: 'Vũng Tàu', value: '7' },
-    { label: 'Buôn Ma Thuột', value: '8' },
+  { label: 'Đà Nẵng', value: '5' },
+  { label: 'Sài Gòn', value: '1' },
+  { label: 'Hà Nội', value: '2' },
+  { label: 'Hải Phòng', value: '3' },
+  { label: 'Đà Lạt', value: '4' },
+  { label: 'Nha Trang', value: '6' },
+  { label: 'Vũng Tàu', value: '7' },
+  { label: 'Buôn Ma Thuột', value: '8' },
 ];
 export const BUSES_LIST = [
-    {
-        id: 1,
-        label: 'Xe Giường Nằm 40 Chỗ',
-        seats: 40,
-        rowsPerLevel: 5, // Số hàng mỗi tầng
-        seatsPerRow: 3,
-        levels: 2, // Xe 2 tầng
-        lastRowSeats: 5,
-    },
-    {
-        id: 2,
-        label: 'Xe Giường Nằm 46 Chỗ',
-        seats: 46,
-        seatsPerRow: 3,
-        levels: 2,
-        rowsPerLevel: 6,
-        lastRowSeats: 5,
-    },
-    {
-        id: 4,
-        label: 'Xe Khách 32 Chỗ',
-        seats: 32,
-        rowsPerLevel: 4,
-        seatsPerRow: 3,
-        levels: 2,
-        lastRowSeats: 4,
-    },
-    {
-        id: 5,
-        label: 'Xe Khách 34 Chỗ',
-        seats: 34,
-        rowsPerLevel: 5,
-        seatsPerRow: 3,
-        levels: 2,
-        lastRowSeats: 2,
-    },
+  {
+    id: 1,
+    label: 'Xe Giường Nằm 40 Chỗ',
+    seats: 40,
+    rowsPerLevel: 5, // Số hàng mỗi tầng
+    seatsPerRow: 3,
+    levels: 2, // Xe 2 tầng
+    lastRowSeats: 5,
+  },
+  {
+    id: 2,
+    label: 'Xe Giường Nằm 46 Chỗ',
+    seats: 46,
+    seatsPerRow: 3,
+    levels: 2,
+    rowsPerLevel: 6,
+    lastRowSeats: 5,
+  },
+  {
+    id: 4,
+    label: 'Xe Khách 32 Chỗ',
+    seats: 32,
+    rowsPerLevel: 4,
+    seatsPerRow: 3,
+    levels: 2,
+    lastRowSeats: 4,
+  },
+  {
+    id: 5,
+    label: 'Xe Khách 34 Chỗ',
+    seats: 34,
+    rowsPerLevel: 5,
+    seatsPerRow: 3,
+    levels: 2,
+    lastRowSeats: 2,
+  },
 
-    {
-        id: 3,
-        label: 'Xe Limousine 20 giường',
-        seats: 20,
-        rowsPerLevel: 5,
-        seatsPerRow: 2,
-        levels: 2,
-        lastRowSeats: 0,
-    },
-    {
-        id: 6,
-        label: 'Xe Khách 44 Chỗ',
-        seats: 44,
-        rowsPerLevel: 10,
-        seatsPerRow: 4,
-        levels: 1,
-        lastRowSeats: 5,
-    },
-    {
-        id: 7,
-        label: 'Xe Giường Nằm VIP',
-        seats: 40,
-        rowsPerLevel: 5,
-        seatsPerRow: 4,
-        levels: 2,
-        lastRowSeats: 4,
-    },
-    {
-        id: 8,
-        label: 'Xe Du Lịch 16 Chỗ',
-        seats: 16,
-        rowsPerLevel: 4,
-        seatsPerRow: 4,
-        levels: 1,
-        lastRowSeats: 4,
-    },
-    {
-        id: 9,
-        label: 'Xe Du Lịch 30 Chỗ',
-        seats: 30,
-        rowsPerLevel: 8,
-        seatsPerRow: 4,
-        levels: 1,
-        lastRowSeats: 2,
-    },
-    {
-        id: 10,
-        label: 'Xe Buýt Đường Dài',
-        seats: 50,
-        rowsPerLevel: 6,
-        seatsPerRow: 5,
-        levels: 2,
-        lastRowSeats: 6,
-    },
+  {
+    id: 3,
+    label: 'Xe Limousine 20 giường',
+    seats: 20,
+    rowsPerLevel: 5,
+    seatsPerRow: 2,
+    levels: 2,
+    lastRowSeats: 0,
+  },
+  {
+    id: 6,
+    label: 'Xe Khách 44 Chỗ',
+    seats: 44,
+    rowsPerLevel: 10,
+    seatsPerRow: 4,
+    levels: 2,
+    lastRowSeats: 5,
+  },
+  {
+    id: 7,
+    label: 'Xe Giường Nằm VIP',
+    seats: 40,
+    rowsPerLevel: 5,
+    seatsPerRow: 4,
+    levels: 2,
+    lastRowSeats: 4,
+  },
+  {
+    id: 8,
+    label: 'Xe Du Lịch 16 Chỗ',
+    seats: 16,
+    rowsPerLevel: 4,
+    seatsPerRow: 4,
+    levels: 1,
+    lastRowSeats: 4,
+  },
+  {
+    id: 9,
+    label: 'Xe Du Lịch 30 Chỗ',
+    seats: 30,
+    rowsPerLevel: 8,
+    seatsPerRow: 4,
+    levels: 1,
+    lastRowSeats: 2,
+  },
+  {
+    id: 10,
+    label: 'Xe Buýt Đường Dài',
+    seats: 50,
+    rowsPerLevel: 6,
+    seatsPerRow: 5,
+    levels: 2,
+    lastRowSeats: 6,
+  },
 ];
 
 export const AMENITIES = [
-    {
-        id: 'F1',
-        name: 'Không cần thanh toán trước',
-        icon: 'fa fa-credit-card text-green-500',
-    },
-    {
-        id: 'F3',
-        name: 'Được chọn chỗ ngồi',
-        icon: 'fa fa-chair text-purple-500',
-    },
-    {
-        id: 'F4',
-        name: 'Chăn đắp',
-        icon: 'fa fa-bed text-yellow-500',
-    },
-    {
-        id: 'F5',
-        name: 'Wifi',
-        icon: 'fa fa-wifi text-blue-500',
-    },
-    {
-        id: 'F6',
-        name: 'Điều hòa',
-        icon: 'fa fa-snowflake text-cyan-500',
-    },
-    {
-        id: 'F7',
-        name: 'Phục vụ nước miễn phí',
-        icon: 'fas  fa-tint text-blue-500',
-    },
-    {
-        id: 'F8',
-        name: 'Xuất ăn miễn phí',
-        icon: 'fa fa-utensils text-red-500',
-    },
-    {
-        id: 'F9',
-        name: 'Nghỉ giữa chuyến',
-        icon: 'fa fa-stopwatch text-orange-500',
-    },
-    {
-        id: 'F10',
-        name: 'Cho phép mang thú cưng',
-        icon: 'fa fa-paw text-brown-500',
-    },
-    {
-        id: 'F11',
-        name: 'Búa phá kính',
-        icon: 'fa fa-hammer text-gray-500',
-    },
+  {
+    id: 'F1',
+    name: 'Không cần thanh toán trước',
+    icon: 'fa fa-credit-card text-green-500',
+  },
+  {
+    id: 'F3',
+    name: 'Được chọn chỗ ngồi',
+    icon: 'fa fa-chair text-purple-500',
+  },
+  {
+    id: 'F4',
+    name: 'Chăn đắp',
+    icon: 'fa fa-bed text-yellow-500',
+  },
+  {
+    id: 'F5',
+    name: 'Wifi',
+    icon: 'fa fa-wifi text-blue-500',
+  },
+  {
+    id: 'F6',
+    name: 'Điều hòa',
+    icon: 'fa fa-snowflake text-cyan-500',
+  },
+  {
+    id: 'F7',
+    name: 'Phục vụ nước miễn phí',
+    icon: 'fas  fa-tint text-blue-500',
+  },
+  {
+    id: 'F8',
+    name: 'Xuất ăn miễn phí',
+    icon: 'fa fa-utensils text-red-500',
+  },
+  {
+    id: 'F9',
+    name: 'Nghỉ giữa chuyến',
+    icon: 'fa fa-stopwatch text-orange-500',
+  },
+  {
+    id: 'F10',
+    name: 'Cho phép mang thú cưng',
+    icon: 'fa fa-paw text-brown-500',
+  },
+  {
+    id: 'F11',
+    name: 'Búa phá kính',
+    icon: 'fa fa-hammer text-gray-500',
+  },
 ];
 
-
 export const ROLES = Object.freeze({
-    ADMIN: 'admin',
-    BUS_OWNER: 'busOwner',
-    TICKET_CONTROLLER: 'ticketController',
-    USER: 'user',
+  ADMIN: 'admin',
+  BUS_OWNER: 'busOwner',
+  TICKET_CONTROLLER: 'ticketController',
+  USER: 'user',
 });
 
 export const sidebarItems = [
-    {
-        id: 'dashboardAll',
-        icon: 'fa-th-large',
-        label: 'Tổng quan',
-        roles: [ROLES.ADMIN,],
-    },
-    {
-        id: 'usersAll',
-        icon: 'fa-users',
-        label: 'Danh sách tài khoản',
-        active: true,
-        roles: [ROLES.ADMIN],
-    },
-    {
-        id: 'request',
-        icon: 'fa-clipboard-list',
-        label: 'Đăng ký nhà xe mới',
-        roles: [ROLES.ADMIN],
-    },
-    {
-        id: 'busAll',
-        icon: 'fa-bus',
-        label: 'Danh sách chuyến xe',
-        roles: [ROLES.ADMIN],
-    },
-    {
-        id: 'ticketAll',
-        icon: 'fa-tasks',
-        label: 'Danh sách vé xe',
-        active: true,
-        roles: [ROLES.ADMIN],
-    },
-    {
-        id: 'dashboard',
-        icon: 'fa-th-large',
-        label: 'Tổng quan',
-        roles: [ROLES.BUS_OWNER],
-    },
-    {
-        id: 'users',
-        icon: 'fa-users',
-        label: 'Danh sách tài khoản',
-        active: true,
-        roles: [ROLES.BUS_OWNER],
-    },
-    {
-        id: 'buses',
-        icon: 'fa-bus',
-        label: 'Danh sách xe',
-        roles: [ROLES.BUS_OWNER, ROLES.TICKET_CONTROLLER],
-    },
-    {
-        id: 'bus-trip',
-        icon: 'fa-route',
-        label: 'Danh sách chuyến xe',
-        roles: [ROLES.BUS_OWNER, ROLES.TICKET_CONTROLLER],
-    },
-    {
-        id: 'tickets',
-        icon: 'fa-clipboard-list',
-        label: 'Danh sách vé xe',
-        roles: [ROLES.BUS_OWNER, ROLES.TICKET_CONTROLLER],
-    },
-    {
-        id: 'profile',
-        icon: 'fa-smile',
-        label: 'Thông tin tài khoản',
-        roles: [ROLES.BUS_OWNER, ROLES.TICKET_CONTROLLER, ROLES.USER],
-    },
+  {
+    id: 'dashboardAll',
+    icon: 'fa-th-large',
+    label: 'Tổng quan',
+    roles: [ROLES.ADMIN],
+  },
+  {
+    id: 'usersAll',
+    icon: 'fa-users',
+    label: 'Danh sách tài khoản',
+    active: true,
+    roles: [ROLES.ADMIN],
+  },
+  {
+    id: 'request',
+    icon: 'fa-clipboard-list',
+    label: 'Đăng ký nhà xe mới',
+    roles: [ROLES.ADMIN],
+  },
+  {
+    id: 'busAll',
+    icon: 'fa-bus',
+    label: 'Danh sách chuyến xe',
+    roles: [ROLES.ADMIN],
+  },
+  {
+    id: 'ticketAll',
+    icon: 'fa-tasks',
+    label: 'Danh sách vé xe',
+    active: true,
+    roles: [ROLES.ADMIN],
+  },
+  {
+    id: 'dashboard',
+    icon: 'fa-th-large',
+    label: 'Tổng quan',
+    roles: [ROLES.BUS_OWNER],
+  },
+  {
+    id: 'users',
+    icon: 'fa-users',
+    label: 'Danh sách tài khoản',
+    active: true,
+    roles: [ROLES.BUS_OWNER],
+  },
+  {
+    id: 'buses',
+    icon: 'fa-bus',
+    label: 'Danh sách xe',
+    roles: [ROLES.BUS_OWNER, ROLES.TICKET_CONTROLLER],
+  },
+  {
+    id: 'bus-trip',
+    icon: 'fa-route',
+    label: 'Danh sách chuyến xe',
+    roles: [ROLES.BUS_OWNER, ROLES.TICKET_CONTROLLER],
+  },
+  {
+    id: 'tickets',
+    icon: 'fa-clipboard-list',
+    label: 'Danh sách vé xe',
+    roles: [ROLES.BUS_OWNER, ROLES.TICKET_CONTROLLER],
+  },
+  {
+    id: 'profile',
+    icon: 'fa-smile',
+    label: 'Thông tin tài khoản',
+    roles: [ROLES.BUS_OWNER, ROLES.TICKET_CONTROLLER, ROLES.USER],
+  },
 ];
 
 export const GENDER = {
-    1: 'Nam',
-    2: 'Nữ',
-    3: 'Khác',
-}
+  1: 'Nam',
+  2: 'Nữ',
+  3: 'Khác',
+};
 
 export const STATUS = {
-    true: 'Hoạt động',
-    false: 'Vô hiệu hóa',
-}
+  true: 'Hoạt động',
+  false: 'Vô hiệu hóa',
+};
 
 export const PAYMENT_METHODS = [
-    // {
-    //     id: '1',
-    //     label: 'Thanh toán khi lên xe',
-    // },
-    {
-        id: '1',
-        label: 'Thanh toán qua VNPAY',
-    },
-    {
-        id: '2',
-        label: 'Thanh toán qua ví MOMO',
-        disable: true
-    },
-]
+  // {
+  //     id: '1',
+  //     label: 'Thanh toán khi lên xe',
+  // },
+  {
+    id: '1',
+    label: 'Thanh toán qua VNPAY',
+  },
+  {
+    id: '2',
+    label: 'Thanh toán qua ví MOMO',
+    disable: true,
+  },
+];
 export const BusTripStatusConstant = Object.freeze({
-    SCHEDULED: "Scheduled",
-    COMPLETED: "Completed",
-    CANCELLED: "Cancelled",
+  SCHEDULED: 'Scheduled',
+  COMPLETED: 'Completed',
+  CANCELLED: 'Cancelled',
 });
 
 export const WEEKDAYS = [
-    'Chủ nhật ',
-    'Thứ hai',
-    'Thứ ba',
-    'Thứ tư',
-    'Thứ năm',
-    'Thứ sáu',
-    'Thứ bảy',
-]
+  'Chủ nhật ',
+  'Thứ hai',
+  'Thứ ba',
+  'Thứ tư',
+  'Thứ năm',
+  'Thứ sáu',
+  'Thứ bảy',
+];
+export const TICKET_STATUS = [
+  {
+    value: 1,
+    label: 'Đã thanh toán',
+    color: 'success',
+  },
+  {
+    value: 2,
+    label: 'Đã huỷ chuyến',
+    color: 'danger',
+  },
+  {
+    value: 3,
+    label: 'Đã hoàn thành',
+    color: 'success',
+  },
+  {
+    value: 1,
+    label: 'Đã đánh giá',
+    color: 'success',
+  },
+];

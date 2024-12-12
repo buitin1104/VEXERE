@@ -1,15 +1,16 @@
 import { Textarea } from '@nextui-org/react';
 import React from 'react';
+import { useFormContext } from 'react-hook-form';
 
 const TextAreaField = ({
   type = 'text',
   placeholder = '',
   name,
-  register,
-  errors,
   className = '',
+  errors,
   ...props
 }) => {
+  const { register } = useFormContext();
   return (
     <>
       <Textarea
@@ -18,7 +19,7 @@ const TextAreaField = ({
         {...register(name)}
         {...props}
       />
-      {errors[name] && (
+      {errors?.[name] && (
         <span className="text-red">Bắt buộc nhập thông tin</span>
       )}
     </>
