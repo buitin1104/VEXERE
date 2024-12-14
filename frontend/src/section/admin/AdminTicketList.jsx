@@ -1,96 +1,106 @@
 import { CustomTable } from '@components/custom-table/CustomTable';
-import { Chip, Input, Tab, Tabs } from '@nextui-org/react';
-import { convertStringToNumber } from '@utils/Utils';
-import React, { useState } from 'react';
+import { Button, Chip, Input, Tab, Tabs } from '@nextui-org/react';
+import React, { useEffect, useState } from 'react';
 
-const ticketData = [
-  {
-    Address: 'Điện Biên Phủ',
-    PhoneNumber: '0987654321',
-    PassengerName: 'Duy Anh',
-    BranchName: 'Hoàng Long',
-    BusName: 'Hoàng Long 1',
-    TicketCount: '3',
-    price: '123000',
-    DepartureTime: '14:30',
-    ArrivalTime: '18:30',
-    Route: 'Hà Nội - Thanh Hóa',
-    Status: 'Đã đặt',
-    Type: 'Pickup',
-  },
-  {
-    Address: 'Nguyễn Trãi',
-    PhoneNumber: '0981234567',
-    PassengerName: 'Minh Tú',
-    TicketCount: '1',
-    DepartureTime: '09:00',
-    price: '323000',
-    ArrivalTime: '13:00',
-    Route: 'Hà Nội - Nam Định',
-    Status: 'Đã hủy',
-    Type: 'Dropoff',
-  },
-  // Thêm nhiều vé khác nếu cần
-];
-
-const columns = [
-  {
-    id: 'PassengerName',
-    label: 'Tên Hành Khách',
-    renderCell: (row) => <div className="w-40">{row.PassengerName}</div>,
-  },
-  {
-    id: 'BranchName',
-    label: 'Nhà xe',
-    renderCell: (row) => <div className="w-40">{row.BranchName}</div>,
-  },
-  {
-    id: 'BusName',
-    label: 'Tên xe',
-    renderCell: (row) => <div className="w-40">{row.BusName}</div>,
-  },
-  {
-    id: 'Route',
-    label: 'Tuyến Đường',
-    renderCell: (row) => <span>{row.Route}</span>,
-  },
-  {
-    id: 'PhoneNumber',
-    label: 'Số Điện Thoại',
-    renderCell: (row) => <span>{row.PhoneNumber}</span>,
-  },
-  {
-    id: 'count',
-    label: 'Giá tiền',
-    renderCell: (row) => (
-      <span>{convertStringToNumber(row.TicketCount * row.price)}</span>
-    ),
-  },
-  {
-    id: 'time',
-    label: 'Thời Gian',
-    renderCell: (row) => (
-      <span>
-        {row.DepartureTime} - {row.ArrivalTime}
-      </span>
-    ),
-  },
-  {
-    id: 'Status',
-    label: 'Trạng Thái',
-    renderCell: (row) => (
-      <div className="w-36">
-        <Chip color={row.Status === 'Đã đặt' ? 'primary' : 'default'}>
-          {row.Status}
-        </Chip>
-      </div>
-    ),
-  },
-];
+import TicketModal from '@pages/ticket/TicketModal';
+import { TICKET_STATUS } from '@utils/constants';
+import { getDate } from '@utils/Utils';
+import { useAuth } from '../../context/AuthContext';
+import { useModalCommon } from '../../context/ModalContext';
+import { factories } from '../../factory';
 
 export default function TicketListPage() {
   const [activeTab, setActiveTab] = useState();
-
+  const [loading, setLoading] = useState(true);
+  const [data, setData] = useState([]);
+  const [pagination, setPagination] = useState();
+  const { onOpen } = useModalCommon();
+  const { auth } = useAuth();
+  useEffect(() => {
+    if (auth) {
+      loadList();
+    }
+  }, [auth, activeTab]);
+  function loadList() {
+    setLoading(true);
+    const params = {
+      status: activeTab,
+      page: pagination?.current,
+    };
+    factories
+      .getListTicket(params)
+      .then((data) => {
+        setData(data?.tickets);
+        setLoading(false);
+        setPagination(data.pagination);
+      })
+      .finally(() => setLoading(false));
+  }
+  function openDetail(row) {
+    onOpen({
+      view: <TicketModal item={row} onReload={loadList} />,
+      title: 'Chi tiết vé',
+      size: 'xl',
+    });
+  }
+  const columns = [
+    {
+      id: 'BusName',
+      label: 'Tên xe',
+      renderCell: (row) => <div className="w-28">{row.bus.busNumber}</div>,
+    },
+    {
+      id: 'Route',
+      label: 'Đi từ',
+      renderCell: (row) => (
+        <div className="w-32">
+          <span>{row.tripId.origin.name}</span>
+        </div>
+      ),
+    },
+    {
+      id: 'Route2',
+      label: 'Đi đên',
+      renderCell: (row) => (
+        <div className="w-32">
+          <span>{row.tripId.destination.name}</span>
+        </div>
+      ),
+    },
+    {
+      id: 'time',
+      label: 'Thời Gian',
+      renderCell: (row) => (
+        <div className="w-32">{getDate(row.tripId.departureTime, 3)}</div>
+      ),
+    },
+    {
+      id: 'Status',
+      label: 'Trạng Thái',
+      renderCell: (row) => (
+        <Chip
+          color={TICKET_STATUS.find((x) => x.value === row.status)?.color}
+          className="text-white"
+        >
+          {TICKET_STATUS.find((x) => x.value === row.status)?.label}
+        </Chip>
+      ),
+    },
+    {
+      id: 'detail',
+      label: '',
+      renderCell: (row) => (
+        <Button
+          onClick={() => openDetail(row)}
+          variant="light"
+          className="rounded-lg"
+          color={'primary'}
+        >
+          Xem chi tiết
+        </Button>
+      ),
+    },
+  ];
   return (
     <div className="bg-white rounded shadow-md px-4 py-3 h-full">
       <div className="flex items-center justify-between mb-3">
@@ -103,9 +113,10 @@ export default function TicketListPage() {
             selectedKey={activeTab}
             onSelectionChange={setActiveTab}
           >
-            <Tab key="1" title="Tất cả" />
-            <Tab key="2" title="Đã đặt" />
-            <Tab key="3" title="Đã hủy" />
+            <Tab key="" title="Tất cả" />
+            <Tab key="1" title="Đã đặt" />
+            <Tab key="2" title="Đã hủy" />
+            <Tab key="4" title="Đã đánh giá" />
           </Tabs>
         </div>
       </div>
@@ -117,7 +128,7 @@ export default function TicketListPage() {
         startContent={<i className="fas fa-search text-gray-500 mr-2"></i>}
       />
       <div className="mt-4">
-        <CustomTable columns={columns} data={ticketData} />
+        <CustomTable columns={columns} data={data ?? []} isLoading={loading} />{' '}
       </div>
     </div>
   );

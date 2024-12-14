@@ -1,4 +1,3 @@
-import { CustomTable } from '@components/custom-table/CustomTable';
 import RegisterModal from '@components/header/Register';
 import ConfirmModal from '@components/modal/ConfirmModal';
 import EditUserModal from '@components/modal/EditUserModal';
@@ -9,6 +8,7 @@ import React, { useEffect, useState } from 'react';
 import { useAuth } from '../../context/AuthContext';
 import { useModalCommon } from '../../context/ModalContext';
 import { factories } from '../../factory';
+import { CustomTable } from '@components/custom-table/CustomTable';
 
 export default function AdminUser({ isAdmin }) {
   const { auth } = useAuth();
@@ -29,6 +29,7 @@ export default function AdminUser({ isAdmin }) {
     const params = {
       roles: activeTab,
       page: pagination?.current,
+      ...(auth.roles[0] === ROLES.BUS_OWNER && { bossId: auth._id }),
       ...(keyword ? { keyword } : {}),
     };
     factories
@@ -45,7 +46,7 @@ export default function AdminUser({ isAdmin }) {
     {
       id: 'name',
       label: 'Họ và tên',
-      renderCell: (row) => <div className="w-40">{row.fullName}</div>,
+      renderCell: (row) => <div className="w-40">{row?.fullName}</div>,
     },
     {
       id: 'avatar',
@@ -55,29 +56,29 @@ export default function AdminUser({ isAdmin }) {
     {
       id: 'role',
       label: 'Email',
-      renderCell: (row) => <span>{row.email}</span>,
+      renderCell: (row) => <span>{row?.email}</span>,
     },
     {
       id: 'phone',
       label: 'Số điện thoại',
-      renderCell: (row) => <span>{row.phone}</span>,
+      renderCell: (row) => <span>{row?.phone}</span>,
     },
     {
       id: 'gender',
       label: 'Giới tính',
-      renderCell: (row) => <span>{GENDER[row.gender]}</span>,
+      renderCell: (row) => <span>{GENDER[row?.gender]}</span>,
     },
     {
       id: 'dob',
       label: 'Ngày sinh',
-      renderCell: (row) => <span>{row.dob}</span>,
+      renderCell: (row) => <span>{row?.dob}</span>,
     },
     {
       id: 'status',
       label: 'Trạng thái',
       renderCell: (row) => (
         <Chip color={row.status ? 'success' : 'danger'} className="text-white">
-          {STATUS[row.status]}
+          {STATUS[row?.status]}
         </Chip>
       ),
     },
@@ -101,7 +102,7 @@ export default function AdminUser({ isAdmin }) {
             size="sm"
             className="border-none max-w-8 h-8"
           >
-            {row.status ? (
+            {row?.status ? (
               <i className="fas fa-pause text-pink-500 text-sm"></i>
             ) : (
               <i className="fas fa-play text-blue-500 text-sm"></i>
@@ -153,7 +154,7 @@ export default function AdminUser({ isAdmin }) {
   }
   function addEmployee() {
     onOpen({
-      view: <RegisterModal addEmployee onReload={loadList} />,
+      view: <RegisterModal addEmployee onReload={loadList} bossId={auth._id} />,
       title: 'Đăng ký tài khoản mới',
       showFooter: false,
     });
@@ -162,23 +163,34 @@ export default function AdminUser({ isAdmin }) {
     <div className="bg-white rounded px-4 py-3">
       <div className="flex items-center justify-between mb-3">
         <div className="flex">
-          <Tabs
-            variant="light"
-            color="primary"
-            aria-label="Tabs colors"
-            radius="lg"
-            selectedKey={activeTab}
-            onSelectionChange={setActiveTab}
-          >
-            {auth.roles?.[0] === ROLES.ADMIN && (
-              <>
+          {auth?.roles[0] === ROLES.ADMIN ? (
+            <>
+              <Tabs
+                variant="light"
+                color="primary"
+                aria-label="Tabs colors"
+                radius="lg"
+                selectedKey={activeTab}
+                onSelectionChange={setActiveTab}
+              >
                 <Tab key="" title="Tất cả" />
                 <Tab key={ROLES.USER} title="Khách hàng" />
                 <Tab key={ROLES.BUS_OWNER} title="Chủ nhà xe" />
-              </>
-            )}
-            <Tab key={ROLES.TICKET_CONTROLLER} title="Nhân viên" />
-          </Tabs>
+                <Tab key={ROLES.TICKET_CONTROLLER} title="Nhân viên" />
+              </Tabs>
+            </>
+          ) : (
+            <Tabs
+              variant="light"
+              color="primary"
+              aria-label="Tabs colors"
+              radius="lg"
+              selectedKey={activeTab}
+              onSelectionChange={setActiveTab}
+            >
+              <Tab key={ROLES.TICKET_CONTROLLER} title="Nhân viên" />
+            </Tabs>
+          )}
         </div>
         {auth.roles?.[0] === ROLES.BUS_OWNER && (
           <Button
