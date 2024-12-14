@@ -28,6 +28,11 @@ const userSchema = new mongoose.Schema(
                 enum: Object.values(Role),
             },
         ],
+        bossId: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "User",
+            required: false,
+        },
         profilePictureUrl: { type: String, default: null },
         isRequestBusOwner: { type: Boolean, default: false },
     },

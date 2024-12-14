@@ -47,11 +47,16 @@ router.patch("/:userId", async (req, res) => {
             return res.status(400).json({ message: "No fields to update" });
         }
 
-        const allowedFields = ["fullName", "profilePictureUrl", 'phone', 'dob', 'gender', 'status'];
+        const allowedFields = ["fullName", "profilePictureUrl", 'phone', 'dob', 'gender', 'status', 'bossId'];
         const fieldsToUpdate = Object.keys(updates).filter((field) =>
             allowedFields.includes(field),
         );
-
+        if (updates.phone) {
+            const phoneExists = await User.findOne({ phone: updates.phone });
+            if (phoneExists && phoneExists._id.toString() !== userId) {
+                return res.status(400).json({ message: "Số điện thoại đã được sử dụng" });
+            }
+        }
         if (fieldsToUpdate.length === 0) {
             return res.status(400).json({ message: "No valid fields to update" });
         }
@@ -66,7 +71,7 @@ router.patch("/:userId", async (req, res) => {
         });
 
         if (!updatedUser) {
-            return res.status(404).json({ message: "User not found" });
+            return res.status(404).json({ message: "Không tìm thấy tài khoản" });
         }
 
         res.status(200).json(updatedUser);
@@ -94,8 +99,8 @@ router.get("/:userId", async (req, res) => {
 });
 router.get("/", async (req, res) => {
     try {
-        const { keyword, roles, page = "1", limit = "10" } = req.query;
-        let query = {};
+        const { keyword, bossId, roles, page = "1", limit = "10" } = req.query;
+        let query = { email: { $ne: "admin@vexere.com" } };
         if (keyword) {
             query.$or = [
                 { fullName: { $regex: `.*${keyword}.*`, $options: "i" } },
@@ -105,6 +110,9 @@ router.get("/", async (req, res) => {
         }
         if (roles) {
             query.roles = roles;
+        }
+        if (bossId) {
+            query.bossId = bossId;
         }
         const pageNumber = parseInt(page, 10);
         const limitNumber = parseInt(limit, 10);

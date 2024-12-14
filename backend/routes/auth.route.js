@@ -10,7 +10,7 @@ const router = express.Router();
 
 router.post("/sign-up", async (req, res) => {
     try {
-        const { email, password, fullName, phone, branchName, roles, profilePictureUrl } = req.body;
+        const { email, password, fullName, phone, branchName, roles, profilePictureUrl, bossId } = req.body;
 
         const hashedPassword = await bcrypt.hash(password, 10);
         const newUser = new User({
@@ -21,6 +21,7 @@ router.post("/sign-up", async (req, res) => {
             profilePictureUrl,
             phone,
             ...(branchName ? { branchName } : {}),
+            ...(bossId ? { bossId } : {}),
         });
 
         await newUser.save();

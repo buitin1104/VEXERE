@@ -1,6 +1,5 @@
 import express from "express";
 import { RequestActionConstant } from "../constants/requestAction.constant.js";
-import { Role } from "../constants/role.constant.js";
 import Request from "../models/request.schema.js";
 import User from "../models/user.schema.js";
 
@@ -62,13 +61,9 @@ router.patch("/:requestId", async (req, res) => {
             }
 
             if (isApprove) {
-                user.isRequestBusOwner = false;
+                user.isRequestBusOwner = true;
             } else {
                 user.isRequestBusOwner = false;
-                const idx = user.roles.indexOf(Role.BUS_OWNER);
-                if (idx !== -1) {
-                    user.roles.splice(idx, 1);
-                }
             }
 
             await user.save();
