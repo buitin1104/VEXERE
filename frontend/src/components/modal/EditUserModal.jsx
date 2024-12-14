@@ -10,6 +10,7 @@ import { useModalCommon } from '../../context/ModalContext';
 import { factories } from '../../factory';
 
 export default function EditUserModal({ auth, onReload }) {
+  console.log('🚀 ~ EditUserModal ~ auth:', auth);
   const methods = useForm();
   const { onClose } = useModalCommon();
 
@@ -42,6 +43,7 @@ export default function EditUserModal({ auth, onReload }) {
       ...values,
       profilePictureUrl: newUrl,
       dob: getDate(values.dob, 13) ?? null,
+      bossId: auth?.bossId ?? '',
     };
     factories
       .updateUserInfo(auth._id, newValues)

@@ -7,7 +7,7 @@ import { factories } from '../../factory';
 import { ToastInfo, ToastNotiError } from '../../utils/Utils';
 import LoginModal from './Login';
 
-const RegisterModal = ({ addEmployee, onReload }) => {
+const RegisterModal = ({ addEmployee, bossId, onReload }) => {
   const { onOpen, onClose } = useModalCommon();
 
   const [isVisible, setIsVisible] = useState(false);
@@ -49,6 +49,7 @@ const RegisterModal = ({ addEmployee, onReload }) => {
       profilePictureUrl:
         'https://ui-avatars.com/api/?name=' + email.replace('@gmail.com', ''),
       roles: [addEmployee ? ROLES.TICKET_CONTROLLER : ROLES.USER],
+      bossId: bossId ?? '',
     };
     factories
       .getSignUpEmail(metaData)
@@ -92,7 +93,6 @@ const RegisterModal = ({ addEmployee, onReload }) => {
   //     try {
   //       const result = await signInWithPopup(auth, googleProvider);
   //       const user = result.user;
-  //       console.log('🚀 ~ ~ user:', user);
   //       await linkEmailAndPassword(user, email, user.uid);
   //       ToastInfo('Đăng ký thành công.');
   //     } catch (error) {

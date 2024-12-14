@@ -77,7 +77,7 @@ export default function MyWalletPage() {
   }, [auth]);
   return (
     <div className="mx-auto my-20 flex justify-center">
-      <div className="flex w-full max-w-[60%] gap-6">
+      <div className="flex w-full max-w-[80%] gap-6">
         <div className="w-fit">
           <Sidebar active="1" />
         </div>

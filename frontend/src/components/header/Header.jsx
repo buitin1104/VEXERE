@@ -29,6 +29,7 @@ function Header({ showText, showSearch }) {
   const navigate = useNavigate();
   const { onOpen } = useModalCommon();
   const { auth, logout } = useAuth();
+  console.log('🚀 ~ Header ~ auth:', auth);
   const router = useRouter();
 
   const [date, setDate] = useState(now(getLocalTimeZone()));
@@ -135,7 +136,9 @@ function Header({ showText, showSearch }) {
                         <i className="fa fa-caret-down text-white"></i>
                       </Button>
                     </DropdownTrigger>
-                    {auth.roles[0] === ROLES.USER ? (
+                    {auth.roles[0] === ROLES.USER ||
+                    (auth.roles[0] === ROLES.BUS_OWNER &&
+                      auth.isRequestBusOwner === false) ? (
                       <DropdownMenu aria-label="Static Actions">
                         <DropdownItem
                           key="profile"
@@ -150,13 +153,6 @@ function Header({ showText, showSearch }) {
                         >
                           <i className="fas fa-ticket-alt mr-2"></i>
                           <span>Vé của tôi</span>
-                        </DropdownItem>
-                        <DropdownItem
-                          key="review"
-                          onClick={() => navigate('/my-review')}
-                        >
-                          <i className="fas fa-comment-dots mr-2"></i>
-                          <span>Nhận xét chuyến đi</span>
                         </DropdownItem>
                         <DropdownItem onClick={logout} color="danger">
                           <i className="fas fa-power-off mr-2"></i>

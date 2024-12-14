@@ -10,6 +10,7 @@ import {
 } from '@utils/Utils';
 import { useEffect, useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
+import { useAuth } from '../../context/AuthContext';
 import { useModalCommon } from '../../context/ModalContext';
 import { factories } from '../../factory';
 
@@ -19,6 +20,8 @@ export default function TicketModal({ item, onReload }) {
   const [rating, setRating] = useState(item.rating);
   const [hover, setHover] = useState(0);
   const { onClose } = useModalCommon();
+  const { auth } = useAuth();
+  const isOwner = auth?._id === item.userId;
   useEffect(() => {
     if (item.star) {
       setRating(Number(item.star));
@@ -56,7 +59,7 @@ export default function TicketModal({ item, onReload }) {
           </h2>
         </div>
         <div className="p-4">
-          <div className="bg-yellow-400 p-4 rounded-md text-center">
+          <div className="bg-yellow-400 p-2 rounded-md text-center">
             <div className="flex flex-row justify-between">
               <p className="font-bold">Tuyến đường:</p>
               <div className="flex justify-end gap-2">
@@ -109,7 +112,7 @@ export default function TicketModal({ item, onReload }) {
             </div>
           </div>
         </div>
-        <div className="flex justify-around bg-gray-100 p-2  rounded-t-lg">
+        <div className="flex justify-around bg-gray-100 p-1  rounded-t-lg">
           <div className="text-center">
             <i className="fas fa-map-marker-alt text-blue-500 text-2xl"></i>
             <p className="mt-2">Điểm đón</p>
@@ -132,7 +135,7 @@ export default function TicketModal({ item, onReload }) {
           <h2 className="font-bold">Hướng dẫn lên xe</h2>
           <p className="mt-1">
             Bạn cần ra điểm đón trước 15 phút, đọc SĐT cho nhân viên để nhân
-            viên văn phòng vé để đổi vé giấy
+            viên văn phòng vé để đổi vé giấy.
           </p>
           <p className="mt-2">
             Khi lên xe, bạn xuất trình vé cho tài xế hoặc phụ xe.
@@ -140,7 +143,7 @@ export default function TicketModal({ item, onReload }) {
         </div>
         <FormProvider {...methods}>
           <form onSubmit={methods.handleSubmit(onSubmit)}>
-            <div className="mt-2">
+            <div className="my-2 bg-neutral-100 p-2 rounded-xl">
               <div className="flex space-x-1 w-full justify-center mb-1">
                 {Array.from({ length: maxStars }, (_, index) => {
                   const starValue = index + 1;
@@ -152,21 +155,31 @@ export default function TicketModal({ item, onReload }) {
                           ? 'text-yellow-400'
                           : 'text-gray-400'
                       }`}
-                      onClick={() => setRating(starValue)}
-                      onMouseEnter={() => setHover(starValue)}
-                      onMouseLeave={() => setHover(0)}
+                      onClick={() => isOwner && setRating(starValue)}
+                      onMouseEnter={() => isOwner && setHover(starValue)}
+                      onMouseLeave={() => isOwner && setHover(0)}
                     ></i>
                   );
                 })}
               </div>
             </div>
 
-            <TextAreaField label="Đánh giá" name={'content'} />
-            <div className="flex justify-end  w-full">
-              <Button type="submit" className="mt-4">
-                Gửi đánh giá
-              </Button>
-            </div>
+            <TextAreaField
+              label="Đánh giá"
+              name={'content'}
+              isDisabled={!isOwner}
+            />
+            {isOwner && (
+              <div className="flex justify-end  w-full">
+                <Button
+                  type="submit"
+                  className="mt-4 text-white"
+                  color="secondary"
+                >
+                  Gửi đánh giá
+                </Button>
+              </div>
+            )}
           </form>
         </FormProvider>
       </div>

@@ -9,44 +9,6 @@ import { useModalCommon } from '../../context/ModalContext';
 import { factories } from '../../factory';
 import TicketModal from './TicketModal';
 
-const ticketData = [
-  {
-    Address: 'Điện Biên Phủ',
-    PhoneNumber: '0987654321',
-    PassengerName: 'Duy Anh',
-    BranchName: 'Hoàng Long',
-    BusName: 'Hoàng Long 1',
-    TicketCount: '2',
-    Seats: '1,2',
-    lat: '16.05632000000001',
-    lng: '108.17320332563219',
-    price: '500000',
-    DepartureTime: '14:30',
-    ArrivalTime: '18:30',
-    Route: 'Hà Nội - Thanh Hóa',
-    Status: 'Đã thanh toán',
-    Type: 'Pickup',
-  },
-  {
-    Address: 'Nguyễn Trãi',
-    PhoneNumber: '0981234567',
-    PassengerName: 'Minh Tú',
-    Seats: '3',
-    BranchName: 'Hoàng Long',
-    lat: '21.028535524073362',
-    lng: '105.7783269830858',
-    BusName: 'Hoàng Long 2',
-    TicketCount: '1',
-    DepartureTime: '09:00',
-    price: '323000',
-    ArrivalTime: '13:00',
-    Route: 'Hà Nội - Nam Định',
-    Status: 'Đã hủy',
-    Type: 'Dropoff',
-  },
-  // Thêm nhiều vé khác nếu cần
-];
-
 export default function MyTicketPage() {
   const columns = [
     {
@@ -141,11 +103,11 @@ export default function MyTicketPage() {
 
   return (
     <div className="mx-auto my-20 flex justify-center items-center">
-      <div className="flex w-full max-w-[70%] gap-6">
+      <div className="flex w-full max-w-[80%] gap-6">
         <div className="w-fit">
           <Sidebar />
         </div>
-        <div className="flex flex-grow max-w-[900px]">
+        <div className="flex flex-grow">
           <Card className="w-full">
             <CardBody className="w-full gap-4">
               <div className="flex flex-row justify-between p-2">
