@@ -8,6 +8,7 @@ import busRoute from "./routes/bus.route.js";
 import busTripRoute from "./routes/busTrip.route.js";
 import locationRoute from "./routes/location.route.js";
 import paymentRoute from "./routes/payment.route.js";
+import staticsRoute from "./routes/statics.route.js";
 import requestRoute from "./routes/request.route.js";
 import ticketRouter from "./routes/ticket.route.js";
 import userRoute from "./routes/user.route.js";
@@ -20,9 +21,9 @@ await connectDB();
 const app = express();
 
 const corsOptions = {
-    origin: "*",
-    methods: ["GET", "POST", "PUT", "DELETE", "PATCH"],
-    credentials: true,
+  origin: "*",
+  methods: ["GET", "POST", "PUT", "DELETE", "PATCH"],
+  credentials: true,
 };
 
 app.use(cors(corsOptions));
@@ -36,8 +37,9 @@ app.use("/users", userRoute);
 app.use("/ticket", ticketRouter);
 app.use("/requests", requestRoute);
 app.use("/payment", paymentRoute);
+app.use("/statics", staticsRoute);
 app.use(cookieParser());
 
 app.listen(port, () => {
-    console.log(`Server running on port ${port}`);
+  console.log(`Server running on port ${port}`);
 });
