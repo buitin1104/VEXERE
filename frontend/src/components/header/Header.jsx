@@ -29,7 +29,6 @@ function Header({ showText, showSearch }) {
   const navigate = useNavigate();
   const { onOpen } = useModalCommon();
   const { auth, logout } = useAuth();
-  console.log('🚀 ~ Header ~ auth:', auth);
   const router = useRouter();
 
   const [date, setDate] = useState(now(getLocalTimeZone()));

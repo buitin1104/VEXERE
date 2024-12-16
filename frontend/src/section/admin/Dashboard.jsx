@@ -1,3 +1,5 @@
+import { Spinner } from '@nextui-org/react';
+import { convertStringToNumber } from '@utils/Utils';
 import {
   ArcElement,
   BarElement,
@@ -11,8 +13,9 @@ import {
   Title,
   Tooltip,
 } from 'chart.js';
-import React from 'react';
-import { Bar, Line, Pie } from 'react-chartjs-2';
+import React, { useEffect, useState } from 'react';
+import { Bar, Line } from 'react-chartjs-2';
+import { factories } from '../../factory';
 
 // Đăng ký các thành phần Chart.js
 ChartJS.register(
@@ -51,34 +54,6 @@ const pieOptions = {
 };
 
 const Dashboard = () => {
-  // Dữ liệu doanh thu theo tháng
-  const revenueData = {
-    labels: ['Tháng 1', 'Tháng 2', 'Tháng 3', 'Tháng 4', 'Tháng 5', 'Tháng 6'],
-    datasets: [
-      {
-        label: 'Doanh Thu (VNĐ)',
-        data: [50000000, 70000000, 30000000, 90000000, 60000000, 80000000],
-        backgroundColor: 'rgba(75, 192, 192, 0.6)',
-        borderColor: 'rgba(75, 192, 192, 1)',
-        borderWidth: 1,
-      },
-    ],
-  };
-
-  // Dữ liệu số lượng lượt đặt xe
-  const bookingData = {
-    labels: ['Tháng 1', 'Tháng 2', 'Tháng 3', 'Tháng 4', 'Tháng 5', 'Tháng 6'],
-    datasets: [
-      {
-        label: 'Số Lượt Đặt Xe',
-        data: [120, 150, 90, 200, 160, 180],
-        backgroundColor: 'rgba(255, 99, 132, 0.6)',
-        borderColor: 'rgba(255, 99, 132, 1)',
-        borderWidth: 1,
-      },
-    ],
-  };
-
   // Dữ liệu biểu đồ tròn
   const pieData = {
     labels: ['Nhà Xe A', 'Nhà Xe B', 'Nhà Xe C'],
@@ -94,21 +69,93 @@ const Dashboard = () => {
       },
     ],
   };
+  const [dataMonth, setDataMonth] = useState();
+  const [dataYearRevenue, setDataYearRevenue] = useState();
+  const [dataYearTicket, setDataYearTicket] = useState();
+  const [dataYearTopRevenue, setDataYearTopRevenue] = useState();
+  useEffect(() => {
+    loadListMonth();
+    loadListRevenueYear();
+    loadListRevenueTicket();
+    loadListYearTopBus();
+  }, []);
 
-  // Dữ liệu biểu đồ đường
-  const lineData = {
-    labels: ['Tháng 1', 'Tháng 2', 'Tháng 3', 'Tháng 4', 'Tháng 5', 'Tháng 6'],
-    datasets: [
-      {
-        label: 'Doanh Thu (VNĐ)',
-        data: [50000000, 70000000, 30000000, 90000000, 60000000, 80000000],
-        fill: false,
-        backgroundColor: 'rgba(75, 192, 192, 1)',
-        borderColor: 'rgba(75, 192, 192, 1)',
-      },
-    ],
-  };
-
+  function loadListMonth() {
+    factories.getStaticsMonth().then((res) => {
+      setDataMonth(res.data);
+    });
+  }
+  function loadListYearTopBus() {
+    factories.getStaticsYearTopBusOwner().then((res) => {
+      const bookingData = {
+        labels: res.map((_, index) => `Top ${index + 1}`),
+        datasets: [
+          {
+            label: res.map((item) => `Nhà xe${item.branchName}`),
+            data: res.map((item) => `${item.totalRevenue}`),
+            backgroundColor: 'rgb(255, 205, 86)',
+            borderColor: 'rgb(255, 205, 86)',
+            borderWidth: 1,
+          },
+        ],
+      };
+      setDataYearTopRevenue(bookingData);
+    });
+  }
+  // backgroundColor: [
+  //   'rgba(255, 99, 132, 0.2)',
+  //   'rgba(255, 159, 64, 0.2)',
+  //   'rgba(255, 205, 86, 0.2)',
+  //   'rgba(75, 192, 192, 0.2)',
+  //   'rgba(54, 162, 235, 0.2)',
+  //   'rgba(153, 102, 255, 0.2)',
+  //   'rgba(201, 203, 207, 0.2)',
+  // ],
+  // borderColor: [
+  //   'rgb(255, 99, 132)',
+  //   'rgb(255, 159, 64)',
+  //   'rgb(255, 205, 86)',
+  //   'rgb(75, 192, 192)',
+  //   'rgb(54, 162, 235)',
+  //   'rgb(153, 102, 255)',
+  //   'rgb(201, 203, 207)',
+  // ],
+  function loadListRevenueYear() {
+    factories.getStaticsYearRevenue().then((res) => {
+      // Dữ liệu doanh thu theo tháng
+      if (!res.data) return;
+      const revenueData = {
+        labels: res.data.map((item) => `Tháng ${item.month}`),
+        datasets: [
+          {
+            label: 'Doanh Thu (VNĐ)',
+            data: res.data.map((item) => item.totalMoney),
+            fill: false,
+            backgroundColor: 'rgba(75, 192, 192, 1)',
+            borderColor: 'rgba(75, 192, 192, 1)',
+          },
+        ],
+      };
+      setDataYearRevenue(revenueData);
+    });
+  }
+  function loadListRevenueTicket() {
+    factories.getStaticsYearTicket().then((res) => {
+      const bookingData = {
+        labels: res.data.map((item) => `Tháng ${item.month}`),
+        datasets: [
+          {
+            label: 'Số Lượt Đặt Xe',
+            data: res.data.map((item) => item.totalTicket),
+            backgroundColor: 'rgba(255, 99, 132, 0.6)',
+            borderColor: 'rgba(255, 99, 132, 1)',
+            borderWidth: 1,
+          },
+        ],
+      };
+      setDataYearTicket(bookingData);
+    });
+  }
   return (
     <div className="flex flex-col h-screen">
       <main className="flex-1 p-4">
@@ -116,21 +163,34 @@ const Dashboard = () => {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           <div className="bg-white border rounded-lg p-4 shadow">
             <h2 className="text-lg font-semibold">Số Lượt Đặt Vé</h2>
-            <p className="text-2xl">
-              <i className="fas fa-ticket-alt mr-2"></i> 1500
-            </p>
+            {!dataMonth ? (
+              <Spinner />
+            ) : (
+              <p className="text-2xl">
+                <i className="fas fa-ticket-alt mr-2"></i> {dataMonth.tickets}
+              </p>
+            )}
           </div>
           <div className="bg-white border rounded-lg p-4 shadow">
             <h2 className="text-lg font-semibold">Số Chuyến Xe </h2>
-            <p className="text-2xl">
-              <i className="fas fa-bus mr-2"></i> 300
-            </p>
+            {!dataMonth ? (
+              <Spinner />
+            ) : (
+              <p className="text-2xl">
+                <i className="fas fa-bus mr-2"></i> {dataMonth.busTrips}
+              </p>
+            )}
           </div>
           <div className="bg-white border rounded-lg p-4 shadow">
             <h2 className="text-lg font-semibold">Số Tiền</h2>
-            <p className="text-2xl">
-              <i className="fas fa-dollar-sign mr-2"></i> 500,000,000 VNĐ
-            </p>
+            {!dataMonth ? (
+              <Spinner />
+            ) : (
+              <p className="text-2xl">
+                <i className="fas fa-dollar-sign mr-2"></i>
+                {convertStringToNumber(dataMonth?.totalMoney)}
+              </p>
+            )}
           </div>
         </div>
 
@@ -138,24 +198,46 @@ const Dashboard = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div className="bg-white border rounded-lg p-4 shadow">
             <h2 className="text-lg font-semibold">Doanh Thu Theo Tháng</h2>
-            <Bar data={revenueData} options={{ responsive: true }} />
-          </div>
-          <div className="bg-white border rounded-lg p-4 shadow">
-            <h2 className="text-lg font-semibold">Số Lượt Đặt Xe Theo Tháng</h2>
-            <Bar data={bookingData} options={{ responsive: true }} />
-          </div>
-          <div className="bg-white border rounded-lg p-4 shadow h-[450px] ">
-            <h2 className="text-lg font-semibold">
-              Tỷ Lệ Doanh Thu Theo Nhà Xe
-            </h2>
-            <Pie data={pieData} options={pieOptions} />
+            {!dataYearRevenue ? (
+              <Spinner />
+            ) : (
+              <Bar data={dataYearRevenue} options={{ responsive: true }} />
+            )}
           </div>
           <div className="bg-white border rounded-lg p-4 shadow h-[450px]">
             <h2 className="text-lg font-semibold">
               Xu Hướng Doanh Thu Theo Tháng
             </h2>
-            <Line data={lineData} options={{ responsive: true }} />
+            {!dataYearRevenue ? (
+              <Spinner />
+            ) : (
+              <Line data={dataYearRevenue} options={{ responsive: true }} />
+            )}
           </div>
+          <div className="bg-white border rounded-lg p-4 shadow">
+            <h2 className="text-lg font-semibold">Số Lượt Đặt Xe Theo Tháng</h2>
+            {!dataYearTicket ? (
+              <Spinner />
+            ) : (
+              <Bar data={dataYearTicket} options={{ responsive: true }} />
+            )}
+          </div>
+          <div className="bg-white border rounded-lg p-4 shadow">
+            <h2 className="text-lg font-semibold">
+              Top 5 nhà xe doanh thu cao nhất
+            </h2>
+            {!dataYearTopRevenue ? (
+              <Spinner />
+            ) : (
+              <Bar data={dataYearTopRevenue} options={{ responsive: true }} />
+            )}
+          </div>
+          {/* <div className="bg-white border rounded-lg p-4 shadow h-[450px] ">
+            <h2 className="text-lg font-semibold">
+              Tỷ Lệ Doanh Thu Theo Nhà Xe
+            </h2>
+            <Pie data={pieData} options={pieOptions} />
+          </div> */}
         </div>
       </main>
     </div>
