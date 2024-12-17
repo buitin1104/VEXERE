@@ -155,23 +155,36 @@ router.get('/', async (req, res) => {
 router.put('/:id', async (req, res) => {
     try {
         const { id } = req.params;
-        const { status, reason } = req.body;
+        const { status } = req.body;
 
         if (!status) {
             return res
                 .status(400)
-                .json({ message: 'Status and reason are required' });
+                .json({ message: 'Status is required' });
         }
 
         const ticket = await Ticket.findByIdAndUpdate(
             id,
-            { status, review: reason },
+            { status },
             { new: true },
         );
         if (!ticket) {
-            return res.status(404).json({ message: 'Ticket not found' });
+            return res.status(404).json({ message: 'Vẽ không tồn tại' });
         }
-
+        const user = await User.findById(ticket.userId);
+        if (!user) {
+            return res.status(404).json({ message: 'Tài khoản không tồn tại' });
+        }
+        user.balance += ticket.price;
+        await user.save();
+        const newPayment = new Payment({
+            txnRef: Date.now().toString(),
+            amount: ticket.price,
+            userId: ticket.userId,
+            status: 1,
+            description: 'Hoàn vé xe ' + ticket.bus.busNumber,
+        });
+        await newPayment.save();
         res.status(200).json(ticket);
     } catch (error) {
         console.error(error);
@@ -197,6 +210,7 @@ router.post('/review/:ticketId', async (req, res) => {
         }
         ticket.star = star;
         ticket.review = review;
+        ticket.status = 4;
         await ticket.save();
 
         res.status(200).json(ticket);

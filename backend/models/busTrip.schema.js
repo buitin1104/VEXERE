@@ -19,6 +19,7 @@ const BusTripSchema = new mongoose.Schema({
     ticketBooked: [{ type: Number, required: false }],
     paymentMethods: [{ type: String, required: false }],
     // bookedTickets: { type: [String], default: [] },
+    tickets: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Ticket' }]
 });
 
 export default mongoose.model("BusTrip", BusTripSchema);

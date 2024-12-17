@@ -305,27 +305,27 @@ router.get("/admin/trip", async (req, res) => {
     }
 });
 
-router.patch("/admin/trip/:id", async (req, res) => {
-    try {
-        const { id } = req.params;
-        const updates = req.body;
+// router.patch("/admin/trip/:id", async (req, res) => {
+//     try {
+//         const { id } = req.params;
+//         const updates = req.body;
 
-        if (!updates) {
-            return res.status(400).json({ message: "No fields to update" });
-        }
+//         if (!updates) {
+//             return res.status(400).json({ message: "No fields to update" });
+//         }
 
-        const busTrip = await BusTrip.findByIdAndUpdate(id, updates, {
-            new: true,
-        })
-        if (!busTrip) {
-            return res.status(404).json({ message: "BusTrip not found" });
-        }
-        res.status(200).json(busTrip);
-    } catch (error) {
-        console.error(error);
-        res
-            .status(500)
-            .json({ message: "Error updating BusTrip info", error: error.message });
-    }
-});
+//         const busTrip = await BusTrip.findByIdAndUpdate(id, updates, {
+//             new: true,
+//         })
+//         if (!busTrip) {
+//             return res.status(404).json({ message: "BusTrip not found" });
+//         }
+//         res.status(200).json(busTrip);
+//     } catch (error) {
+//         console.error(error);
+//         res
+//             .status(500)
+//             .json({ message: "Error updating BusTrip info", error: error.message });
+//     }
+// });
 export default router;
