@@ -2,13 +2,13 @@ import SteeringWheelIcon from '@assets/base/icon/SteeringWheelIcon';
 import ImageGallery from '@components/galery/Galery';
 import Review from '@components/review';
 import { Button, Chip, ScrollShadow, Tab, Tabs } from '@nextui-org/react';
-import { reviewsData } from '@pages/detail/mock';
 import { RouterPath } from '@router/RouterPath';
 import { AMENITIES, BUSES_LIST, PROVINCES } from '@utils/constants';
 import { differenceInHours } from '@utils/dateTime';
 import { cn, convertStringToNumber, getDate } from '@utils/Utils';
-import React, { useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { useAuth } from '../../../context/AuthContext';
+import { factories } from '../../../factory';
 import useRouter from '../../../hook/use-router';
 
 export default function SearchResult({ data }) {
@@ -72,6 +72,20 @@ export default function SearchResult({ data }) {
 function CardSearch({ item }) {
   const [showDetail, setShowDetail] = useState(false);
   const [showBooking, setShowBooking] = useState(false);
+  const [reviews, setReview] = useState([]);
+  const [reviewCount, setReviewCount] = useState(0);
+
+  useEffect(() => {
+    if (item?.bus) {
+      loadReview(item.bus._id);
+    }
+  }, [item?.bus]);
+  function loadReview(id) {
+    factories.getBusReview(id).then((data) => {
+      setReview(data.reviews);
+      setReviewCount(data.averageStar);
+    });
+  }
   return (
     <div className="w-full flex flex-col mx-auto p-4 bg-white border hover:shadow-xl rounded-lg">
       <div className="flex">
@@ -110,8 +124,8 @@ function CardSearch({ item }) {
               </div>
               <div className="flex items-center text-sm text-gray-500">
                 <span className="bg-blue-500 text-white px-2 py-1 rounded-md">
-                  {item?.rating ?? 'Chưa có đánh giá'}
-                  {item?.ratingCount && <p>({item?.ratingCount})</p>}
+                  {reviews?.length === 0 && 'Chưa có đánh giá'}
+                  {reviewCount && <p>{reviewCount}</p>}
                 </span>
               </div>
             </div>
@@ -218,12 +232,16 @@ function CardSearch({ item }) {
                   </div>
                 </Tab>
                 <Tab key="rate" title="Đánh giá">
-                  <div className="">
-                    <ScrollShadow className="w-full h-[400px]">
-                      {reviewsData.map((review) => (
-                        <Review key={review.id} review={review} />
-                      ))}
-                    </ScrollShadow>
+                  <div className="w-full flex justify-center items-center">
+                    {reviews?.length === 0 ? (
+                      'Chưa có đánh giá'
+                    ) : (
+                      <ScrollShadow className="w-full min-h-[230px] max-h-[600px]">
+                        {reviews.map((review) => (
+                          <Review key={review.id} review={review} />
+                        ))}
+                      </ScrollShadow>
+                    )}
                   </div>
                 </Tab>
 
@@ -353,11 +371,11 @@ function BookingSection({ item, busModel, seatsLocked, price }) {
       for (let j = 0; j < lastRowSeats; j++) {
         const seatNumber = lastRowStartSeat + j;
 
-        const isLocked = seatsLocked.includes(seatNumber.toString());
+        const isLocked = seatsLocked.includes(seatNumber);
         lastRow.push(
           <div
             key={seatNumber}
-            onClick={() => toggleSeatSelection(seatNumber)}
+            onClick={() => !isLocked && toggleSeatSelection(seatNumber)}
             className={cn(
               'relative border-grey-600 w-6 h-12 border-2 rounded flex pt-2 justify-center cursor-pointer',
               isLocked

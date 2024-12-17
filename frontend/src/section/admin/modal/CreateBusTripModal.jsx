@@ -4,12 +4,7 @@ import InputQuillForm from '@components/common/InputQuillForm';
 import SelectField from '@components/common/SelectField';
 import { getLocalTimeZone, now } from '@internationalized/date';
 import { Button, Checkbox, Spinner } from '@nextui-org/react';
-import {
-  AMENITIES,
-  BUSES_LIST,
-  PAYMENT_METHODS,
-  ROLES,
-} from '@utils/constants';
+import { AMENITIES, BUSES_LIST, ROLES } from '@utils/constants';
 import { getDate, ToastInfo, ToastNotiError } from '@utils/Utils';
 import React, { useEffect, useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
@@ -17,7 +12,7 @@ import { useAuth } from '../../../context/AuthContext';
 import { useModalCommon } from '../../../context/ModalContext';
 import { factories } from '../../../factory';
 
-export default function CreateBusTripModal({ onReload }) {
+export default function CreateBusTripModal({ onReload, item }) {
   const [formReady, setFormReady] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [users, setUsers] = useState([]);
@@ -28,13 +23,27 @@ export default function CreateBusTripModal({ onReload }) {
   const { auth } = useAuth();
   const { onClose } = useModalCommon();
   const methods = useForm();
-  const { watch } = methods;
+  const { watch, setValue } = methods;
   useEffect(() => {
     setFormReady(false);
     fetchData();
   }, []);
 
+  useEffect(() => {
+    if (item) {
+      setValue('bus', item.bus._id);
+      setValue('driverId', item.driverId._id);
+      setValue('origin', item.origin._id);
+      setValue('destination', item.destination._id);
+      //   setValue('departureTime', getDate(item.departureTime, 16));
+      //   setValue('arrivalTime', getDate(item.arrivalTime, 16));
+      setAmenities(item.amenity);
+      setValue('price', item.price);
+    }
+  }, [item]);
+  console.log(watch());
   async function fetchData() {
+    ``;
     await loadListUser();
     await loadListLocation();
     await loadListBus();
@@ -92,7 +101,23 @@ export default function CreateBusTripModal({ onReload }) {
       arrivalTime: getDate(values.arrivalTime, 14),
       amenity: amenities,
     };
-    console.log('🚀 ~ handleSave ~ data:', data);
+    if (item?._id) {
+      factories
+        .editBusTrip(data, item._id)
+        .then(() => {
+          ToastInfo('Cập nhật chuyến xe thành công');
+          onClose();
+          onReload();
+          setIsLoading(false);
+        })
+        .catch((err) => {
+          if (err.response?.data?.message) {
+            ToastNotiError(err.response?.data?.message);
+          }
+          setIsLoading(false);
+        });
+      return;
+    }
     factories
       .createNewBusTrip(data)
       .then(() => {
@@ -213,8 +238,8 @@ export default function CreateBusTripModal({ onReload }) {
                 </div>
               </div>
               <div className="bg-neutral-100 p-4 rounded-lg ">
-                <p className="text-sm mb-2">Phương thức thanh toán</p>
-                <div className="flex flex-wrap gap-4">
+                {/* <p className="text-sm mb-2">Phương thức thanh toán</p> */}
+                {/* <div className="flex flex-wrap gap-4">
                   {PAYMENT_METHODS.map((x) => (
                     <div className="flex flex-row gap-1">
                       <Checkbox
@@ -225,9 +250,10 @@ export default function CreateBusTripModal({ onReload }) {
                       <p className="text-sm text-neutral-700">{x.label}</p>
                     </div>
                   ))}
-                </div>
+                </div> */}
               </div>
               <InputQuillForm
+                defaultValue={item?.policy}
                 placeholder="Ghi chú quy định"
                 label="Quy định"
                 name={'policy'}

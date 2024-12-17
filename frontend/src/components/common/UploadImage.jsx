@@ -23,7 +23,7 @@ export default function UploadImages({ label, name }) {
               onChange={(e) => handleChangeImage(index, e.target.files[0])}
               className="block max-w-[500px] px-4 py-2 text-sm text-gray-700 bg-white border border-gray-300 rounded-md shadow-sm appearance-none focus:outline-none focus:ring-primary-500 focus:border-primary-500"
             />
-            {image.file && (
+            {image.url && (
               <div className="flex flex-grow w-full justify-end">
                 <img
                   src={image.url}
@@ -31,6 +31,20 @@ export default function UploadImages({ label, name }) {
                   className="h-24 rounded-lg "
                 />
               </div>
+            )}
+            {image.url && (
+              <button
+                onClick={() => {
+                  const newImages = [...images];
+                  newImages.splice(index, 1);
+                  setValue(name, newImages);
+                }}
+                variant="ghost"
+                type="button"
+                className="p-1"
+              >
+                <i className="fas fa-trash-alt text-pink-500 text-sm"></i>
+              </button>
             )}
           </div>
         ))}

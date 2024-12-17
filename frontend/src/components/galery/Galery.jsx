@@ -2,6 +2,7 @@ import { Image } from '@nextui-org/react';
 import React, { useState } from 'react';
 
 const ImageGallery = ({ images }) => {
+  console.log('🚀 ~ ImageGallery ~ images:', images);
   const [currentIndex, setCurrentIndex] = useState(0);
 
   // Hàm chuyển ảnh

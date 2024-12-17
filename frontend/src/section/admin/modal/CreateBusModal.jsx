@@ -3,21 +3,34 @@ import SelectField from '@components/common/SelectField';
 import UploadImages from '@components/common/UploadImage';
 import { Button } from '@nextui-org/react';
 import { BUSES_LIST } from '@utils/constants';
-import { uploadFirebase } from '@utils/UFirebase';
-import { ToastInfo, ToastNotiError } from '@utils/Utils';
-import React, { useState } from 'react';
+import { ToastInfo, ToastNotiError, uploadFirebase } from '@utils/Utils';
+import React, { useEffect, useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import { useAuth } from '../../../context/AuthContext';
 import { useModalCommon } from '../../../context/ModalContext';
 import { factories } from '../../../factory';
 
-export default function CreateBusModal({ onReload }) {
+export default function CreateBusModal({ onReload, item }) {
+  console.log('🚀 ~ CreateBusModal ~ item:', item);
   const [isLoading, setIsLoading] = useState(false);
   const { auth } = useAuth();
   const { onClose } = useModalCommon();
   const methods = useForm();
-  const { register, errors } = methods;
+  const { register, errors, setValue, watch } = methods;
 
+  useEffect(() => {
+    if (item) {
+      setValue('busModel', item.busModel);
+      setValue('busNumber', item.busNumber);
+      if (item.gallery.length > 0) {
+        const newList = item.gallery.map((image) => ({
+          url: image,
+          file: null,
+        }));
+        setValue('busImage', newList);
+      }
+    }
+  }, [item]);
   async function handleSave(values) {
     setIsLoading(true);
     let data = {
@@ -27,11 +40,28 @@ export default function CreateBusModal({ onReload }) {
     };
     const newUrls = [];
     for (const image of values?.busImage) {
-      if (!image.url) continue;
-      const newUrl = await uploadFirebase(image);
+      if (!image.file) continue;
+      const newUrl = await uploadFirebase(image.file);
       newUrls.push(newUrl);
     }
     data.gallery = newUrls;
+    if (item?._id) {
+      factories
+        .editBus(data, item._id)
+        .then(() => {
+          ToastInfo('Cập nhật xe thành công');
+          onClose();
+          onReload();
+          setIsLoading(false);
+        })
+        .catch((err) => {
+          if (err.response?.data?.message) {
+            ToastNotiError(err.response?.data?.message);
+          }
+          setIsLoading(false);
+        });
+      return;
+    }
     factories
       .createNewBus(data)
       .then(() => {
@@ -75,7 +105,7 @@ export default function CreateBusModal({ onReload }) {
           />
           <UploadImages label="Hình ảnh xe" name={'busImage'} />
           <Button isLoading={isLoading} type="submit">
-            Tạo mới xe
+            {item ? 'Cập nhật thông tin' : 'Tạo mới xe'}
           </Button>
         </form>
       </FormProvider>

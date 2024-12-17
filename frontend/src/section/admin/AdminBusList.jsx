@@ -7,61 +7,6 @@ import { useModalCommon } from '../../context/ModalContext';
 import { factories } from '../../factory/index';
 import CreateBusModal from './modal/CreateBusModal';
 
-const columns = [
-  {
-    id: 'BusName',
-    label: 'Biển số xe',
-    renderCell: (row) => <div className="w-40">{row.busNumber}</div>,
-  },
-  {
-    id: 'BranchName',
-    label: 'Mẫu xe',
-    renderCell: (row) => (
-      <div className="w-40">
-        {BUSES_LIST.find((x) => x.id.toString() === row.busModel)?.label}
-      </div>
-    ),
-  },
-  {
-    id: 'seats',
-    label: 'Số ghế',
-    renderCell: (row) => (
-      <div className="w-40">
-        {BUSES_LIST.find((x) => x.id.toString() === row.busModel)?.seats}
-      </div>
-    ),
-  },
-  {
-    id: 'phone',
-    label: 'Số điện thoại chủ xe',
-    renderCell: (row) => <span>{row.owner?.phone}</span>,
-  },
-  {
-    id: 'name',
-    label: 'Tên chủ xe',
-    renderCell: (row) => <span>{row.owner?.fullName}</span>,
-  },
-  {
-    id: 'mail',
-    label: 'Email chủ xe',
-    renderCell: (row) => <span>{row.owner?.email}</span>,
-  },
-  {
-    id: 'action',
-    label: 'Tác vụ',
-    headCell: () => <span className="text-center w-full">Tác vụ</span>,
-    renderCell: (row) => (
-      <div className="">
-        <Tooltip content="Xóa">
-          <Button variant="ghost" size="sm" className="border-none max-w-8 h-8">
-            <i className="fas fa-trash-alt text-pink-500 text-sm"></i>
-          </Button>
-        </Tooltip>
-      </div>
-    ),
-  },
-];
-
 export default function AdminBusList({ isAdmin }) {
   const [keyword, setKeyword] = useState();
   const [data, setData] = useState([]);
@@ -73,10 +18,86 @@ export default function AdminBusList({ isAdmin }) {
     loadList();
   }, [keyword, pagination?.current]);
 
-  function createBus() {
+  const columns = [
+    {
+      id: 'BusName',
+      label: 'Biển số xe',
+      renderCell: (row) => <div className="w-40">{row.busNumber}</div>,
+    },
+    {
+      id: 'BranchName',
+      label: 'Mẫu xe',
+      renderCell: (row) => (
+        <div className="w-40">
+          {BUSES_LIST.find((x) => x.id.toString() === row.busModel)?.label}
+        </div>
+      ),
+    },
+    {
+      id: 'seats',
+      label: 'Số ghế',
+      renderCell: (row) => (
+        <div className="w-40">
+          {BUSES_LIST.find((x) => x.id.toString() === row.busModel)?.seats}
+        </div>
+      ),
+    },
+    {
+      id: 'phone',
+      label: 'Số điện thoại chủ xe',
+      renderCell: (row) => <span>{row.owner?.phone}</span>,
+    },
+    {
+      id: 'name',
+      label: 'Tên chủ xe',
+      renderCell: (row) => <span>{row.owner?.fullName}</span>,
+    },
+    {
+      id: 'mail',
+      label: 'Email chủ xe',
+      renderCell: (row) => <span>{row.owner?.email}</span>,
+    },
+    {
+      id: 'action',
+      label: 'Tác vụ',
+      headCell: () => <span className="text-center w-full">Tác vụ</span>,
+      renderCell: (row) => (
+        <div className="">
+          <Tooltip content="Sửa">
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => editBus(row)}
+              className="border-none max-w-8 h-8"
+            >
+              <i className="fas fa-edit text-blue-500 text-sm"></i>
+            </Button>
+          </Tooltip>
+          {/* <Tooltip content="Xóa">
+            <Button
+              variant="ghost"
+              size="sm"
+              className="border-none max-w-8 h-8"
+            >
+              <i className="fas fa-trash-alt text-pink-500 text-sm"></i>
+            </Button>
+          </Tooltip> */}
+        </div>
+      ),
+    },
+  ];
+
+  function createBus(item) {
     onOpen({
       view: <CreateBusModal onReload={loadList} />,
       title: 'Tạo xe mới',
+      size: '2xl',
+    });
+  }
+  function editBus(item) {
+    onOpen({
+      view: <CreateBusModal onReload={loadList} item={item} />,
+      title: 'Cập nhật xe',
       size: '2xl',
     });
   }
@@ -100,18 +121,6 @@ export default function AdminBusList({ isAdmin }) {
     <div className="bg-white rounded shadow-md px-4 py-3 h-full">
       <div className="flex items-center justify-between mb-3">
         <div className="mt-2 flex justify-end items-center w-full">
-          {/* <Tabs
-            variant="light"
-            color="primary"
-            aria-label="Tabs colors"
-            radius="lg"
-            selectedKey={activeTab}
-            onSelectionChange={setActiveTab}
-          >
-            <Tab key="1" title="Tất cả" />
-            <Tab key="2" title="Đang hoạt động" />
-            <Tab key="3" title="Đang tạm nghỉ" />
-          </Tabs> */}
           <Button onClick={createBus} size="sm" color="primary">
             Tạo mới xe
           </Button>

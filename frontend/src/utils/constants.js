@@ -320,7 +320,7 @@ export const TICKET_STATUS = [
     },
     {
         value: 2,
-        label: 'Đã huỷ chuyến',
+        label: 'Đã huỷ vé',
         color: 'danger',
     },
     {

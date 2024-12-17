@@ -1,15 +1,16 @@
 import moment from 'moment';
-
 import regex from './regex';
+const timeZone = 'Asia/Ho_Chi_Minh';
 // import { addDoc, collection, serverTimestamp } from 'firebase/firestore'
 // import { db } from '../firebase'
-import dayjs from 'dayjs';
 import { toast } from 'react-toastify';
 // import { getDownloadURL, ref, uploadBytes } from 'firebase/storage'
 // import { storage } from '../firebase'
 import clsx from 'clsx';
+import { getDownloadURL, ref, uploadBytes } from 'firebase/storage';
 import { twMerge } from 'tailwind-merge';
 import { v4 } from 'uuid';
+import { storage } from '../config/firebaseConfig';
 
 export const convertStringToNumber = (value, delimiter = '.') => {
     if (value || value === 0) {
@@ -157,7 +158,7 @@ export const getDate = (timestamp, type = 1) => {
                 hour12: false,
                 fractionalSecondDigits: 3,
             });
-            const parts = formatter.formatToParts(date);
+            const parts = formatter.formatToParts(timestamp);
             const dateObj = {};
             parts.forEach(part => {
                 if (part.type !== 'literal') {
@@ -179,6 +180,21 @@ export const getDate = (timestamp, type = 1) => {
                 calendar: { identifier: 'gregory' },
             };
             break;
+        case 16: {
+            const date = typeof timestamp === 'string' ? new Date(timestamp) : timestamp;
+            // Định dạng ngày giờ theo múi giờ và ngôn ngữ
+            result = new Intl.DateTimeFormat('vi-VN', {
+                timeZone,
+                year: 'numeric',
+                month: '2-digit',
+                day: '2-digit',
+                hour: '2-digit',
+                minute: '2-digit',
+                second: '2-digit',
+                hour12: false, // Sử dụng 24 giờ
+            }).format(date);
+
+        }
         default:
             break;
     }

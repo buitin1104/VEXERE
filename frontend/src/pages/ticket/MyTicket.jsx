@@ -1,7 +1,8 @@
 import { CustomTable } from '@components/custom-table/CustomTable';
+import ConfirmModal from '@components/modal/ConfirmModal';
 import { Button, Card, CardBody, Chip } from '@nextui-org/react';
 import { TICKET_STATUS } from '@utils/constants';
-import { getDate } from '@utils/Utils';
+import { getDate, ToastInfo, ToastNotiError } from '@utils/Utils';
 import { default as React, useEffect, useState } from 'react';
 import Sidebar from '../../components/sidebar/SideBar';
 import { useAuth } from '../../context/AuthContext';
@@ -57,14 +58,26 @@ export default function MyTicketPage() {
       id: 'detail',
       label: '',
       renderCell: (row) => (
-        <Button
-          onClick={() => openDetail(row)}
-          variant="light"
-          className="rounded-lg"
-          color={'primary'}
-        >
-          Xem chi tiết
-        </Button>
+        <>
+          <Button
+            onClick={() => openDetail(row)}
+            variant="light"
+            className="rounded-lg"
+            color={'primary'}
+          >
+            Xem chi tiết
+          </Button>
+          {row.status === 1 && (
+            <Button
+              onClick={() => openConfirm(row)}
+              variant="light"
+              className="rounded-lg"
+              color={'danger'}
+            >
+              Huỷ vé
+            </Button>
+          )}
+        </>
       ),
     },
   ];
@@ -100,7 +113,32 @@ export default function MyTicketPage() {
       size: 'xl',
     });
   }
+  function openConfirm(row) {
+    onOpen({
+      view: (
+        <ConfirmModal
+          content="Xác nhận huỷ vé đã đặt?"
+          onSubmit={() => onCancelTicket(row._id)}
+        />
+      ),
+      title: 'Chi tiết vé',
+      size: 'xl',
+    });
+  }
 
+  function onCancelTicket(id) {
+    factories
+      .cancelTicket(id)
+      .then(() => {
+        ToastInfo('Huỷ vé thành công');
+      })
+      .catch((e) => {
+        ToastNotiError(e.response.data.message);
+      })
+      .finally(() => {
+        loadList();
+      });
+  }
   return (
     <div className="mx-auto my-20 flex justify-center items-center">
       <div className="flex w-full max-w-[80%] gap-6">

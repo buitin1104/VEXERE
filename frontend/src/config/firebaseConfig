@@ -6,13 +6,13 @@ import { getStorage } from 'firebase/storage';
 
 // Firebase configuration from environment variables
 const firebaseConfig = {
-  apiKey: 'AIzaSyC2CrhhDkmucwgpw4LnWXHf9jgKyRcpCkc',
-  authDomain: 'co-velo.firebaseapp.com',
-  projectId: 'co-velo',
-  storageBucket: 'co-velo.appspot.com',
-  messagingSenderId: '37346108711',
-  appId: '1:37346108711:web:f491a03d5dfd1073ae7502',
-  measurementId: 'G-2JDTZ2S9CP',
+  apiKey: 'AIzaSyA38Liip3bPVJem9J6MtyP6wEviLBPzcYM',
+  authDomain: 'webnovel-eee3f.firebaseapp.com',
+  projectId: 'webnovel-eee3f',
+  storageBucket: 'webnovel-eee3f.appspot.com',
+  messagingSenderId: '201939309789',
+  appId: '1:201939309789:web:b0a089abb9803a2ffb7734',
+  measurementId: 'G-LP0JPHZ93F',
 };
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);

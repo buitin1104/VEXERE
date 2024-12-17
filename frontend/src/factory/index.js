@@ -8,6 +8,15 @@ export const factories = {
             method: 'GET',
         });
     },
+    cancelTicket: (id) => {
+        return ApiOperation.request({
+            url: ApiConstants.TICKET + '/' + id,
+            method: 'PUT',
+            data: {
+                status: 2
+            }
+        });
+    },
     getStaticsYearRevenue: () => {
         return ApiOperation.request({
             url: ApiConstants.STATICS + '/year/revenue',
@@ -76,6 +85,12 @@ export const factories = {
             method: 'GET',
         });
     },
+    getBusReview: (id) => {
+        return ApiOperation.request({
+            url: ApiConstants.BUSES + '/' + id + '/reviews',
+            method: 'GET',
+        });
+    },
     ///admin
     getRequestHost: () => {
         return ApiOperation.request({
@@ -134,6 +149,13 @@ export const factories = {
             data: data,
         });
     },
+    editBus: (data, id) => {
+        return ApiOperation.request({
+            url: ApiConstants.BUSES + '/' + id,
+            method: 'PATCH',
+            data: data,
+        });
+    },
     createReview: (data) => {
         return ApiOperation.request({
             url: ApiConstants.REVIEW + '/' + data.id,
@@ -159,6 +181,13 @@ export const factories = {
         return ApiOperation.request({
             url: ApiConstants.BUS_TRIP,
             method: 'POST',
+            data: data,
+        });
+    },
+    editBusTrip: (data, id) => {
+        return ApiOperation.request({
+            url: ApiConstants.BUS_TRIP + '/' + id,
+            method: 'PUT',
             data: data,
         });
     },

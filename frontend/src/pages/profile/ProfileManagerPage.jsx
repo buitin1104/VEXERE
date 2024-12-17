@@ -14,8 +14,12 @@ import InputField from '../../components/common/InputField';
 import Sidebar from '../../components/sidebar/SideBar';
 import { useAuth } from '../../context/AuthContext';
 import { factories } from '../../factory';
-import { uploadFirebase } from '../../utils/UFirebase';
-import { getDate, ToastInfo, ToastNotiError } from '../../utils/Utils';
+import {
+  getDate,
+  ToastInfo,
+  ToastNotiError,
+  uploadFirebase,
+} from '../../utils/Utils';
 
 export default function ProfileManagerPage() {
   const { auth, login } = useAuth();

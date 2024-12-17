@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useFormContext } from 'react-hook-form';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
@@ -8,6 +8,7 @@ export default function InputQuillForm({
   label,
   placeholder = '',
   validate = {},
+  defaultValue,
   ...props
 }) {
   const { formState, setValue } = useFormContext();
@@ -17,6 +18,11 @@ export default function InputQuillForm({
     setContent(value);
     setValue(name, value);
   };
+  useEffect(() => {
+    if (defaultValue) {
+      setContent(defaultValue);
+    }
+  }, [defaultValue]);
   const modules = {
     toolbar: [
       [{ header: [1, 2, 3, false] }],
@@ -51,6 +57,7 @@ export default function InputQuillForm({
         theme="snow"
         value={content}
         onChange={handleContentChange}
+        defaultValue={defaultValue}
         modules={modules}
         formats={formats}
         placeholder={placeholder ? placeholder : 'Viết nội dung ở đây...'}

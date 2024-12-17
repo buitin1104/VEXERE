@@ -10,7 +10,7 @@ const SelectField = ({
   className = '',
   validate = {},
 }) => {
-  const { register, formState } = useFormContext();
+  const { register, formState, watch } = useFormContext();
   const error = formState.errors?.[name]?.message;
   return (
     <div className="flex flex-col w-full">
@@ -20,6 +20,7 @@ const SelectField = ({
         className={`w-full bg-transparent ${className}`}
         color={error ? 'danger' : 'default'}
         errorMessage={error}
+        selectedKeys={watch(name) ? [watch(name)] : []}
         {...register(name, validate)}
       >
         {options.map((option) => (

@@ -8,7 +8,7 @@ import {
   ToastInfo,
   ToastNotiError,
 } from '@utils/Utils';
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import { useAuth } from '../../context/AuthContext';
 import { useModalCommon } from '../../context/ModalContext';
@@ -21,7 +21,7 @@ export default function TicketModal({ item, onReload }) {
   const [hover, setHover] = useState(0);
   const { onClose } = useModalCommon();
   const { auth } = useAuth();
-  const isOwner = auth?._id === item.userId;
+  const isOwner = useMemo(() => auth?._id === item.userId._id, [item]);
   useEffect(() => {
     if (item.star) {
       setRating(Number(item.star));
@@ -169,7 +169,7 @@ export default function TicketModal({ item, onReload }) {
               name={'content'}
               isDisabled={!isOwner}
             />
-            {isOwner && (
+            {isOwner && item.status === 1 && (
               <div className="flex justify-end  w-full">
                 <Button
                   type="submit"
