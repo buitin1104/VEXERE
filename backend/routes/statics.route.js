@@ -218,4 +218,63 @@ router.get("/top-bus-owners", async (req, res) => {
     }
 });
 
+router.get('/popular-routes', async (req, res) => {
+    try {
+        const popularRoutes = await BusTrip.aggregate([
+            {
+                $lookup: {
+                    from: "locations",
+                    localField: "origin",
+                    foreignField: "_id",
+                    as: "originInfo"
+                }
+            },
+            { $unwind: "$originInfo" },
+            {
+                $lookup: {
+                    from: "locations",
+                    localField: "destination",
+                    foreignField: "_id",
+                    as: "destinationInfo"
+                }
+            },
+            { $unwind: "$destinationInfo" },
+            {
+                $group: {
+                    _id: { origin: "$origin", destination: "$destination" },
+                    count: { $sum: 1 },
+                    originCity: { $first: "$originInfo.city" },
+                    destinationCity: { $first: "$destinationInfo.city" },
+                    firstBusTrip: { $first: "$$ROOT" }
+                }
+            },
+            {
+                $lookup: {
+                    from: "buses",
+                    localField: "firstBusTrip.bus",
+                    foreignField: "_id",
+                    as: "busInfo"
+                }
+            },
+            { $unwind: "$busInfo" },
+            {
+                $project: {
+                    _id: 0,
+                    origin: "$originCity",
+                    destination: "$destinationCity",
+                    count: 1,
+                    gallery: "$busInfo.gallery",
+                    price: "$firstBusTrip.price"
+                }
+            },
+            { $sort: { count: -1 } },
+            { $limit: 10 }
+        ]);
+
+        return res.status(200).json(popularRoutes);
+    } catch (error) {
+        console.error(error);
+        return res.status(500).json({ message: "Server Error" });
+    }
+});
 export default router;
