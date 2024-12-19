@@ -114,6 +114,15 @@ export const factories = {
             },
         });
     },
+    updatePinReview: (id, value) => {
+        return ApiOperation.request({
+            url: ApiConstants.TICKET + '/update-show/' + id,
+            method: 'PATCH',
+            data: {
+                isShow: value,
+            },
+        });
+    },
     getListUser: (params) => {
         return ApiOperation.request({
             url: ApiConstants.USERS,
@@ -161,6 +170,13 @@ export const factories = {
             url: ApiConstants.REVIEW + '/' + data.id,
             method: 'POST',
             data: data,
+        });
+    },
+    getReviews: (params) => {
+        return ApiOperation.request({
+            url: ApiConstants.TICKET + '/reviews',
+            method: 'GET',
+            params,
         });
     },
     addMoneyToWallet: (data) => {

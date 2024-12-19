@@ -1,5 +1,5 @@
 import { CustomTable } from '@components/custom-table/CustomTable';
-import { Button, Input, Tooltip } from '@nextui-org/react';
+import { Button, Input } from '@nextui-org/react';
 import { BUSES_LIST } from '@utils/constants';
 import { convertStringToNumber, getDate } from '@utils/Utils';
 import React, { useEffect, useState } from 'react';
@@ -117,26 +117,26 @@ export default function AdminBusRoute({ isAdmin }) {
         <div className="w-28">{convertStringToNumber(row.price)}</div>
       ),
     },
-    {
-      id: 'action',
-      label: 'Tác vụ',
-      headCell: () => <span className="text-center w-full">Tác vụ</span>,
-      renderCell: (row) => (
-        <div className="">
-          <Tooltip content="Xóa">
-            <Button
-              variant="ghost"
-              onClick={() => editBusTrip(row)}
-              size="sm"
-              disabled
-              className="border-none max-w-8 h-8"
-            >
-              <i className="fas fa-edit text-blue-500 text-sm"></i>
-            </Button>
-          </Tooltip>
-        </div>
-      ),
-    },
+    // {
+    //   id: 'action',
+    //   label: 'Tác vụ',
+    //   headCell: () => <span className="text-center w-full">Tác vụ</span>,
+    //   renderCell: (row) => (
+    //     <div className="">
+    //       <Tooltip content="Xóa">
+    //         <Button
+    //           variant="ghost"
+    //           onClick={() => editBusTrip(row)}
+    //           size="sm"
+    //           disabled
+    //           className="border-none max-w-8 h-8"
+    //         >
+    //           <i className="fas fa-edit text-blue-500 text-sm"></i>
+    //         </Button>
+    //       </Tooltip>
+    //     </div>
+    //   ),
+    // },
   ];
   return (
     <div className="bg-white rounded shadow-md px-4 py-3 h-full">

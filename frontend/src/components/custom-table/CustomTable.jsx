@@ -16,20 +16,23 @@ export function CustomTable({
   page = 1,
   totalPage = 1,
   isLoading,
+  isShowPagination = false,
 }) {
   return (
     <Table
       bottomContent={
         <div className="flex w-full justify-center">
-          <Pagination
-            isCompact
-            showControls
-            showShadow
-            color="primary"
-            page={page}
-            total={totalPage}
-            onChange={(page) => setPage(page)}
-          />
+          {isShowPagination && (
+            <Pagination
+              isCompact
+              showControls
+              showShadow
+              color="primary"
+              page={page}
+              total={totalPage}
+              onChange={(page) => setPage(page)}
+            />
+          )}
         </div>
       }
       aria-label="Custom Table Component"

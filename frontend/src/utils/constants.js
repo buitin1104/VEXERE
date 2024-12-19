@@ -214,12 +214,6 @@ export const sidebarItems = [
         roles: [ROLES.ADMIN],
     },
     {
-        id: 'request',
-        icon: 'fa-clipboard-list',
-        label: 'Đăng ký nhà xe mới',
-        roles: [ROLES.ADMIN],
-    },
-    {
         id: 'busAll',
         icon: 'fa-bus',
         label: 'Danh sách chuyến xe',
@@ -230,6 +224,12 @@ export const sidebarItems = [
         icon: 'fa-tasks',
         label: 'Danh sách vé xe',
         active: true,
+        roles: [ROLES.ADMIN],
+    },
+    {
+        id: 'request',
+        icon: 'fa-clipboard-list',
+        label: 'Đăng ký nhà xe mới',
         roles: [ROLES.ADMIN],
     },
     {
@@ -262,6 +262,12 @@ export const sidebarItems = [
         icon: 'fa-clipboard-list',
         label: 'Danh sách vé xe',
         roles: [ROLES.BUS_OWNER, ROLES.TICKET_CONTROLLER],
+    },
+    {
+        id: 'review',
+        icon: 'fa-star',
+        label: 'Danh sách Đánh giá',
+        roles: [ROLES.ADMIN],
     },
     {
         id: 'profile',

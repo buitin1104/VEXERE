@@ -88,10 +88,12 @@ const Dashboard = () => {
   function loadListYearTopBus() {
     factories.getStaticsYearTopBusOwner().then((res) => {
       const bookingData = {
-        labels: res.map((_, index) => `Top ${index + 1}`),
+        labels: res.map(
+          (item, index) => `Top ${index + 1} ${item.branchName} `,
+        ),
         datasets: [
           {
-            label: res.map((item) => `Nhà xe${item.branchName}`),
+            label: 'Doanh Thu',
             data: res.map((item) => `${item.totalRevenue}`),
             backgroundColor: 'rgb(255, 205, 86)',
             borderColor: 'rgb(255, 205, 86)',
