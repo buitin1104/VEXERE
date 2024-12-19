@@ -21,10 +21,6 @@ router.post('/', async (req, res) => {
             seats,
             price,
             paymentMethod,
-            // origin,
-            // destination,
-            // departureTime,
-            // arrivalTime,
         } = req.body;
 
         const existingBus = await Bus.findById(bus);
@@ -74,6 +70,7 @@ router.post('/', async (req, res) => {
             seats,
             price,
             paymentMethod,
+            branchId: existingBus.owner,
         });
 
         const saveTrip = await newTicket.save();

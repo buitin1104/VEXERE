@@ -99,7 +99,7 @@ router.get("/:userId", async (req, res) => {
 });
 router.get("/", async (req, res) => {
     try {
-        const { keyword, bossId, roles, page = "1", limit = "10" } = req.query;
+        const { keyword, bossId, status, roles, page = "1", limit = "10" } = req.query;
         let query = { email: { $ne: "admin@vexere.com" } };
         if (keyword) {
             query.$or = [
@@ -107,6 +107,12 @@ router.get("/", async (req, res) => {
                 { email: { $regex: `.*${keyword}.*`, $options: "i" } },
                 { phone: { $regex: `.*${keyword}.*`, $options: "i" } },
             ];
+        }
+        if (roles) {
+            query.roles = roles;
+        }
+        if (status) {
+            query.status = status;
         }
         if (roles) {
             query.roles = roles;

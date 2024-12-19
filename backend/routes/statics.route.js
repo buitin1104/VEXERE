@@ -56,7 +56,7 @@ router.get('/month', async (req, res) => {
             data: {
                 tickets,
                 busTrips,
-                totalMoney: totalMoney[0].totalMoney
+                totalMoney: totalMoney.length > 0 && totalMoney[0].totalMoney
             }
         });
     } catch (error) {
@@ -180,38 +180,47 @@ router.get('/year/ticket', async (req, res) => {
 // API: Get top bus owners by revenue
 router.get("/top-bus-owners", async (req, res) => {
     try {
-        const topBusOwners = await Ticket.aggregate([
+        const year = parseInt(req.query.year) || new Date().getFullYear();
+        const firstDayOfYear = new Date(year, 0, 1);
+        const lastDayOfYear = new Date(year, 11, 31);
+
+        const topBranches = await Ticket.aggregate([
             {
-                $lookup: {
-                    from: "buses", // Tên collection của `Bus`
-                    localField: "bus",
-                    foreignField: "_id",
-                    as: "busInfo",
-                },
+                $match: {
+                    createdAt: {
+                        $gte: firstDayOfYear,
+                        $lte: lastDayOfYear
+                    }
+                }
             },
-            { $unwind: "$busInfo" }, // Giải nén mảng `busInfo`
-            {
-                $lookup: {
-                    from: "users", // Tên collection của `User`
-                    localField: "busInfo.owner",
-                    foreignField: "_id",
-                    as: "ownerInfo",
-                },
-            },
-            { $unwind: "$ownerInfo" }, // Giải nén mảng `ownerInfo`
             {
                 $group: {
-                    _id: "$busInfo.owner", // Nhóm theo `ownerId`
-                    totalRevenue: { $sum: "$price" }, // Tính tổng doanh thu
-                    branchName: { $first: "$ownerInfo.branchName" }, // Lấy `branchName`
-                    fullName: { $first: "$ownerInfo.fullName" }, // Lấy tên đầy đủ
-                },
+                    _id: "$branchId",
+                    totalRevenue: { $sum: "$price" }
+                }
             },
-            { $sort: { totalRevenue: -1 } }, // Sắp xếp giảm dần theo doanh thu
-            { $limit: 10 }, // Giới hạn số lượng kết quả
+            {
+                $lookup: {
+                    from: "users",
+                    localField: "_id",
+                    foreignField: "_id",
+                    as: "branchInfo"
+                }
+            },
+            { $unwind: "$branchInfo" },
+            {
+                $project: {
+                    _id: 0,
+                    branchId: "$_id",
+                    branchName: "$branchInfo.branchName",
+                    totalRevenue: 1
+                }
+            },
+            { $sort: { totalRevenue: -1 } },
+            { $limit: 10 }
         ]);
 
-        return res.status(200).json(topBusOwners);
+        return res.status(200).json(topBranches);
     } catch (error) {
         console.error(error);
         return res.status(500).json({ message: "Server Error" });

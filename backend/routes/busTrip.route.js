@@ -163,8 +163,8 @@ router.get("/", async (req, res) => {
             .limit(limitNumber)
             .populate('bus')
             .populate('driverId', 'phone')
-            .populate("origin", "name city")
-            .populate("destination", "name city");
+            .populate("origin", "name city coordinates")
+            .populate("destination", "name city coordinates");
 
         const total = await BusTrip.countDocuments(query);
 
