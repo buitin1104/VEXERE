@@ -340,3 +340,15 @@ export const TICKET_STATUS = [
         color: 'success',
     },
 ];
+
+export const bgRamdom = [
+    'bg-purple-700',
+    'bg-red-dark',
+    'bg-blue-600',
+    'bg-yellow-600',
+    'bg-teal-700',
+    'bg-green-700',
+    'bg-pink-600',
+    'bg-orange-600',
+    'bg-indigo-600',
+]

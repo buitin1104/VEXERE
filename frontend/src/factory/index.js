@@ -172,6 +172,12 @@ export const factories = {
             data: data,
         });
     },
+    getTopRouter: () => {
+        return ApiOperation.request({
+            url: ApiConstants.STATICS + '/popular-routes',
+            method: 'GET',
+        });
+    },
     getReviews: (params) => {
         return ApiOperation.request({
             url: ApiConstants.TICKET + '/reviews',

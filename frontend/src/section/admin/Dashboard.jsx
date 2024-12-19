@@ -1,4 +1,5 @@
 import { Spinner } from '@nextui-org/react';
+import { PROVINCES } from '@utils/constants';
 import { convertStringToNumber } from '@utils/Utils';
 import {
   ArcElement,
@@ -71,18 +72,64 @@ const Dashboard = () => {
   };
   const [dataMonth, setDataMonth] = useState();
   const [dataYearRevenue, setDataYearRevenue] = useState();
+  const [topRouter, setTopRoute] = useState();
   const [dataYearTicket, setDataYearTicket] = useState();
   const [dataYearTopRevenue, setDataYearTopRevenue] = useState();
+
   useEffect(() => {
     loadListMonth();
     loadListRevenueYear();
     loadListRevenueTicket();
     loadListYearTopBus();
+    loadListRouter();
   }, []);
 
   function loadListMonth() {
     factories.getStaticsMonth().then((res) => {
       setDataMonth(res.data);
+    });
+  }
+  function loadListRouter() {
+    factories.getTopRouter().then((res) => {
+      console.log('🚀 ~ factories.getTopRouter ~ res:', res);
+      const routerData = {
+        labels: res.map(
+          (item, index) =>
+            `${PROVINCES.find((x) => x.value === item.origin.toString()).label} - ${PROVINCES.find((i) => i.value === item.destination.toString()).label}`,
+        ),
+        datasets: [
+          {
+            label: 'Số chuyến: ',
+            data: res.map((item) => `${item.count}`),
+            backgroundColor: [
+              'rgba(255, 99, 132, 0.2)',
+              'rgba(255, 159, 64, 0.2)',
+              'rgba(153, 102, 255, 0.2)',
+              'rgba(255, 159, 64, 0.2)',
+              'rgba(54, 162, 235, 0.2)',
+              'rgba(153, 102, 255, 0.2)',
+              'rgba(255, 205, 86, 0.2)',
+              'rgba(201, 203, 207, 0.2)',
+              'rgba(75, 192, 192, 0.2)',
+              'rgba(153, 102, 255, 0.2)',
+            ],
+            borderColor: [
+              'rgb(255, 99, 132)',
+              'rgb(255, 159, 64)',
+              'rgb(54, 162, 235)',
+              'rgb(255, 205, 86)',
+              'rgb(54, 162, 235)',
+              'rgb(255, 99, 132)',
+              'rgb(75, 192, 192)',
+              'rgb(255, 205, 86)',
+              'rgb(75, 192, 192)',
+              'rgb(255, 159, 64)',
+            ],
+            borderWidth: 1,
+          },
+        ],
+      };
+      setTopRoute(routerData);
     });
   }
   function loadListYearTopBus() {
@@ -95,8 +142,30 @@ const Dashboard = () => {
           {
             label: 'Doanh Thu',
             data: res.map((item) => `${item.totalRevenue}`),
-            backgroundColor: 'rgb(255, 205, 86)',
-            borderColor: 'rgb(255, 205, 86)',
+            backgroundColor: [
+              'rgba(255, 99, 132, 0.2)',
+              'rgba(255, 159, 64, 0.2)',
+              'rgba(153, 102, 255, 0.2)',
+              'rgba(255, 159, 64, 0.2)',
+              'rgba(54, 162, 235, 0.2)',
+              'rgba(153, 102, 255, 0.2)',
+              'rgba(255, 205, 86, 0.2)',
+              'rgba(201, 203, 207, 0.2)',
+              'rgba(75, 192, 192, 0.2)',
+              'rgba(153, 102, 255, 0.2)',
+            ],
+            borderColor: [
+              'rgb(255, 99, 132)',
+              'rgb(255, 159, 64)',
+              'rgb(54, 162, 235)',
+              'rgb(255, 205, 86)',
+              'rgb(255, 99, 132)',
+              'rgb(75, 192, 192)',
+              'rgb(255, 205, 86)',
+              'rgb(75, 192, 192)',
+              'rgb(255, 159, 64)',
+              'rgb(54, 162, 235)',
+            ],
             borderWidth: 1,
           },
         ],
@@ -198,12 +267,20 @@ const Dashboard = () => {
 
         <p className="text-2xl mb-2 font-bold mt-6">Biểu đồ thống kê</p>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div className="bg-white border rounded-lg p-4 shadow">
+          {/* <div className="bg-white border rounded-lg p-4 shadow">
             <h2 className="text-lg font-semibold">Doanh Thu Theo Tháng</h2>
             {!dataYearRevenue ? (
               <Spinner />
             ) : (
               <Bar data={dataYearRevenue} options={{ responsive: true }} />
+            )}
+          </div> */}
+          <div className="bg-white border rounded-lg p-4 shadow">
+            <h2 className="text-lg font-semibold">Top tuyến đường phổ biến</h2>
+            {!topRouter ? (
+              <Spinner />
+            ) : (
+              <Bar data={topRouter} options={{ responsive: true }} />
             )}
           </div>
           <div className="bg-white border rounded-lg p-4 shadow h-[450px]">
