@@ -20,6 +20,7 @@ const TicketSchema = new mongoose.Schema({
     },
     paymentMethod: { type: String, required: false },
     star: { type: Number, required: false },
+    isShow: { type: Boolean, required: false, default: false },
     review: { type: String, required: false },
     createdAt: { type: Date, default: Date.now, required: true },
 });

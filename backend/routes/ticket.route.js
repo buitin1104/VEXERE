@@ -198,10 +198,6 @@ router.post('/review/:ticketId', async (req, res) => {
         const { ticketId } = req.params;
         const { star, review } = req.body;
 
-        if (!star) {
-            return res.status(400).json({ message: 'Vui lòng chọn số sao đánh giá' });
-        }
-
         const ticket = await Ticket.findById(ticketId);
         if (!ticket) {
             return res
@@ -210,6 +206,7 @@ router.post('/review/:ticketId', async (req, res) => {
         }
         ticket.star = star;
         ticket.review = review;
+
         ticket.status = 4;
         await ticket.save();
 
@@ -221,14 +218,56 @@ router.post('/review/:ticketId', async (req, res) => {
             .json({ message: 'Xảy ra lỗi hệ thông', error: error.message });
     }
 });
+router.patch('/update-show/:id', async (req, res) => {
+    try {
+        const { id } = req.params;
+        const { isShow } = req.body;
+
+        const ticket = await Ticket.findByIdAndUpdate(
+            id,
+            { isShow },
+            { new: true },
+        );
+        if (!ticket) {
+            return res.status(404).json({ message: 'Đánh giá không tồn tại' });
+        }
+        res.status(200).json(ticket);
+    } catch (error) {
+        console.error(error);
+        res
+            .status(500)
+            .json({ message: 'Lỗi hệ thống', error: error.message });
+    }
+});
 router.get('/reviews', async (req, res) => {
     try {
-        const { userId } = req.query;
-
+        const { userId, isShow } = req.query;
+        let query = {}
         if (userId) {
             query.userId = userId;
         }
-        const reviews = await Ticket.find(query);
+        if (isShow) {
+            query.isShow = true;
+        }
+        const reviews = await Ticket.find(query)
+            .populate('bus')
+            .populate('driverId')
+            .populate('tripId')
+            .populate({
+                path: 'tripId',
+                populate: {
+                    path: 'origin',
+                    select: 'name city coordinates',
+                },
+            })
+            .populate({
+                path: 'tripId',
+                populate: {
+                    path: 'destination',
+                    select: 'name city coordinates',
+                },
+            })
+            .populate('userId');
 
         res.status(200).json(reviews);
     } catch (error) {
@@ -238,4 +277,5 @@ router.get('/reviews', async (req, res) => {
             .json({ message: 'Error fetching reviews', error: error.message });
     }
 });
+
 export default router;
