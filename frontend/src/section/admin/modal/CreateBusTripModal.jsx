@@ -53,6 +53,8 @@ export default function CreateBusTripModal({ onReload, item }) {
   const loadListUser = async () => {
     const params = {
       roles: ROLES.TICKET_CONTROLLER,
+      status: true,
+      bossId: auth._id,
       ownerId: auth._id,
       limit: 100,
     };

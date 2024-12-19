@@ -96,9 +96,10 @@ export default function ConfirmPage() {
                     />
                     <InputField
                       placeholder="Nhập email"
-                      label="Email nhận thông tin"
+                      label="Email liên hệ"
                       name={'email'}
                       type="email"
+                      isDisabled
                     />
                     <div className="py-2 px-3 rounded-lg text-sm  bg-green-100 border border-green-460 text-content-primaryC flex  items-center gap-2">
                       <i className="fa fa-check-circle text-white bg-green-500 rounded-full p-1"></i>
@@ -159,12 +160,19 @@ export default function ConfirmPage() {
                 <div className="flex flex-row gap-4">
                   <div className="flex justify-start items-start flex-col gap-2">
                     <div className="text-center mr-5">
-                      <p className="text-2xl font-semibold">07:00</p>
-                      <p className="text-sm text-gray-500">(12/12)</p>
+                      <p className="text-2xl font-semibold">
+                        {getDate(data.departureTime, 6)}
+                      </p>
+                      <p className="text-sm text-gray-500">
+                        ({getDate(data.departureTime, 11)})
+                      </p>
                     </div>
                     <div className="text-center mr-[15px]">
-                      <p className="text-2xl font-semibold">19:01</p>
-                      <p className="text-sm text-gray-500 ml-2">(12/12)</p>
+                      <p className="text-2xl font-semibold">
+                        {' '}
+                        {getDate(data.arrivalTime, 6)}
+                      </p>
+                      ({getDate(data.arrivalTime, 11)})
                     </div>
                   </div>
                   <div className="flex flex-col gap-2 justify-center items-start ">
@@ -210,19 +218,14 @@ export default function ConfirmPage() {
               <div className=" px-4 w-full border rounded-lg shadow-lg p-6 ">
                 <p className="text-lg mb-2 font-bold">Phương thức thanh toán</p>
                 <RadioGroup
-                  defaultValue={data.paymentMethods[0]}
+                  isDisabled
+                  defaultValue={'2'}
                   onChange={(e) => {
                     setValue('payment', e);
                   }}
                 >
-                  {PAYMENT_METHODS.filter((i) =>
-                    data.paymentMethods.includes(i.id),
-                  ).map((x) => (
-                    <Radio
-                      key={x.id}
-                      value={x.id}
-                      defaultChecked={x.id === data.paymentMethods[0]}
-                    >
+                  {PAYMENT_METHODS.map((x) => (
+                    <Radio key={x.id} value={x.id}>
                       {x.label}
                     </Radio>
                   ))}

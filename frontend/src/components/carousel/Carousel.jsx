@@ -41,17 +41,20 @@ export default function Carousel({
           }}
         >
           {React.Children.map(children, (child, index) => (
-            <div
+            <button
               key={index}
-              style={{ width: `${cardWidth}px` }} // Chiều rộng của mỗi card
-              className="flex-shrink-0" // Không cho phép phần tử co lại
+              style={{ width: `${cardWidth}px` }}
+              className="flex-shrink-0"
+              onClick={() => {
+                console.log(`Card ${index} clicked`);
+                if (child.props.onClick) child.props.onClick(index); // Call child's onClick if provided
+              }}
             >
               {child}
-            </div>
+            </button>
           ))}
         </div>
       </div>
-
       <div className="absolute inset-0 flex items-center justify-center">
         <button
           onClick={handlePrev}

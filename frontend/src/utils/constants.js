@@ -289,17 +289,19 @@ export const STATUS = {
 };
 
 export const PAYMENT_METHODS = [
-    // {
-    //     id: '1',
-    //     label: 'Thanh toán khi lên xe',
-    // },
     {
         id: '1',
-        label: 'Thanh toán qua VNPAY',
+        label: 'Thanh toán khi lên xe',
+        disable: true,
     },
     {
         id: '2',
-        label: 'Thanh toán qua ví MOMO',
+        label: 'Thanh toán qua ví cá nhân',
+        disable: false,
+    },
+    {
+        id: '3',
+        label: 'Thanh toán qua ví Momo',
         disable: true,
     },
 ];

@@ -9,6 +9,7 @@ export default function CreatedSuccessPage() {
   const router = useRouter();
   const params = router.getAll();
   const data = JSON.parse(decodeURIComponent(params.item));
+  console.log('🚀 ~ CreatedSuccessPage ~ data:', data);
   return (
     <div className="mx-auto max-w-full px-5 lg:max-w-[70%] lg:px-0 2xl:max-w-[60%] flex  mt-6 gap-4 mb-20">
       <div className="max-w-2xl mx-auto bg-white shadow-md rounded-lg overflow-hidden mt-10">
@@ -35,10 +36,12 @@ export default function CreatedSuccessPage() {
           <div className="text-center">
             <i className="fas fa-map-marker-alt text-blue-500 text-2xl"></i>
             <p className="mt-2">Điểm đón</p>
-            <GoogleMapLink
-              lat={data?.origin?.coordinates?.[0]}
-              lng={data?.origin?.coordinates?.[1]}
-            />
+            {data?.origin?.coordinates?.[0] && (
+              <GoogleMapLink
+                lat={data?.origin?.coordinates?.[0]}
+                lng={data?.origin?.coordinates?.[1]}
+              />
+            )}
           </div>
           <div className="text-center">
             <i className="fas fa-phone-alt text-blue-500 text-2xl"></i>

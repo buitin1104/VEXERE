@@ -125,7 +125,7 @@ export const getDate = (timestamp, type = 1) => {
             result = moment(timestamp).format('MM');
             break;
         case 11:
-            result = moment(timestamp).format('MM/YYYY');
+            result = moment(timestamp).format('DD/MM');
             break;
         case 12:
             result = moment(timestamp).format('DD.MM.yyyy - HH:mm');
