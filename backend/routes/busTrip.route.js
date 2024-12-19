@@ -104,6 +104,7 @@ router.get("/", async (req, res) => {
                 message: "fromCity, toCity, and departureDate are required",
             });
         }
+        console.log('sort', sort)
 
         const pageNumber = parseInt(page, 10);
         const limitNumber = parseInt(limit, 10);
@@ -158,9 +159,21 @@ router.get("/", async (req, res) => {
             };
         }
 
+        let sortOption = {};
+        if (sort === 'S2') {
+            sortOption = { departureTime: 1 };
+        } else if (sort === 'S3') {
+            sortOption = { departureTime: -1 };
+        } else if (sort === 'S4') {
+            sortOption = { price: 1 };
+        } else if (sort === 'S5') {
+            sortOption = { price: -1 };
+        }
+
         const busTrips = await BusTrip.find(query)
             .skip((pageNumber - 1) * limitNumber)
             .limit(limitNumber)
+            .sort(sortOption)
             .populate('bus')
             .populate('driverId', 'phone')
             .populate("origin", "name city coordinates")

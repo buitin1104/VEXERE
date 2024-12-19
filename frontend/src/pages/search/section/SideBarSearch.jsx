@@ -14,12 +14,11 @@ import { AMENITIES, BUSES_LIST } from '@utils/constants';
 import React, { useEffect, useState } from 'react';
 import useRouter from '../../../hook/use-router';
 export default function SideBarSearch() {
-  const [typeSort, setTypeSort] = useState('S1');
+  const [typeSort, setTypeSort] = useState('S2');
   const [amenitiesSearch, setAmenitiesSearch] = useState([]);
   const [rateCount, setRateCount] = useState();
   const [price, setPrice] = useState([100000, 2000000]);
   const [typeBus, setTypeBus] = useState([]);
-  console.log('🚀 ~ SideBarSearch ~ typeBus:', typeBus);
   const router = useRouter();
   useEffect(() => {
     const newParams = {
@@ -69,15 +68,13 @@ export default function SideBarSearch() {
           <h2 className="mb-2 font-bold">Sắp xếp</h2>
           <div className="mb-4">
             <RadioGroup
-              defaultValue="S1"
+              defaultValue="S2"
               onChange={(e) => setTypeSort(e.target.value)}
             >
-              <Radio value="S1">Mặc định</Radio>
               <Radio value="S2"> Giờ đi sớm nhất </Radio>
               <Radio value="S3"> Giờ đi muộn nhất</Radio>
-              <Radio value="S4"> Đánh giá cao nhất</Radio>
-              <Radio value="S5"> Giá tăng dần</Radio>
-              <Radio value="S6"> Giá giảm dần</Radio>
+              <Radio value="S4"> Giá tăng dần</Radio>
+              <Radio value="S5"> Giá giảm dần</Radio>
             </RadioGroup>
           </div>
         </div>

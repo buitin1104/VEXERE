@@ -354,3 +354,9 @@ export const bgRamdom = [
     'bg-orange-600',
     'bg-indigo-600',
 ]
+export const SORT_TYPE = [
+    { id: 'S2', label: 'Giờ đi sớm nhất' },
+    { id: 'S3', label: 'Giờ đi muộn nhất' },
+    { id: 'S4', label: 'Giá tăng dần' },
+    { id: 'S5', label: 'Giá giảm dần' },
+];

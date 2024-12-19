@@ -3,7 +3,7 @@ import ImageGallery from '@components/galery/Galery';
 import Review from '@components/review';
 import { Button, Chip, ScrollShadow, Tab, Tabs } from '@nextui-org/react';
 import { RouterPath } from '@router/RouterPath';
-import { AMENITIES, BUSES_LIST, PROVINCES } from '@utils/constants';
+import { AMENITIES, BUSES_LIST, PROVINCES, SORT_TYPE } from '@utils/constants';
 import { differenceInHours } from '@utils/dateTime';
 import { cn, convertStringToNumber, getDate } from '@utils/Utils';
 import React, { useEffect, useMemo, useState } from 'react';
@@ -40,7 +40,7 @@ export default function SearchResult({ data }) {
         </Chip>
         {sort && (
           <Chip color="success" className="text-white">
-            {sort}
+            {SORT_TYPE.find((x) => x.id === sort)?.label}
           </Chip>
         )}
         {amenities?.split(',')?.map((item, index) => {
@@ -56,7 +56,8 @@ export default function SearchResult({ data }) {
         })}
         {priceList && (
           <Chip color="warning" className="text-white">
-            Giá: {priceList[0]} - {priceList[1]}
+            Giá: {convertStringToNumber(priceList[0])} -{' '}
+            {convertStringToNumber(priceList[1])}
           </Chip>
         )}
       </div>
@@ -135,7 +136,8 @@ function CardSearch({ item }) {
             <div className="flex items-center text-gray-700">
               <i className="fas fa-map-marker-alt text-blue-500"></i>
               <span className="ml-2 font-bold text-lg">
-                {getDate(item?.departureTime, 6)}
+                {getDate(item?.departureTime, 6)} -{' '}
+                {getDate(item?.departureTime, 11)}
               </span>
               <span className="ml-2">- {item?.origin.name}</span>
             </div>
@@ -149,7 +151,8 @@ function CardSearch({ item }) {
             <div className="flex items-center text-gray-700">
               <i className="fas fa-map-marker-alt text-red text-sm"></i>
               <span className="ml-2 font-bold text-lg">
-                {getDate(item?.arrivalTime, 6)}
+                {getDate(item?.arrivalTime, 6)} -{' '}
+                {getDate(item?.departureTime, 11)}
               </span>
               <span className="ml-2">- {item?.destination.name}</span>
             </div>
