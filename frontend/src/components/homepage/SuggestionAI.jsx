@@ -1,8 +1,24 @@
 import { RouterPath } from '@router/RouterPath';
 import { convertStringToNumber } from '@utils/Utils';
+import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
+import { useAuth } from '../../context/AuthContext';
+import { factories } from '../../factory';
 
 function SuggestionAI() {
+  const [routerTop, setRouter] = useState([]);
+  const { auth } = useAuth();
+  useEffect(() => {
+    if (!auth) return;
+    factories
+      .getRecommend({
+        id: auth._id,
+      })
+      .then((data) => {
+        setRouter(data);
+      });
+  }, [auth]);
+  if (!auth) return <></>;
   return (
     <div>
       <section className="container mx-auto pb-16">

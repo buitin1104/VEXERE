@@ -159,7 +159,15 @@ router.put('/:id', async (req, res) => {
                 .status(400)
                 .json({ message: 'Status is required' });
         }
-
+        const checkTicket = await Ticket.findById(id).populate('tripId');
+        const now = new Date();
+        const departureTime = new Date(checkTicket.tripId.departureTime);
+        const twelveHours = 12 * 60 * 60 * 1000; // 12h
+        if (now.getTime() - departureTime.getTime() > twelveHours) {
+            return res
+                .status(400)
+                .json({ message: 'Không thể huỷ vé lúc này.' });
+        }
         const ticket = await Ticket.findByIdAndUpdate(
             id,
             { status },

@@ -178,6 +178,13 @@ export const factories = {
             method: 'GET',
         });
     },
+    getRecommend: (data) => {
+        return ApiOperation.request({
+            url: ApiConstants.RECOMMEND,
+            method: 'GET',
+            params: data,
+        });
+    },
     getReviews: (params) => {
         return ApiOperation.request({
             url: ApiConstants.TICKET + '/reviews',
