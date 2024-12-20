@@ -1,6 +1,6 @@
 import { CustomTable } from '@components/custom-table/CustomTable';
 import { Button, Input } from '@nextui-org/react';
-import { BUSES_LIST } from '@utils/constants';
+import { BUSES_LIST, ROLES } from '@utils/constants';
 import { convertStringToNumber, getDate } from '@utils/Utils';
 import React, { useEffect, useState } from 'react';
 import { useAuth } from '../../context/AuthContext';
@@ -12,6 +12,7 @@ import CreateBusTripModal from './modal/CreateBusTripModal';
 export default function AdminBusRoute({ isAdmin }) {
   const [keyword, setKeyword] = useState();
   const [data, setData] = useState([]);
+  console.log('🚀 ~ AdminBusRoute ~ data:', data);
   const [pagination, setPagination] = useState();
   const { auth } = useAuth();
   const [loading, setLoading] = useState(true);
@@ -45,13 +46,14 @@ export default function AdminBusRoute({ isAdmin }) {
     setLoading(true);
     const params = {
       //   ownerId: isAdmin ? '' : auth._id,
-      page: pagination?.current,
+      //   page: pagination?.current,
       ...(keyword ? { keyword } : {}),
+      ...(auth.roles[0] === ROLES.BUS_OWNER ? { ownerId: auth._id } : {}),
     };
     factories
       .getListBusesTrip(params)
       .then((data) => {
-        setData(data?.busTrips);
+        if (data) setData(data?.busTrips);
         setLoading(false);
         setPagination(data.pagination);
       })
@@ -62,14 +64,17 @@ export default function AdminBusRoute({ isAdmin }) {
     {
       id: 'BusName',
       label: 'Biển số xe',
-      renderCell: (row) => <div className="w-32">{row.bus.busNumber}</div>,
+      renderCell: (row) => <div className="w-32">{row?.bus?.busNumber}</div>,
     },
     {
       id: 'BranchName',
       label: 'Mẫu xe',
       renderCell: (row) => (
         <div className="w-32">
-          {BUSES_LIST.find((x) => x.id.toString() === row.bus.busModel)?.label}
+          {
+            BUSES_LIST.find((x) => x.id.toString() === row?.bus?.busModel)
+              ?.label
+          }
         </div>
       ),
     },
@@ -78,7 +83,10 @@ export default function AdminBusRoute({ isAdmin }) {
       label: 'Số ghế',
       renderCell: (row) => (
         <div className="">
-          {BUSES_LIST.find((x) => x.id.toString() === row.bus.busModel)?.seats}
+          {
+            BUSES_LIST.find((x) => x.id.toString() === row?.bus?.busModel)
+              ?.seats
+          }
         </div>
       ),
     },
@@ -141,20 +149,22 @@ export default function AdminBusRoute({ isAdmin }) {
   return (
     <div className="bg-white rounded shadow-md px-4 py-3 h-full">
       <div className="flex items-center justify-between mb-3">
-        <div className="mt-2 flex justify-end items-center w-full">
-          <div className="flex gap-2">
-            <Button
-              onClick={() => createBusDestination()}
-              size="sm"
-              color="primary"
-            >
-              Tạo mới điểm đón/trả
-            </Button>
-            <Button onClick={() => createBusTrip()} size="sm" color="primary">
-              Tạo mới chuyến xe
-            </Button>
+        {auth?.roles[0] === ROLES.BUS_OWNER && (
+          <div className="mt-2 flex justify-end items-center w-full">
+            <div className="flex gap-2">
+              <Button
+                onClick={() => createBusDestination()}
+                size="sm"
+                color="primary"
+              >
+                Tạo mới điểm đón/trả
+              </Button>
+              <Button onClick={() => createBusTrip()} size="sm" color="primary">
+                Tạo mới chuyến xe
+              </Button>
+            </div>
           </div>
-        </div>
+        )}
       </div>
 
       <Input

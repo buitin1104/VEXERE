@@ -1,6 +1,6 @@
 import { CustomTable } from '@components/custom-table/CustomTable';
 import { Button, Input, Tooltip } from '@nextui-org/react';
-import { BUSES_LIST } from '@utils/constants';
+import { BUSES_LIST, ROLES } from '@utils/constants';
 import React, { useEffect, useState } from 'react';
 import { useAuth } from '../../context/AuthContext';
 import { useModalCommon } from '../../context/ModalContext';
@@ -104,8 +104,8 @@ export default function AdminBusList({ isAdmin }) {
   function loadList() {
     setLoading(true);
     const params = {
-      ownerId: isAdmin ? '' : auth._id,
       page: pagination?.current,
+      ...(auth.roles[0] === ROLES.BUS_OWNER ? { ownerId: auth._id } : {}),
       ...(keyword ? { keyword } : {}),
     };
     factories
@@ -119,14 +119,15 @@ export default function AdminBusList({ isAdmin }) {
   }
   return (
     <div className="bg-white rounded shadow-md px-4 py-3 h-full">
-      <div className="flex items-center justify-between mb-3">
-        <div className="mt-2 flex justify-end items-center w-full">
-          <Button onClick={createBus} size="sm" color="primary">
-            Tạo mới xe
-          </Button>
+      {auth?.roles[0] === ROLES.BUS_OWNER && (
+        <div className="flex items-center justify-between mb-3">
+          <div className="mt-2 flex justify-end items-center w-full">
+            <Button onClick={createBus} size="sm" color="primary">
+              Tạo mới xe
+            </Button>
+          </div>
         </div>
-      </div>
-
+      )}
       <Input
         type="text"
         onChange={(e) => setKeyword(e.target.value)}

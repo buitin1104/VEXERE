@@ -1,5 +1,5 @@
 import { Spinner } from '@nextui-org/react';
-import { PROVINCES } from '@utils/constants';
+import { PROVINCES, ROLES } from '@utils/constants';
 import { convertStringToNumber } from '@utils/Utils';
 import {
   ArcElement,
@@ -16,6 +16,7 @@ import {
 } from 'chart.js';
 import React, { useEffect, useState } from 'react';
 import { Bar, Line } from 'react-chartjs-2';
+import { useAuth } from '../../context/AuthContext';
 import { factories } from '../../factory';
 
 // Đăng ký các thành phần Chart.js
@@ -56,20 +57,7 @@ const pieOptions = {
 
 const Dashboard = () => {
   // Dữ liệu biểu đồ tròn
-  const pieData = {
-    labels: ['Nhà Xe A', 'Nhà Xe B', 'Nhà Xe C'],
-    datasets: [
-      {
-        label: 'Tỷ Lệ Doanh Thu',
-        data: [300000000, 200000000, 100000000],
-        backgroundColor: [
-          'rgba(255, 99, 132, 0.6)',
-          'rgba(54, 162, 235, 0.6)',
-          'rgba(255, 206, 86, 0.6)',
-        ],
-      },
-    ],
-  };
+  const { auth } = useAuth();
   const [dataMonth, setDataMonth] = useState();
   const [dataYearRevenue, setDataYearRevenue] = useState();
   const [topRouter, setTopRoute] = useState();
@@ -82,16 +70,19 @@ const Dashboard = () => {
     loadListRevenueTicket();
     loadListYearTopBus();
     loadListRouter();
-  }, []);
+  }, [auth]);
 
   function loadListMonth() {
+    if (!auth) return;
+    const params = {
+      ...(auth.roles[0] === ROLES.ADMIN ? {} : { userId: auth._id }),
+    };
     factories.getStaticsMonth().then((res) => {
       setDataMonth(res.data);
     });
   }
   function loadListRouter() {
     factories.getTopRouter().then((res) => {
-      console.log('🚀 ~ factories.getTopRouter ~ res:', res);
       const routerData = {
         labels: res.map(
           (item, index) =>

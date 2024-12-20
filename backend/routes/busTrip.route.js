@@ -284,9 +284,9 @@ router.get("/admin/trip", async (req, res) => {
         const limitNumber = parseInt(limit, 10);
 
         let query = {};
-        if (ownerId) {
-            query["bus.owner"] = ownerId;
-        }
+        // if (ownerId) {
+        //     query["bus.owner"] = ownerId;
+        // }
         if (keyword) {
             query["bus.busNumber"] = { $regex: `.*${keyword}.*`, $options: "i" };
         }
