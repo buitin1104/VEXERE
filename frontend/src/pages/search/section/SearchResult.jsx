@@ -15,6 +15,7 @@ export default function SearchResult({ data }) {
   const router = useRouter();
   const {
     fromCity,
+    branchName,
     toCity,
     departureDateTime,
     amenities,
@@ -41,6 +42,11 @@ export default function SearchResult({ data }) {
         {sort && (
           <Chip color="success" className="text-white">
             {SORT_TYPE.find((x) => x.id === sort)?.label}
+          </Chip>
+        )}
+        {branchName && (
+          <Chip color="primary" className="text-white">
+            Nhà xe {branchName}
           </Chip>
         )}
         {amenities?.split(',')?.map((item, index) => {

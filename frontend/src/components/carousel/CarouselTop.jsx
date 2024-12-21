@@ -1,6 +1,5 @@
 import { RouterPath } from '@router/RouterPath';
 import { PROVINCES } from '@utils/constants';
-import { convertStringToNumber } from '@utils/Utils';
 import React, { useState } from 'react';
 import useRouter from '../../hook/use-router';
 
@@ -18,6 +17,30 @@ export default function CarouselTop({
     'bg-blue-500',
     'bg-green-500',
     'bg-yellow-500',
+    'bg-indigo-500',
+    'bg-purple-500',
+    'bg-pink-500',
+    'bg-orange-500',
+    'bg-teal-500',
+    'bg-cyan-500',
+    'bg-gray-500',
+    'bg-lime-500',
+    'bg-amber-500',
+    'bg-emerald-500',
+    'bg-fuchsia-500',
+    'bg-rose-500',
+    'bg-brown-500',
+    'bg-deep-purple-500',
+    'bg-light-blue-500',
+    'bg-light-green-500',
+    'bg-khaki-500',
+    'bg-mint-500',
+    'bg-coral-500',
+    'bg-turquoise-500',
+    'bg-silver-500',
+    'bg-maroon-500',
+    'bg-olive-500',
+    'bg-crimson-500',
   ];
 
   const handlePrev = () => {
@@ -37,7 +60,7 @@ export default function CarouselTop({
 
   return (
     <div className="relative w-full mx-auto">
-      <div className="overflow-hidden w-full items-center flex flex-row flex-1 w-full">
+      <div className="overflow-hidden w-full items-center flex flex-row flex-1">
         <button
           onClick={handlePrev}
           className="relative z-20 left-1 bg-gray-700 bg-opacity-50  text-white px-2 py-2 rounded-full"
@@ -59,7 +82,6 @@ export default function CarouselTop({
                 'https://static.vexere.com/production/images/1681707544528.jpeg'
               }
               title={`${PROVINCES.find((i) => i.value === x.origin.toString()).label} - ${PROVINCES.find((i) => i.value === x.destination.toString()).label}`}
-              price={convertStringToNumber(x.price)}
               from={x.origin.toString()}
               to={x.destination.toString()}
               bgColor={bgRamdom[Math.floor(Math.random() * bgRamdom.length)]}

@@ -121,7 +121,7 @@ router.get("/admin/buses", async (req, res) => {
 router.get("/:id/reviews", async (req, res) => {
     try {
         const { id } = req.params;
-        const { page = "1", limit = "20" } = req.query;
+        const { page = "1", limit = "100" } = req.query;
         const pageNumber = parseInt(page, 10);
         const limitNumber = parseInt(limit, 10);
 

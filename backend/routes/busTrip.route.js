@@ -91,6 +91,7 @@ router.get("/", async (req, res) => {
         const {
             fromCity,
             toCity,
+            busTripId,
             departureDateTime,
             amenities,
             price,
@@ -105,7 +106,6 @@ router.get("/", async (req, res) => {
                 message: "fromCity, toCity, and departureDate are required",
             });
         }
-        console.log('sort', sort)
 
         const pageNumber = parseInt(page, 10);
         const limitNumber = parseInt(limit, 10);
@@ -140,6 +140,9 @@ router.get("/", async (req, res) => {
                 $in: destinationLocations.map((location) => location._id),
             },
         };
+        if (busTripId) {
+            query._id = busTripId;
+        }
 
         if (amenitiesArray.length > 0) {
             query.amenity = { $all: amenitiesArray };

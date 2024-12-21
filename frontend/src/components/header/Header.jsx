@@ -1,3 +1,5 @@
+import logoImg from '@assets/image/logo.png';
+import { getLocalTimeZone, now } from '@internationalized/date';
 import {
   Avatar,
   Button,
@@ -12,8 +14,6 @@ import {
   Select,
   SelectItem,
 } from '@nextui-org/react';
-
-import { getLocalTimeZone, now } from '@internationalized/date';
 import { RouterPath } from '@router/RouterPath';
 import { PROVINCES, ROLES } from '@utils/constants';
 import { cn, getDate } from '@utils/Utils';
@@ -68,8 +68,12 @@ function Header({ showText, showSearch }) {
         <header className="py-3 text-white w-full  justify-center items-center">
           <div className="px-8 mx-auto flex items-center justify-between">
             <div className="flex items-center space-x-2">
-              <Link to="/" className="text-2xl font-bold">
-                <img src="https://storage.googleapis.com/fe-production/svgIcon/icon_vxr_full_2.svg" />
+              <Link
+                to="/"
+                className="flex flex-rơw items-center gap-2 text-2xl font-bold"
+              >
+                <img src={logoImg} className="w-12 h-12" />
+                <p>Vexe</p>
               </Link>
             </div>
             <div className="flex items-center space-x-2">
@@ -232,7 +236,7 @@ function Header({ showText, showSearch }) {
           )}
 
           {showSearch && (
-            <div className="items-center flex flex-col justify-center my-10 ">
+            <div className=" items-center flex flex-col justify-center my-10 ">
               <div className=" w-full xl:w-[70%] flex h-full flex-col items-center justify-center gap-1 rounded-xl bg-white p-1 shadow-lg xl:flex-row">
                 <Select
                   className="flex-4 xl:flex-3 border-nonet"
@@ -310,7 +314,14 @@ function Header({ showText, showSearch }) {
           )}
 
           {showSearch && (
-            <div className="h-14 w-full absolute bottom-0 bg-black bg-opacity-50 flex justify-center items-center space-x-12 text-white text-lg">
+            <div
+              className="h-14 w-full absolute bottom-0 bg-black bg-opacity-50  justify-center items-center space-x-12 text-white text-lg hidden xl:flex"
+              style={{
+                '@media (max-width: 1200px)': {
+                  display: 'none',
+                },
+              }}
+            >
               <div className="flex items-center space-x-2">
                 <i className="fas fa-star text-yellow-500"></i>
                 <span>Chắc chắn có chỗ</span>

@@ -1,12 +1,13 @@
 import { RouterPath } from '@router/RouterPath';
+import { PROVINCES } from '@utils/constants';
 import { convertStringToNumber } from '@utils/Utils';
 import { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import { factories } from '../../factory';
+import useRouter from '../../hook/use-router';
 
 function SuggestionAI() {
-  const [routerTop, setRouter] = useState([]);
+  const [sugesstion, setRouter] = useState([]);
   const { auth } = useAuth();
   useEffect(() => {
     if (!auth) return;
@@ -15,7 +16,7 @@ function SuggestionAI() {
         id: auth._id,
       })
       .then((data) => {
-        setRouter(data);
+        setRouter(data.recommendations);
       });
   }, [auth]);
   if (!auth) return <></>;
@@ -24,62 +25,18 @@ function SuggestionAI() {
       <section className="container mx-auto pb-16">
         <h2 className="mb-8 text-2xl font-extrabold">Gợi ý cho bạn</h2>
         <div className="grid grid-cols-3 gap-8">
-          <CardDestination
-            name="Xe Hoàng Long"
-            rate={8}
-            src={
-              'https://static.vexere.com/production/images/1732087569487.jpeg?w=250&h=250'
-            }
-            from={'Đà Nẵng'}
-            to="Quy Nhơn"
-            comments={29}
-            price="120.000"
-          />
-          <CardDestination
-            name="Đà Lạt ơi"
-            rate={8.8}
-            src={
-              'https://static.vexere.com/production/images/1723530067929.jpeg?w=250&h=250'
-            }
-            from={'Đà Nẵng'}
-            to="Quy Nhơn"
-            comments={130}
-            price="220.000"
-          />
-
-          <CardDestination
-            name="Long Vân Lemouse"
-            rate={8.8}
-            src={
-              'https://static.vexere.com/production/images/1694430418331.jpeg?w=250&h=250'
-            }
-            price="320.000"
-            from={'Đà Nẵng'}
-            to="Quy Nhơn"
-            comments={130}
-          />
-          <CardDestination
-            name="Bình Minh BUS"
-            price="320.000"
-            rate={8.8}
-            src={
-              'https://static.vexere.com/production/images/1732087569487.jpeg?w=250&h=250'
-            }
-            from={'Đà Nẵng'}
-            to="Quy Nhơn"
-            comments={130}
-          />
-          <CardDestination
-            name="Hạnh CAFE"
-            price="320.000"
-            rate={8.8}
-            from={'Đà Nẵng'}
-            to="Quy Nhơn"
-            src={
-              'https://static.vexere.com/production/images/1728527263430.jpeg?w=250&h=250'
-            }
-            comments={130}
-          />
+          {sugesstion?.map((item, index) => (
+            <CardDestination
+              key={index}
+              id={item._id}
+              name={item.bus.owner.branchName}
+              rate={item.rate}
+              src={item.bus.gallery[0]}
+              from={item.origin.city}
+              to={item.destination.city}
+              price={item.price}
+            />
+          ))}
         </div>
       </section>
     </div>
@@ -88,18 +45,24 @@ function SuggestionAI() {
 
 export default SuggestionAI;
 
-function CardDestination({
-  name,
-  price,
-  src,
-  rate = 8.9,
-  from,
-  to,
-  comments = 0,
-}) {
+function CardDestination({ id, name, price, src, from, to }) {
+  const router = useRouter();
+
+  function handleSearch() {
+    const newParams = {
+      fromCity: from,
+      toCity: to,
+      busTripId: id,
+      branchName: name,
+    };
+    router.push({
+      pathname: RouterPath.SEARCH,
+      params: newParams,
+    });
+  }
   return (
-    <Link
-      to={`${RouterPath.DETAIL}`}
+    <button
+      onClick={handleSearch}
       className="overflow-hidden rounded-lg bg-white shadow-lg transition-all duration-100 ease-in-out hover:scale-105 hover:shadow-2xl"
     >
       <img
@@ -114,16 +77,11 @@ function CardDestination({
         </div>
         <div className="flex mt-2 justify-between items-center">
           <p className="text-gray-600">
-            {from} - {to}
+            {PROVINCES.find((p) => p.value === from)?.label} -{' '}
+            {PROVINCES.find((p) => p.value === to)?.label}
           </p>
-          <div className="flex items-center">
-            <span className="rounded-md bg-blue-600 px-2 py-1 text-sm text-white">
-              {rate}
-            </span>
-            <span className="ml-2 text-gray-600">{comments} đánh giá</span>
-          </div>
         </div>
       </div>
-    </Link>
+    </button>
   );
 }

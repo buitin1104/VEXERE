@@ -66,6 +66,10 @@ router.post("/login", async (req, res) => {
         if (user.status === false) {
             return res.status(401).json({ message: "Tài khoản đã bị vô hiệu hoá" });
         }
+
+        if (user.roles.includes(Role.BUS_OWNER) && user.isRequestBusOwner === false) {
+            return res.status(401).json({ message: "Tài khoản chưa được phê duyệt" });
+        }
         // Tạo token JWT
         const token = jwt.sign(
             { userId: user._id, roles: user.roles },

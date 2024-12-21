@@ -17,6 +17,8 @@ export default function SearchPage() {
   const {
     fromCity,
     toCity,
+    busTripId,
+    branchName,
     departureDateTime,
     amenities,
     isWithPet,
@@ -30,11 +32,16 @@ export default function SearchPage() {
   const [data, setData] = useState([]);
 
   useEffect(() => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }, []);
+
+  useEffect(() => {
     setLoading(true);
     const newData = {
       fromCity,
+      busTripId,
       toCity,
-      departureDateTime,
+      departureDateTime: departureDateTime ? departureDateTime : new Date(),
       amenities,
       isWithPet,
       price,
