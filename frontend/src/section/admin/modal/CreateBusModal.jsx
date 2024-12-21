@@ -11,7 +11,6 @@ import { useModalCommon } from '../../../context/ModalContext';
 import { factories } from '../../../factory';
 
 export default function CreateBusModal({ onReload, item }) {
-  console.log('🚀 ~ CreateBusModal ~ item:', item);
   const [isLoading, setIsLoading] = useState(false);
   const { auth } = useAuth();
   const { onClose } = useModalCommon();
@@ -40,6 +39,10 @@ export default function CreateBusModal({ onReload, item }) {
     };
     const newUrls = [];
     for (const image of values?.busImage) {
+      if (image.url && !image.file) {
+        newUrls.push(image.url);
+        continue;
+      }
       if (!image.file) continue;
       const newUrl = await uploadFirebase(image.file);
       newUrls.push(newUrl);

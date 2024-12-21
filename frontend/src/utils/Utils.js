@@ -146,6 +146,13 @@ export const getDate = (timestamp, type = 1) => {
                 timestamp.millisecond
             );
             break;
+        case 17:
+            result = result = new Date(
+                timestamp.year,
+                timestamp.month - 1,
+                timestamp.day,
+            );
+            break;
         case 15:
             const formatter = new Intl.DateTimeFormat('en-US', {
                 timeZone,

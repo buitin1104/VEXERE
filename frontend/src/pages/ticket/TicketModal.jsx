@@ -121,7 +121,7 @@ export default function TicketModal({ item, onReload }) {
               lng={item?.tripId.origin.coordinates?.[1]}
             />
           </div>
-          {item.driverId?.phone && (
+          {item.driverId?.phone?.length > 0 && (
             <div className="text-center">
               <i className="fas fa-phone-alt text-blue-500 text-2xl"></i>
               <p className="mt-2">Gọi điện</p>

@@ -59,7 +59,7 @@ const LoginModal = () => {
         setIsLoading(false);
       })
       .catch((error) => {
-        ToastNotiError('Email hoặc mật khẩu không chính xác!');
+        ToastNotiError(error.response.data.message);
         setIsLoading(false);
       });
   };

@@ -14,10 +14,13 @@ export function CustomTable({
   columns,
   data,
   page = 1,
-  totalPage = 1,
+  total = 1,
+  limit = 10,
+  setPage,
   isLoading,
   isShowPagination = false,
 }) {
+  const totalPage = Math.ceil(total / limit);
   return (
     <Table
       bottomContent={

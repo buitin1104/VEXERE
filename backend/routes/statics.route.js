@@ -1,16 +1,50 @@
 import express from 'express';
+import mongoose from 'mongoose';
 import BusTrip from '../models/busTrip.schema.js';
 import Ticket from '../models/ticket.schema.js';
 
 const router = express.Router();
 router.get('/month', async (req, res) => {
     try {
+        const { branchId } = req.query;
         const currentDate = new Date(req.query.date || Date.now());
         const firstDayOfMonth = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1);
         const lastDayOfMonth = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0);
+        const objectIdBranchId = new mongoose.Types.ObjectId(branchId);
+        const resultCountBus = await Ticket.aggregate([
+            {
+                $lookup: {
+                    from: "bustrips", // Tên collection BusTrip
+                    localField: "tripId",
+                    foreignField: "_id",
+                    as: "busTripInfo",
+                },
+            },
+            {
+                $lookup: {
+                    from: "buses", // Tên collection Bus
+                    localField: "busTripInfo.bus",
+                    foreignField: "_id",
+                    as: "busInfo",
+                },
+            },
+            {
+                $match: {
+                    "busInfo.owner": objectIdBranchId, // Lọc theo branchId
+                    createdAt: { $gte: firstDayOfMonth, $lt: lastDayOfMonth }, // Lọc theo tháng
+                },
+            },
+            {
+                $group: {
+                    _id: null,
+                    tripCount: { $sum: 1 }, // Đếm số lượng chuyến
+                },
+            },
+        ]);
 
-        const [tickets, busTrips, totalMoney] = await Promise.all([
+        const [tickets, bustrips, totalMoney] = await Promise.all([
             Ticket.countDocuments({
+                ...(branchId && { branchId }),
                 createdAt: {
                     $gte: firstDayOfMonth,
                     $lte: lastDayOfMonth
@@ -35,6 +69,7 @@ router.get('/month', async (req, res) => {
             Ticket.aggregate([
                 {
                     $match: {
+                        ...branchId && { branchId: objectIdBranchId },
                         createdAt: {
                             $gte: firstDayOfMonth,
                             $lte: lastDayOfMonth
@@ -55,7 +90,7 @@ router.get('/month', async (req, res) => {
         res.status(200).json({
             data: {
                 tickets,
-                busTrips,
+                busTrips: !branchId ? bustrips : resultCountBus?.[0]?.tripCount || 0,
                 totalMoney: totalMoney.length > 0 && totalMoney[0].totalMoney
             }
         });

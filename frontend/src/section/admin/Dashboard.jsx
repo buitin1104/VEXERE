@@ -75,9 +75,9 @@ const Dashboard = () => {
   function loadListMonth() {
     if (!auth) return;
     const params = {
-      ...(auth.roles[0] === ROLES.ADMIN ? {} : { userId: auth._id }),
+      ...(auth.roles[0] === ROLES.ADMIN ? {} : { branchId: auth._id }),
     };
-    factories.getStaticsMonth().then((res) => {
+    factories.getStaticsMonth(params).then((res) => {
       setDataMonth(res.data);
     });
   }

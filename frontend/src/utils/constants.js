@@ -263,12 +263,12 @@ export const sidebarItems = [
         label: 'Danh sách Đánh giá',
         roles: [ROLES.ADMIN],
     },
-    {
-        id: 'profile',
-        icon: 'fa-smile',
-        label: 'Thông tin tài khoản',
-        roles: [ROLES.BUS_OWNER, ROLES.TICKET_CONTROLLER, ROLES.USER],
-    },
+    // {
+    //     id: 'profile',
+    //     icon: 'fa-smile',
+    //     label: 'Thông tin tài khoản',
+    //     roles: [ROLES.BUS_OWNER, ROLES.TICKET_CONTROLLER, ROLES.USER],
+    // },
 ];
 
 export const GENDER = {

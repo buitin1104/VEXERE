@@ -1,7 +1,7 @@
 import { CustomTable } from '@components/custom-table/CustomTable';
-import { Button, Input } from '@nextui-org/react';
-import { BUSES_LIST, ROLES } from '@utils/constants';
-import { convertStringToNumber, getDate } from '@utils/Utils';
+import { Button, DatePicker, Select, SelectItem } from '@nextui-org/react';
+import { BUSES_LIST, PROVINCES, ROLES } from '@utils/constants';
+import { convertStringToNumber, getDate, ToastInfo } from '@utils/Utils';
 import React, { useEffect, useState } from 'react';
 import { useAuth } from '../../context/AuthContext';
 import { useModalCommon } from '../../context/ModalContext';
@@ -10,16 +10,19 @@ import CreateBusDestinationModal from './modal/CreateBusDestination';
 import CreateBusTripModal from './modal/CreateBusTripModal';
 
 export default function AdminBusRoute({ isAdmin }) {
-  const [keyword, setKeyword] = useState();
+  //   const [keyword, setKeyword] = useState();
   const [data, setData] = useState([]);
-  console.log('🚀 ~ AdminBusRoute ~ data:', data);
   const [pagination, setPagination] = useState();
   const { auth } = useAuth();
+  const [date, setDate] = useState();
+  const [from, setFrom] = useState();
+  const [to, setTo] = useState();
+
   const [loading, setLoading] = useState(true);
   const { onOpen } = useModalCommon();
   useEffect(() => {
     loadList();
-  }, [keyword, pagination?.current]);
+  }, [pagination?.current]);
 
   function createBusTrip() {
     onOpen({
@@ -28,12 +31,17 @@ export default function AdminBusRoute({ isAdmin }) {
       size: '4xl',
     });
   }
-  function editBusTrip(row) {
-    onOpen({
-      view: <CreateBusTripModal onReload={loadList} item={row} />,
-      title: 'Tạo chuyến xe mới',
-      size: '4xl',
-    });
+  function editBusTripStatus(row) {
+    factories
+      .editBusTrip(row.id)
+      .then(() => {
+        ToastInfo('Cập nhật thông tin thành công');
+      })
+      .catch((err) => {
+        if (err.response?.data?.message) {
+          ToastNotiError(err.response?.data?.message);
+        }
+      });
   }
   function createBusDestination() {
     onOpen({
@@ -45,9 +53,10 @@ export default function AdminBusRoute({ isAdmin }) {
   function loadList() {
     setLoading(true);
     const params = {
-      //   ownerId: isAdmin ? '' : auth._id,
-      //   page: pagination?.current,
-      ...(keyword ? { keyword } : {}),
+      page: pagination?.current || 1,
+      fromCity: from,
+      toCity: to,
+      departureDateTime: getDate(date, 17),
       ...(auth.roles[0] === ROLES.BUS_OWNER ? { ownerId: auth._id } : {}),
     };
     factories
@@ -64,7 +73,7 @@ export default function AdminBusRoute({ isAdmin }) {
     {
       id: 'BusName',
       label: 'Biển số xe',
-      renderCell: (row) => <div className="w-32">{row?.bus?.busNumber}</div>,
+      renderCell: (row) => <div className="w-22">{row?.bus?.busNumber}</div>,
     },
     {
       id: 'BranchName',
@@ -82,7 +91,7 @@ export default function AdminBusRoute({ isAdmin }) {
       id: 'seats',
       label: 'Số ghế',
       renderCell: (row) => (
-        <div className="">
+        <div className="w-12">
           {
             BUSES_LIST.find((x) => x.id.toString() === row?.bus?.busModel)
               ?.seats
@@ -125,26 +134,20 @@ export default function AdminBusRoute({ isAdmin }) {
         <div className="w-28">{convertStringToNumber(row.price)}</div>
       ),
     },
-    // {
-    //   id: 'action',
-    //   label: 'Tác vụ',
-    //   headCell: () => <span className="text-center w-full">Tác vụ</span>,
-    //   renderCell: (row) => (
-    //     <div className="">
-    //       <Tooltip content="Xóa">
-    //         <Button
-    //           variant="ghost"
-    //           onClick={() => editBusTrip(row)}
-    //           size="sm"
-    //           disabled
-    //           className="border-none max-w-8 h-8"
-    //         >
-    //           <i className="fas fa-edit text-blue-500 text-sm"></i>
-    //         </Button>
-    //       </Tooltip>
-    //     </div>
-    //   ),
-    // },
+    {
+      id: 'action',
+      label: 'Tác vụ',
+      headCell: () => <span className="text-center w-full">Tác vụ</span>,
+      renderCell: (row) => (
+        <Button
+          onClick={() => editBusTripStatus(row)}
+          color="primary"
+          className="border-none h-8"
+        >
+          Hoàn thành
+        </Button>
+      ),
+    },
   ];
   return (
     <div className="bg-white rounded shadow-md px-4 py-3 h-full">
@@ -167,15 +170,70 @@ export default function AdminBusRoute({ isAdmin }) {
         )}
       </div>
 
-      <Input
-        type="text"
-        onChange={(e) => setKeyword(e.target.value)}
-        placeholder="Tìm kiếm biển số"
-        className="w-full outline-none bg-gray-100 rounded-lg"
-        startContent={<i className="fas fa-search text-gray-500 mr-2"></i>}
-      />
+      <div className="flex gap-4 items-center">
+        <Select
+          className="flex-4 xl:flex-3 border-nonet"
+          variant="flat"
+          radius="sm"
+          label="Nơi xuất phát"
+          defaultSelectedKeys={from}
+          autoComplete="on"
+          onChange={(e) => setFrom(e.target.value)}
+          placeholder="Nơi đi ?"
+          startContent={<i className="fas fa-dot-circle text-blue-500"></i>}
+        >
+          {PROVINCES.map((province) => (
+            <SelectItem key={province.value}>{province.label}</SelectItem>
+          ))}
+        </Select>
+        <Select
+          className="flex-4 xl:flex-3 border-none"
+          id="toCity"
+          value={to}
+          variant="flat"
+          onChange={(e) => setTo(e.target.value)}
+          radius="sm"
+          label="Nơi đến"
+          autoComplete="on"
+          placeholder="Nơi đến ?"
+          startContent={<i className="fas fa-map-marker-alt text-error"></i>}
+        >
+          {PROVINCES.filter((province) => province.value !== from).map(
+            (province) => (
+              <SelectItem key={province.value}>{province.label}</SelectItem>
+            ),
+          )}
+        </Select>
+        <DatePicker
+          label="Ngày đi"
+          radius="sm"
+          classNames={{
+            base: 'bg-white',
+            selectorButton: 'bg-white',
+            inputWrapper: 'bg-transparent',
+            input: 'bg-white',
+          }}
+          onChange={setDate}
+          //   hideTimeZone
+          //   showMonthAndYearPickers
+          //   defaultValue={now(getLocalTimeZone())}
+          className="bg-white"
+        />
+        <Button onClick={loadList} color="primary">
+          Tìm kiếm
+        </Button>
+      </div>
+
       <div className="mt-4">
-        <CustomTable columns={columns} data={data} isLoading={loading} />
+        <CustomTable
+          columns={columns}
+          data={data}
+          isLoading={loading}
+          isShowPagination
+          total={pagination?.total}
+          page={pagination?.page}
+          setPage={(page) => setPagination({ ...pagination, current: page })}
+        />
       </div>
     </div>
   );

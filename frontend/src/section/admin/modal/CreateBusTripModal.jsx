@@ -4,7 +4,7 @@ import InputQuillForm from '@components/common/InputQuillForm';
 import SelectField from '@components/common/SelectField';
 import { getLocalTimeZone, now } from '@internationalized/date';
 import { Button, Checkbox, Spinner } from '@nextui-org/react';
-import { AMENITIES, BUSES_LIST, ROLES } from '@utils/constants';
+import { AMENITIES, BUSES_LIST, PROVINCES, ROLES } from '@utils/constants';
 import { getDate, ToastInfo, ToastNotiError } from '@utils/Utils';
 import React, { useEffect, useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
@@ -71,7 +71,8 @@ export default function CreateBusTripModal({ onReload, item }) {
     factories.getListLocation().then((data) => {
       const locations = data?.locations.map((item) => ({
         value: item._id,
-        label: item.name,
+        label:
+          item.name + ' - ' + PROVINCES.find((x) => x.value == item.city).label,
       }));
       setLocations(locations);
     });
@@ -181,6 +182,7 @@ export default function CreateBusTripModal({ onReload, item }) {
                 <SelectField
                   options={locations || []}
                   placeholder="Chọn điểm đón"
+                  isRequired
                   label="Điểm đón"
                   isMultiple
                   validate={{ required: 'Bắt buộc chọn' }}
@@ -192,6 +194,7 @@ export default function CreateBusTripModal({ onReload, item }) {
                   }
                   placeholder="Chọn điểm trả khách"
                   label="Điểm trả khách"
+                  isRequired
                   validate={{ required: 'Bắt buộc chọn' }}
                   isMultiple
                   name={'destination'}
@@ -202,6 +205,7 @@ export default function CreateBusTripModal({ onReload, item }) {
                   isHaveTime
                   placeholder="Chọn giờ đi"
                   label="Giờ đi"
+                  isRequired
                   minValue={now(getLocalTimeZone())}
                   validate={{ required: 'Bắt buộc chọn' }}
                   name={'departureTime'}
@@ -212,6 +216,7 @@ export default function CreateBusTripModal({ onReload, item }) {
                   minValue={watch('departureTime')}
                   validate={{ required: 'Bắt buộc chọn' }}
                   label="Giờ đến"
+                  isRequired
                   isMultiple
                   name={'arrivalTime'}
                 />
@@ -219,6 +224,7 @@ export default function CreateBusTripModal({ onReload, item }) {
               <div className="flex flex-row gap-2">
                 <InputField
                   placeholder="Nhập giá vé"
+                  isRequired
                   label="Giá vé"
                   validate={{ required: 'Bắt buộc chọn' }}
                   name={'price'}

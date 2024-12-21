@@ -1,4 +1,5 @@
 import express from "express";
+import { BusTripStatusConstant } from "../constants/busTripStatus.constant.js";
 import Bus from "../models/bus.schema.js";
 import BusTrip from "../models/busTrip.schema.js";
 import Location from "../models/location.schema.js";
@@ -203,104 +204,63 @@ router.get("/", async (req, res) => {
 router.put("/:id", async (req, res) => {
     try {
         const { id } = req.params;
-        const updates = req.body;
-
-        if (!updates || Object.keys(updates).length === 0) {
-            return res.status(400).json({ message: "No fields to update" });
-        }
 
         const existingBusTrip = await BusTrip.findById(id);
         if (!existingBusTrip) {
-            return res.status(404).json({ message: "BusTrip not found" });
+            return res.status(404).json({ message: "Không tồn tại chuyến xe" });
         }
-
-        if (updates.bus && updates.bus !== existingBusTrip.bus.toString()) {
-            const newBus = await Bus.findById(updates.bus);
-            if (!newBus) {
-                return res.status(404).json({ message: "New bus not found" });
-            }
-
-            const oldBus = await Bus.findById(existingBusTrip.bus);
-            if (oldBus) {
-                oldBus.trips = oldBus.trips.filter(
-                    (tripId) => tripId.toString() !== id,
-                );
-                await oldBus.save();
-            }
-
-            newBus.trips.push(id);
-            await newBus.save();
-        }
-
-        if (
-            updates.departureTime &&
-            updates.arrivalTime &&
-            new Date(updates.departureTime) >= new Date(updates.arrivalTime)
-        ) {
-            return res
-                .status(400)
-                .json({ message: "Departure time must be before arrival time" });
-        }
-
-        if (updates.origin) {
-            const originExists = await Location.findById(updates.origin);
-            if (!originExists) {
-                return res.status(404).json({ message: "Origin location not found" });
-            }
-        }
-
-        if (updates.destination) {
-            const destinationExists = await Location.findById(updates.destination);
-            if (!destinationExists) {
-                return res
-                    .status(404)
-                    .json({ message: "Destination location not found" });
-            }
-        }
-
-        const updatedBusTrip = await BusTrip.findByIdAndUpdate(id, updates, {
+        const updatedBusTrip = await BusTrip.findByIdAndUpdate(id, {
+            status: BusTripStatusConstant.COMPLETED,
+        }, {
             new: true,
         })
-            .populate("origin", "name city")
-            .populate("destination", "name city");
-
         if (!updatedBusTrip) {
-            return res.status(404).json({ message: "BusTrip not found" });
+            return res.status(404).json({ message: "Không tồn tại chuyến xe" });
         }
-
         res.status(200).json(updatedBusTrip);
     } catch (error) {
         console.error(error);
         res
             .status(500)
-            .json({ message: "Error updating BusTrip", error: error.message });
+            .json({ message: "Lỗi xảy ra khi cập nhật", error: error.message });
     }
 });
 
 router.get("/admin/trip", async (req, res) => {
     try {
-        const { keyword, ownerId, page = "1", limit = "10" } = req.query;
+        const { fromCity, toCity, departureDateTime, ownerId, page = "1", limit = "100" } = req.query;
         const pageNumber = parseInt(page, 10);
         const limitNumber = parseInt(limit, 10);
-
         let query = {};
-        // if (ownerId) {
-        //     query["bus.owner"] = ownerId;
-        // }
-        if (keyword) {
-            query["bus.busNumber"] = { $regex: `.*${keyword}.*`, $options: "i" };
+        if (fromCity) {
+            const originLocations = await Location.find({ city: fromCity.toString() });
+            query.origin = { $in: originLocations.map((location) => location._id) };
+        }
+        if (toCity) {
+            const destinationLocations = await Location.find({ city: toCity.toString() });
+            query.destination = {
+                $in: destinationLocations.map((location) => location._id),
+            };
+        }
+        if (departureDateTime) {
+            query.departureTime = {
+                $gte: new Date(departureDateTime),
+                $lt: new Date(new Date(departureDateTime).setDate(new Date(departureDateTime).getDate() + 1)),
+            };
+        }
+
+        if (ownerId) {
+            const buses = await Bus.find({ owner: ownerId });
+            query.bus = { $in: buses.map((bus) => bus._id) };
         }
         const total = await BusTrip.countDocuments(query);
         const busTrips = await BusTrip.find(query)
-            .populate({
-                path: "bus",
-                match: ownerId ? { owner: ownerId } : {},
-            })
-            .populate("driverId", "fullName")
-            .populate("origin", "name")
-            .populate("destination", "name")
             .skip((pageNumber - 1) * limitNumber)
-            .limit(limitNumber);
+            .limit(limitNumber)
+            .populate("bus")
+            .populate("driverId")
+            .populate("origin")
+            .populate("destination");
 
         const pagination = {
             total,

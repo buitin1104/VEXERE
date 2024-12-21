@@ -84,7 +84,7 @@ router.post('/', async (req, res) => {
 });
 router.get('/', async (req, res) => {
     try {
-        const { userId, date, status, keyword, page = '1', limit = '10' } = req.query;
+        const { userId, branchId, date, status, keyword, page = '1', limit = '10' } = req.query;
 
         const pageNumber = parseInt(page, 10);
         const limitNumber = parseInt(limit, 10);
@@ -96,16 +96,12 @@ router.get('/', async (req, res) => {
         if (userId) {
             query.userId = userId;
         }
+        if (branchId) {
+            query.branchId = branchId;
+        }
         if (status) {
             query.status = status;
         }
-        if (keyword) {
-            query.$or = [
-                { 'user.phone': { $regex: `.*${keyword}.*`, $options: 'i' } },
-                { 'user.fullName': { $regex: `.*${keyword}.*`, $options: 'i' } },
-            ];
-        }
-
         const tickets = await Ticket.find(query)
             .skip((pageNumber - 1) * limitNumber)
             .limit(limitNumber)

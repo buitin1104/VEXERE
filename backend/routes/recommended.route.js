@@ -19,7 +19,6 @@ router.get('/', async (req, res) => {
         const avgPrice =
             userTickets.reduce((sum, ticket) => sum + (ticket.price || 0), 0) /
             userTickets.length;
-        console.log("🚀 ~ router.get ~ avgPrice:", avgPrice)
         const recommendedTrips = await BusTrip.find({
             branchId: { $in: branchIds }, // Chi nhánh tương tự
             price: { $gte: avgPrice * 0.8, $lte: avgPrice * 1.2 }, // Giá gần mức trung bình

@@ -6,6 +6,7 @@ const SelectField = ({
   name,
   options,
   label,
+  isRequired,
   placeholder = '',
   className = '',
   validate = {},
@@ -20,6 +21,7 @@ const SelectField = ({
         className={`w-full bg-transparent ${className}`}
         color={error ? 'danger' : 'default'}
         errorMessage={error}
+        isRequired={isRequired}
         selectedKeys={watch(name) ? [watch(name)] : []}
         {...register(name, validate)}
       >

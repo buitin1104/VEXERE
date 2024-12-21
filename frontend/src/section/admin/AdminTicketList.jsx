@@ -1,9 +1,9 @@
 import { CustomTable } from '@components/custom-table/CustomTable';
-import { Button, Chip, Input, Tab, Tabs } from '@nextui-org/react';
+import { Button, Chip, Tab, Tabs } from '@nextui-org/react';
 import React, { useEffect, useState } from 'react';
 
 import TicketModal from '@pages/ticket/TicketModal';
-import { TICKET_STATUS } from '@utils/constants';
+import { ROLES, TICKET_STATUS } from '@utils/constants';
 import { getDate } from '@utils/Utils';
 import { useAuth } from '../../context/AuthContext';
 import { useModalCommon } from '../../context/ModalContext';
@@ -11,6 +11,7 @@ import { factories } from '../../factory';
 
 export default function TicketListPage() {
   const [activeTab, setActiveTab] = useState();
+  const [keyword, setKeyword] = useState();
   const [loading, setLoading] = useState(true);
   const [data, setData] = useState([]);
   const [pagination, setPagination] = useState();
@@ -20,10 +21,23 @@ export default function TicketListPage() {
     if (auth) {
       loadList();
     }
-  }, [auth, activeTab]);
+  }, [auth, activeTab, keyword]);
+
+  function getBranchId(auth) {
+    if (auth.roles[0] === ROLES.BUS_OWNER) {
+      return auth._id;
+    }
+    if (auth.roles[0] === ROLES.TICKET_CONTROLLER) {
+      return auth.bossId;
+    }
+    return null;
+  }
   function loadList() {
     setLoading(true);
+
     const params = {
+      ...(getBranchId(auth) && { branchId: getBranchId(auth) }),
+      ...(keyword ? { keyword } : {}),
       status: activeTab,
       page: pagination?.current,
     };
@@ -48,6 +62,21 @@ export default function TicketListPage() {
       id: 'BusName',
       label: 'Tên xe',
       renderCell: (row) => <div className="w-28">{row.bus.busNumber}</div>,
+    },
+    {
+      id: 'fullName',
+      label: 'Khách hàng',
+      renderCell: (row) => <div className="w-28">{row?.userId?.fullName}</div>,
+    },
+    {
+      id: 'amil',
+      label: 'email',
+      renderCell: (row) => <div className="w-32">{row?.userId?.email}</div>,
+    },
+    {
+      id: 'phone',
+      label: 'SĐT',
+      renderCell: (row) => <div className="w-28">{row?.userId?.phone}</div>,
     },
     {
       id: 'Route',
@@ -121,12 +150,13 @@ export default function TicketListPage() {
         </div>
       </div>
 
-      <Input
+      {/* <Input
         type="text"
         placeholder="Tìm kiếm tên, số điện thoại"
         className="w-full outline-none bg-gray-100 rounded-lg"
+        onChange={(e) => setKeyword(e.target.value)}
         startContent={<i className="fas fa-search text-gray-500 mr-2"></i>}
-      />
+      /> */}
       <div className="mt-4">
         <CustomTable columns={columns} data={data ?? []} isLoading={loading} />{' '}
       </div>

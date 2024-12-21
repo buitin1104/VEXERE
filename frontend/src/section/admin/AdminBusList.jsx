@@ -28,7 +28,7 @@ export default function AdminBusList({ isAdmin }) {
       id: 'BranchName',
       label: 'Mẫu xe',
       renderCell: (row) => (
-        <div className="w-40">
+        <div className="">
           {BUSES_LIST.find((x) => x.id.toString() === row.busModel)?.label}
         </div>
       ),
@@ -104,7 +104,8 @@ export default function AdminBusList({ isAdmin }) {
   function loadList() {
     setLoading(true);
     const params = {
-      page: pagination?.current,
+      page: pagination?.current || 1,
+      limit: 10,
       ...(auth.roles[0] === ROLES.BUS_OWNER ? { ownerId: auth._id } : {}),
       ...(keyword ? { keyword } : {}),
     };
@@ -136,7 +137,15 @@ export default function AdminBusList({ isAdmin }) {
         startContent={<i className="fas fa-search text-gray-500 mr-2"></i>}
       />
       <div className="mt-4">
-        <CustomTable columns={columns} data={data} isLoading={loading} />
+        <CustomTable
+          columns={columns}
+          data={data}
+          isLoading={loading}
+          isShowPagination
+          total={pagination?.total}
+          page={pagination?.page}
+          setPage={(page) => setPagination({ ...pagination, current: page })}
+        />{' '}
       </div>
     </div>
   );

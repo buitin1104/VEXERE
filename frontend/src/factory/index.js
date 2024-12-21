@@ -2,10 +2,11 @@ import ApiConstants from '../adapter/ApiConstants';
 import ApiOperation from '../adapter/ApiOperation';
 
 export const factories = {
-    getStaticsMonth: () => {
+    getStaticsMonth: (data) => {
         return ApiOperation.request({
             url: ApiConstants.STATICS + '/month',
             method: 'GET',
+            params: data,
         });
     },
     cancelTicket: (id) => {
