@@ -245,7 +245,7 @@ function CardSearch({ item }) {
                     {reviews?.length === 0 ? (
                       'Chưa có đánh giá'
                     ) : (
-                      <ScrollShadow className="w-full min-h-[230px] max-h-[600px]">
+                      <ScrollShadow className="  min-w-[800px] w-full min-h-[230px] max-h-[600px]">
                         {reviews.map((review) => (
                           <Review key={review.id} review={review} />
                         ))}

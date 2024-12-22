@@ -24,7 +24,7 @@ export default function SearchPage() {
     isWithPet,
     price,
     page = 1,
-    limit = 10,
+    limit = 100,
     sort,
     type,
   } = router.getAll();
