@@ -136,7 +136,7 @@ router.put('/', async function (req, res) {
             message: 'Tài khoản không tồn tại',
         });
     }
-    const admin = await User.findOne({ email: 'admin@vexere.com' });
+    const admin = await User.findOne({ email: 'admin@vexe.com' });
     const newPaymentAdmin = new Payment({
         txnRef: 'E' + txnRef,
         amount: payment.amount,

@@ -100,7 +100,7 @@ router.get("/:userId", async (req, res) => {
 router.get("/", async (req, res) => {
     try {
         const { keyword, bossId, status, roles, page = "1", limit = "10" } = req.query;
-        let query = { email: { $ne: "admin@vexere.com" } };
+        let query = { email: { $ne: "admin@vexe.com" } };
         if (keyword) {
             query.$or = [
                 { fullName: { $regex: `.*${keyword}.*`, $options: "i" } },
