@@ -18,22 +18,25 @@ export const factories = {
             }
         });
     },
-    getStaticsYearRevenue: () => {
+    getStaticsYearRevenue: (params) => {
         return ApiOperation.request({
             url: ApiConstants.STATICS + '/year/revenue',
             method: 'GET',
+            params,
         });
     },
-    getStaticsYearTopBusOwner: () => {
+    getStaticsYearTopBusOwner: (params) => {
         return ApiOperation.request({
             url: ApiConstants.STATICS + '/top-bus-owners',
             method: 'GET',
+            params
         });
     },
-    getStaticsYearTicket: () => {
+    getStaticsYearTicket: (params) => {
         return ApiOperation.request({
             url: ApiConstants.STATICS + '/year/ticket',
             method: 'GET',
+            params
         });
     },
     getUserInfo: (id) => {

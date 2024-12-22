@@ -183,7 +183,11 @@ const Dashboard = () => {
   //   'rgb(201, 203, 207)',
   // ],
   function loadListRevenueYear() {
-    factories.getStaticsYearRevenue().then((res) => {
+    if (!auth) return;
+    const params = {
+      ...(auth.roles[0] === ROLES.ADMIN ? {} : { branchId: auth._id }),
+    };
+    factories.getStaticsYearRevenue(params).then((res) => {
       // Dữ liệu doanh thu theo tháng
       if (!res.data) return;
       const revenueData = {
@@ -202,7 +206,11 @@ const Dashboard = () => {
     });
   }
   function loadListRevenueTicket() {
-    factories.getStaticsYearTicket().then((res) => {
+    if (!auth) return;
+    const params = {
+      ...(auth.roles[0] === ROLES.ADMIN ? {} : { branchId: auth._id }),
+    };
+    factories.getStaticsYearTicket(params).then((res) => {
       const bookingData = {
         labels: res.data.map((item) => `Tháng ${item.month}`),
         datasets: [
@@ -244,7 +252,7 @@ const Dashboard = () => {
             )}
           </div>
           <div className="bg-white border rounded-lg p-4 shadow">
-            <h2 className="text-lg font-semibold">Số Tiền</h2>
+            <h2 className="text-lg font-semibold">Số Tiền Vé</h2>
             {!dataMonth ? (
               <Spinner />
             ) : (
@@ -266,14 +274,18 @@ const Dashboard = () => {
               <Bar data={dataYearRevenue} options={{ responsive: true }} />
             )}
           </div> */}
-          <div className="bg-white border rounded-lg p-4 shadow">
-            <h2 className="text-lg font-semibold">Top tuyến đường phổ biến</h2>
-            {!topRouter ? (
-              <Spinner />
-            ) : (
-              <Bar data={topRouter} options={{ responsive: true }} />
-            )}
-          </div>
+          {auth?.roles[0] === ROLES.ADMIN && (
+            <div className="bg-white border rounded-lg p-4 shadow">
+              <h2 className="text-lg font-semibold">
+                Top tuyến đường phổ biến
+              </h2>
+              {!topRouter ? (
+                <Spinner />
+              ) : (
+                <Bar data={topRouter} options={{ responsive: true }} />
+              )}
+            </div>
+          )}
           <div className="bg-white border rounded-lg p-4 shadow h-[450px]">
             <h2 className="text-lg font-semibold">
               Xu Hướng Doanh Thu Theo Tháng
@@ -292,16 +304,18 @@ const Dashboard = () => {
               <Bar data={dataYearTicket} options={{ responsive: true }} />
             )}
           </div>
-          <div className="bg-white border rounded-lg p-4 shadow">
-            <h2 className="text-lg font-semibold">
-              Top 5 nhà xe doanh thu cao nhất
-            </h2>
-            {!dataYearTopRevenue ? (
-              <Spinner />
-            ) : (
-              <Bar data={dataYearTopRevenue} options={{ responsive: true }} />
-            )}
-          </div>
+          {auth?.roles[0] === ROLES.ADMIN && (
+            <div className="bg-white border rounded-lg p-4 shadow">
+              <h2 className="text-lg font-semibold">
+                Top 5 nhà xe doanh thu cao nhất
+              </h2>
+              {!dataYearTopRevenue ? (
+                <Spinner />
+              ) : (
+                <Bar data={dataYearTopRevenue} options={{ responsive: true }} />
+              )}
+            </div>
+          )}
           {/* <div className="bg-white border rounded-lg p-4 shadow h-[450px] ">
             <h2 className="text-lg font-semibold">
               Tỷ Lệ Doanh Thu Theo Nhà Xe
