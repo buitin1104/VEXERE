@@ -258,6 +258,13 @@ export const sidebarItems = [
         roles: [ROLES.ADMIN],
     },
     {
+        id: 'payments',
+        icon: 'fas fa-dollar-sign ',
+        label: 'Danh sách giao dịch',
+        active: true,
+        roles: [ROLES.ADMIN, ROLES.BUS_OWNER],
+    },
+    {
         id: 'review',
         icon: 'fa-star',
         label: 'Danh sách Đánh giá',

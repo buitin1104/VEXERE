@@ -8,6 +8,7 @@ import { useAuth } from '../../context/AuthContext';
 import { useModalCommon } from '../../context/ModalContext';
 import AdminBusList from '../../section/admin/AdminBusList';
 import AdminBusRoute from '../../section/admin/AdminBusRoute';
+import AdminPaymentsPage from '../../section/admin/AdminPayments';
 import AdminProfile from '../../section/admin/AdminProfile';
 import AdminRequestHost from '../../section/admin/AdminRequestHost';
 import AdminReviewList from '../../section/admin/AdminReviewList';
@@ -76,6 +77,8 @@ export default function AdminPage() {
         return <AdminTicketList />;
       case 'tickets':
         return <AdminTicketList />;
+      case 'payments':
+        return <AdminPaymentsPage />;
       case 'profile':
         return <AdminProfile />;
       default:

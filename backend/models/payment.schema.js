@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 const PaymentSchema = new mongoose.Schema({
-    txnRef: { type: String, required: true, unique: true },
+    txnRef: { type: String, required: true, unique: false },
     amount: { type: Number, required: true },
     description: { type: String, required: true },
     userId: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },

@@ -33,9 +33,10 @@ export default function AdminBusRoute({ isAdmin }) {
   }
   function editBusTripStatus(row) {
     factories
-      .editBusTrip(row.id)
+      .editBusTrip(row._id)
       .then(() => {
         ToastInfo('Cập nhật thông tin thành công');
+        loadList();
       })
       .catch((err) => {
         if (err.response?.data?.message) {
@@ -53,7 +54,7 @@ export default function AdminBusRoute({ isAdmin }) {
   function loadList() {
     setLoading(true);
     const params = {
-      page: pagination?.current || 1,
+      //   page: pagination?.current || 1,
       fromCity: from,
       toCity: to,
       departureDateTime: getDate(date, 17),
@@ -64,7 +65,7 @@ export default function AdminBusRoute({ isAdmin }) {
       .then((data) => {
         if (data) setData(data?.busTrips);
         setLoading(false);
-        setPagination(data.pagination);
+        // setPagination(data.pagination);
       })
       .finally(() => setLoading(false));
   }
@@ -139,13 +140,19 @@ export default function AdminBusRoute({ isAdmin }) {
       label: 'Tác vụ',
       headCell: () => <span className="text-center w-full">Tác vụ</span>,
       renderCell: (row) => (
-        <Button
-          onClick={() => editBusTripStatus(row)}
-          color="primary"
-          className="border-none h-8"
-        >
-          Hoàn thành
-        </Button>
+        <>
+          {/* new Date() > new Date(row.arrivalTime) && */}
+          {row.status !== 'Completed' && (
+            <Button
+              onClick={() => editBusTripStatus(row)}
+              color="primary"
+              isDisabled={row.stactus === 'Completed'}
+              className="border-none h-8"
+            >
+              Hoàn thành
+            </Button>
+          )}
+        </>
       ),
     },
   ];
@@ -229,10 +236,10 @@ export default function AdminBusRoute({ isAdmin }) {
           columns={columns}
           data={data}
           isLoading={loading}
-          isShowPagination
-          total={pagination?.total}
-          page={pagination?.page}
-          setPage={(page) => setPagination({ ...pagination, current: page })}
+          //   isShowPagination
+          //   total={pagination?.total}
+          //   page={pagination?.page}
+          //   setPage={(page) => setPagination({ ...pagination, current: page })}
         />
       </div>
     </div>

@@ -1,8 +1,12 @@
 import express from "express";
+import moment from "moment";
 import { BusTripStatusConstant } from "../constants/busTripStatus.constant.js";
 import Bus from "../models/bus.schema.js";
 import BusTrip from "../models/busTrip.schema.js";
 import Location from "../models/location.schema.js";
+import Payment from "../models/payment.schema.js";
+import Ticket from "../models/ticket.schema.js";
+import User from "../models/user.schema.js";
 
 const router = express.Router();
 
@@ -207,11 +211,49 @@ router.get("/", async (req, res) => {
 router.put("/:id", async (req, res) => {
     try {
         const { id } = req.params;
+        if (!id) return res.status(400).json({ message: "Id không hợp lệ" });
+        const existingBusTrip = await BusTrip.findById(id)
+        const existingBus = await Bus.findById(existingBusTrip.bus).populate('owner');
 
-        const existingBusTrip = await BusTrip.findById(id);
         if (!existingBusTrip) {
             return res.status(404).json({ message: "Không tồn tại chuyến xe" });
         }
+        const tickets = await Ticket.find({
+            tripId: id,
+            status: { $ne: 2 },
+        });
+        const totalPrice = tickets.reduce((acc, ticket) => acc + ticket.price, 0);
+
+        const admin = await User.findOne({ roles: ['admin'] });
+        let date = new Date();
+        const orderId = moment(date).format('DDHHmmss')
+        const newPaymentAdmin = new Payment({
+            txnRef: orderId,
+            amount: totalPrice * 0.8,
+            userId: admin._id,
+            status: 1,
+            description: 'Thanh toán tiền cho chủ nhà xe ' + existingBus.owner.branchName + ' chuyến xe ' + existingBus.busNumber,
+        });
+        admin.balance -= totalPrice * 0.8;
+        await admin.save();
+        await newPaymentAdmin.save();
+
+        const newPaymentBusOwner = new Payment({
+            txnRef: "H" + orderId,
+            amount: totalPrice * 0.8,
+            userId: existingBus.owner._id,
+            status: 1,
+            description: 'Hệ thống thanh toán cho chuyến xe' + existingBus.busNumber,
+        });
+        const owner = await User.findById(existingBus.owner._id);
+        if (!owner) {
+            return res.status(404).json({ message: "Không tồn tại chủ xe" });
+        }
+        owner.balance += totalPrice * 0.8;
+        await owner.save();
+
+        await newPaymentBusOwner.save();
+
         const updatedBusTrip = await BusTrip.findByIdAndUpdate(id, {
             status: BusTripStatusConstant.COMPLETED,
         }, {

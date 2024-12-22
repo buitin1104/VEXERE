@@ -214,11 +214,10 @@ export const factories = {
             data: data,
         });
     },
-    editBusTrip: (data, id) => {
+    editBusTrip: (id) => {
         return ApiOperation.request({
             url: ApiConstants.BUS_TRIP + '/' + id,
             method: 'PUT',
-            data: data,
         });
     },
     createNewLocation: (data) => {

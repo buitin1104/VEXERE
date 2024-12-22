@@ -20,6 +20,8 @@ export default function PaymentSuccessPage() {
   const vnp_Amount = params.vnp_Amount / 100;
   const vnp_BankCode = params.vnp_BankCode;
   const vnp_BankTranNo = params.vnp_BankTranNo;
+  const vnp_ResponseCode = params.vnp_ResponseCode;
+  console.log('🚀 ~ PaymentSuccessPage ~ vnp_ResponseCode:', vnp_ResponseCode);
   //   const vnp_CardType = params.vnp_CardType;
   //   const vnp_OrderInfo = params.vnp_OrderInfo;
   //   const vnp_TransactionNo = params.vnp_TransactionNo;
@@ -28,6 +30,11 @@ export default function PaymentSuccessPage() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    if (vnp_ResponseCode !== '00') {
+      setStatus(false);
+      setLoading(false);
+      return;
+    }
     if (auth && vnp_TxnRef) {
       const data = { userId: auth._id, txnRef: vnp_TxnRef };
       factories
@@ -85,10 +92,12 @@ export default function PaymentSuccessPage() {
             <p className="font-bold">Ngân hàng:</p>
             <p>{vnp_BankCode}</p>
           </div>
-          <div className="flex justify-between items-center">
-            <p className="font-bold">Mã chuyển khoản:</p>
-            <p>{vnp_BankTranNo}</p>
-          </div>
+          {vnp_BankTranNo && (
+            <div className="flex justify-between items-center">
+              <p className="font-bold">Mã chuyển khoản:</p>
+              <p>{vnp_BankTranNo}</p>
+            </div>
+          )}
           <div className="flex justify-between items-center">
             <p className="font-bold">Mã giao dịch:</p>
             <p>{vnp_TxnRef}</p>

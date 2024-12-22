@@ -171,6 +171,13 @@ function Header({ showText, showSearch }) {
                           <i className="fas fa-comment-dots mr-2"></i>
                           <span>Quản lý hệ thống</span>
                         </DropdownItem>
+                        <DropdownItem
+                          key="profile"
+                          onClick={() => navigate('/profile')}
+                        >
+                          <i className="fas fa-user mr-2"></i>
+                          <span>Thông tin tài khoản</span>
+                        </DropdownItem>
                         <DropdownItem onClick={logout} color="danger">
                           <i className="fas fa-power-off mr-2"></i>
                           <span>Đăng xuất</span>
