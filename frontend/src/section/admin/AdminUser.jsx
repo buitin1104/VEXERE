@@ -1,3 +1,4 @@
+import { CustomTable } from '@components/custom-table/CustomTable';
 import RegisterModal from '@components/header/Register';
 import ConfirmModal from '@components/modal/ConfirmModal';
 import EditUserModal from '@components/modal/EditUserModal';
@@ -8,7 +9,6 @@ import React, { useEffect, useState } from 'react';
 import { useAuth } from '../../context/AuthContext';
 import { useModalCommon } from '../../context/ModalContext';
 import { factories } from '../../factory';
-import { CustomTable } from '@components/custom-table/CustomTable';
 
 export default function AdminUser({ isAdmin }) {
   const { auth } = useAuth();
@@ -18,17 +18,19 @@ export default function AdminUser({ isAdmin }) {
   const [keyword, setKeyword] = useState();
   const [loading, setLoading] = useState(true);
   const [data, setData] = useState([]);
-  const [pagination, setPagination] = useState();
+  const [page, setPage] = useState(1);
+  const [total, setTotal] = useState(0);
 
   useEffect(() => {
     loadList();
-  }, [keyword, activeTab, pagination?.current]);
+  }, [keyword, activeTab, page]);
 
   function loadList() {
     setLoading(true);
     const params = {
       roles: activeTab,
-      page: pagination?.current,
+      limit: 1000,
+      page: page,
       ...(auth.roles[0] === ROLES.BUS_OWNER && { bossId: auth._id }),
       ...(keyword ? { keyword } : {}),
     };
@@ -37,7 +39,7 @@ export default function AdminUser({ isAdmin }) {
       .then((data) => {
         setData(data?.users);
         setLoading(false);
-        setPagination(data.pagination);
+        // setTotal(data.pagination.total);
       })
       .finally(() => setLoading(false));
   }
@@ -211,7 +213,15 @@ export default function AdminUser({ isAdmin }) {
         startContent={<i className="fas fa-search text-gray-500 mr-2"></i>}
       />
       <div className="mt-4">
-        <CustomTable columns={columns} data={data} isLoading={loading} />
+        <CustomTable
+          columns={columns}
+          data={data}
+          isLoading={loading}
+          //   isShowPagination
+          //   limit="10"
+          //   total={total}
+          //   setPage={(page) => setPage(page)}
+        />
       </div>
     </div>
   );
