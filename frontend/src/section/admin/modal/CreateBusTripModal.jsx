@@ -68,14 +68,21 @@ export default function CreateBusTripModal({ onReload, item }) {
   };
 
   const loadListLocation = async () => {
-    factories.getListLocation().then((data) => {
-      const locations = data?.locations.map((item) => ({
-        value: item._id,
-        label:
-          item.name + ' - ' + PROVINCES.find((x) => x.value == item.city).label,
-      }));
-      setLocations(locations);
-    });
+    factories
+      .getListLocation({
+        limit: 100,
+        page: 1,
+      })
+      .then((data) => {
+        const locations = data?.locations.map((item) => ({
+          value: item._id,
+          label:
+            item.name +
+            ' - ' +
+            PROVINCES.find((x) => x.value == item.city).label,
+        }));
+        setLocations(locations);
+      });
   };
 
   const loadListBus = async () => {
